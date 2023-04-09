@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detalles</title>
+    <link rel="stylesheet" th:href="@{/css/toast.min.css}" />
+    <!-- <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+
+    <style>
+        li {
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+<div th:insert="~{fragments/header :: header}"></div>
+<div class="container">
+    <div class="card">
+        <div class="card-header">Detalles</div>
+        <div class="card-body">
+            <div class="col d-flex justify-content-between bg-white border-bottom mb-2">
+                <h5 class="card-title">Detalles</h5>
+                <div class="text-end mb-3">
+                    <b>Estatus: </b>
+                    <div th:switch="${request.status}">
+                        <div th:case="'1'">
+                            <span class="badge badge-pill badge-danger">Cancelada</span>
+                        </div>
+                        <div th:case="'2'">
+                            <span class="badge badge-pill badge-success">Canalizada</span>
+                        </div>
+                        <div th:case="'3'">
+                            <span class="badge badge-pill badge-primary">Atendida</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 border-bottom mb-3">
+                <div class="row">
+                    <div class="col-12">
+                        <h4 class="mb-3">Comite</h4>
+                        <p th:text="${request.president.committee.name}"></p>
+                    </div>
+                    <div class="col-4">
+                        <b>Usuario: </b>
+                        <p th:text="${request.president.user.name}"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 border-bottom mb-3">
+                <div class="row">
+                    <div class="col-12">
+                        <h4 class="mb-3">Pago</h4>
+                    </div>
+                    <div class="col-6">
+                        <b>Estado: </b>
+                        <div class="mb-3" th:switch="${request.paymentStatus}">
+                            <div th:case="'1'">
+                                <span class="badge badge-pill badge-danger">Por Cobrar</span>
+                            </div>
+                            <div th:case="'2'">
+                                <span class="badge badge-pill badge-primary">Pago Realizado</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <b>Cantidad a pagar: </b>
+                        <p th:text="${request.paymentAmount}"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 border-bottom mb-3">
+                <div class="row">
+                    <div class="col-12">
+                        <b>Descripción: </b>
+                        <p th:utext="${request.description}"></p>
+                    </div>
+                    <div class="col-12">
+                        <b>Evidencia: </b>
+                        <a th:href="@{/docs/{i} (i = ${attachment.name})}" type="*/*"
+                           target="_blank">Ver Evidencia</a>
+                    </div>
+                </div>
+            </div>
+
+            </div>
+        </div>
+        <div class="card-footer">
+            <a th:href="@{/request/list}" class="btn btn-primary btn-block">
+                <ion-icon name="checkmark"></ion-icon>&nbsp;<span
+                    class="d-sm-none d-md-none d-lg-inline d-xl-inline"> Volver</span>
+            </a>
+        </div>
+    </div>
+</div>
+<!-- <script th:src="@{/js/bootstrap.min.js}"></script> -->
+<!--Ionicons-->
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+<script th:src="@{/js/toast.min.js}"></script>
+
+<script th:if="${msg_success != null}">
+    new Toast({
+        message: "[[${msg_success}]]",
+        type: "success",
+    });
+</script>
+<script th:if="${msg_error != null}">
+    new Toast({
+        message: "[[${msg_error}]]",
+        type: "danger",
+    });
+</script>
+</body>
+
+</html>

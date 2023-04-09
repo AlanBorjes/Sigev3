@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>COMVE</title>
+    <link rel="stylesheet" th:href="@{/css/toast.min.css}" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+
+    <style>
+      li {
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div th:insert="~{fragments/header :: header}"></div>
+    <div class="container">
+      <div class="card">
+        <!--<div class="card-header">LISTADO DE SERVICIOS PUBLICOS</div>-->
+        <div class="card-body" style="background-color: #c3edea" >
+          <div
+            class="col d-flex justify-content-between bg-white border-bottom mb-2">
+            <h4  class="card-title text-center" >COMVE</h4>
+          </div>
+          <div class="row" style=" border-radius: 50%">
+            <div class="container" style="width: 50%; height: 50%;" >
+              <img src="https://www.iecm.mx/wp-content/uploads/2019/07/01-36.png"
+                   class="img-fluid rounded  " alt="..." ><br>
+            </div><br><br>
+            <div class="col-12 text-center mb-3">
+              <h3>Bienvenido al Comité Vecinal</h3>
+            </div>
+            <hr>
+            <div class="col-12">
+              <div class="row">
+                <div class="col-6 justify-content-md-center">
+                  <p>COMVE permite gestionar los distintos comités vecinales que existan dentro de las colonias de cada municipio y atender distintas problemáticas que surjan dentro de estos toso esto para tener una colonia con muy buen control y asi no sean ignoradas cada una de las incidencias que tiene cada localidad.</p>
+                </div>
+                <div class="col-6">
+                  <p>Algunos de los problemas que se le podrá dar solución son: Drenaje, Alumbrado Público, Agua potable, Seguridad, Recolección de Basura, etc.</p>
+                </div><br>
+                <div>
+                  <h5 class="text-center mb-3" > ¡ NO OLVIDES LO IMPORTANTE QUE ES COMUNICAR CUALQUIER INCIDENCIA A EL PRESIDENTE DE COMITE DE TU COLONIA !</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--<script th:src="@{/js/bootstrap.min.js}"></script>-->
+    <!--Ionicons-->
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
+    ></script>
+
+    <script th:src="@{/js/toast.min.js}"></script>
+
+    <script th:if="${msg_success != null}">
+      new Toast({
+        message: "[[${msg_success}]]",
+        type: "success",
+      });
+    </script>
+    <script th:if="${msg_error != null}">
+      new Toast({
+        message: "[[${msg_error}]]",
+        type: "danger",
+      });
+    </script>
+  </body>
+</html>
