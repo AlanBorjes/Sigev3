@@ -1,5 +1,7 @@
 package mx.edu.utez.sigev.security;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +17,9 @@ import javax.sql.DataSource;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    private static final Logger logger = LogManager.getLogger(WebSecurityConfiguration.class);
+
 
     @Autowired
     private DataSource dataSource;
@@ -32,7 +37,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	}
 
     @Override
-    public void configure(HttpSecurity httpSecurity) throws Exception {
+        public void configure(HttpSecurity httpSecurity) throws Exception {
+        try {
         httpSecurity.authorizeRequests().antMatchers(
             "/css/**", "/js/**", "/image/**","/img/**", "/error/**", "/images/**", "imagenes/**", "/docs/**").permitAll()
             .antMatchers("/", "/signup", "/encriptar/**").permitAll()
@@ -44,6 +50,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/president/**").hasAnyAuthority("ROL_PRESIDENTE")
             .anyRequest().authenticated()
             .and().formLogin().successHandler(successHandler).loginPage("/login").permitAll();
+            logger.info("Todo salio bien");
+        } catch (Exception exception) {
+            logger.error("WEBSECURITYCONFIG ERROR: {}", exception.getMessage());
+
+        }
     }
 
     @Bean
