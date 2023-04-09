@@ -46,7 +46,6 @@ public class Users implements Serializable {
 
     @Column(name = "password", nullable = false, length = 255)
     @Size(min = 5, message = "La contraseña debe tener mínimo 5 caracteres")
-    @Size(max = 255, message = "La contraseña debe tener máximo 255 caracteres")
     @NotBlank(message = "La contraseña no puede estar vacía")
     private String password;
 
@@ -65,10 +64,23 @@ public class Users implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date registeredDate;
 
-    @ManyToMany(cascade = CascadeType.MERGE)
+    @ManyToMany()
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user"), inverseJoinColumns = @JoinColumn(name = "role"))
-    @NotNull(message = "Los roles no pueden estar vacíos")
     private Set<Roles> roles;
+
+    public Users(Long id, String name, String lastname, String surname, String username, String phone, String password, int enabled, String email, Date registeredDate, Set<Roles> roles) {
+        this.id = id;
+        this.name = name;
+        this.lastname = lastname;
+        this.surname = surname;
+        this.username = username;
+        this.phone = phone;
+        this.password = password;
+        this.enabled = enabled;
+        this.email = email;
+        this.registeredDate = registeredDate;
+        this.roles = roles;
+    }
 
     public Users() {
         this.enabled = 1;

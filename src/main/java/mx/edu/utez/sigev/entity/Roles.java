@@ -16,8 +16,15 @@ public class Roles implements Serializable {
     @Column(name = "authority", nullable = false, length = 150)
     @Size(min = 2, message = "El rol debe tener mínimo 2 caracteres")
     @Size(max = 150, message = "El rol debe tener máximo 150 caracteres")
-    @NotBlank(message = "El rol no puede estar vacío")
     private String authority;
+
+    public Roles(Long id, String authority) {
+        this.id = id;
+        this.authority = authority;
+    }
+
+    public Roles() {
+    }
 
     public Long getId() {
         return id;
