@@ -1,36 +1,34 @@
-2023-04-09 15:39:47,908 INFO o.h.v.i.u.Version [background-preinit] HV000001: Hibernate Validator 6.2.3.Final
-2023-04-09 15:39:47,935 INFO o.s.b.StartupInfoLogger [restartedMain] Starting SigevApplication using Java 17.0.6 on DESKTOP-NET4NK4 with PID 10320 (C:\Users\alans\Documents\Utez\sigev\target\classes started by alans in C:\Users\alans\Documents\Utez\sigev)
-2023-04-09 15:39:47,938 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
-2023-04-09 15:39:47,975 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2023-04-09 15:39:47,995 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2023-04-09 15:39:48,608 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-04-09 15:39:48,682 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 69 ms. Found 12 JPA repository interfaces.
-2023-04-09 15:39:49,261 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port(s): 8082 (http)
-2023-04-09 15:39:49,268 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8082"]
-2023-04-09 15:39:49,268 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
-2023-04-09 15:39:49,269 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/9.0.62]
-2023-04-09 15:39:49,337 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
-2023-04-09 15:39:49,338 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 1342 ms
-2023-04-09 15:39:49,447 INFO o.h.j.i.u.LogHelper [restartedMain] HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-04-09 15:39:49,484 INFO o.h.Version [restartedMain] HHH000412: Hibernate ORM core version 5.6.8.Final
-2023-04-09 15:39:49,585 INFO o.h.a.c.r.j.JavaReflectionManager [restartedMain] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-2023-04-09 15:39:49,652 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
-2023-04-09 15:39:49,764 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
-2023-04-09 15:39:49,774 INFO o.h.d.Dialect [restartedMain] HHH000400: Using dialect: org.hibernate.dialect.MySQL57Dialect
-2023-04-09 15:39:51,093 INFO o.h.e.t.j.p.i.JtaPlatformInitiator [restartedMain] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-04-09 15:39:51,099 INFO o.s.o.j.AbstractEntityManagerFactoryBean [restartedMain] Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-04-09 15:39:51,495 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2023-04-09 15:39:51,671 INFO m.e.u.s.s.WebSecurityConfiguration [restartedMain] Todo salio bien
-2023-04-09 15:39:51,695 INFO o.s.s.w.DefaultSecurityFilterChain [restartedMain] Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@3f61bb4b, org.springframework.security.web.context.SecurityContextPersistenceFilter@2c013929, org.springframework.security.web.header.HeaderWriterFilter@603732ec, org.springframework.security.web.csrf.CsrfFilter@6e515965, org.springframework.security.web.authentication.logout.LogoutFilter@302f6e33, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@34ab5820, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@4b5c8d7e, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@58771b50, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@4bfe1fc8, org.springframework.security.web.session.SessionManagementFilter@73059445, org.springframework.security.web.access.ExceptionTranslationFilter@78d928ae, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@6f7b940e]
-2023-04-09 15:39:51,850 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
-2023-04-09 15:39:51,983 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
-2023-04-09 15:39:52,002 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8082"]
-2023-04-09 15:39:52,021 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port(s): 8082 (http) with context path ''
-2023-04-09 15:39:52,030 INFO o.s.b.StartupInfoLogger [restartedMain] Started SigevApplication in 4.395 seconds (JVM running for 5.47)
-2023-04-09 15:39:52,032 INFO m.e.u.s.u.Runner [restartedMain] STARTING RUNNER
-2023-04-09 15:39:52,109 INFO m.e.u.s.u.Runner [restartedMain] CREATING ROLES
-2023-04-09 15:39:52,170 INFO m.e.u.s.u.Runner [restartedMain] CREATING ADMIN USER
-2023-04-09 15:39:52,219 INFO m.e.u.s.u.Runner [restartedMain] END RUNNER
-2023-04-09 15:40:11,663 INFO o.a.j.l.DirectJDKLog [http-nio-8082-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-04-09 15:40:11,663 INFO o.s.w.s.FrameworkServlet [http-nio-8082-exec-1] Initializing Servlet 'dispatcherServlet'
-2023-04-09 15:40:11,664 INFO o.s.w.s.FrameworkServlet [http-nio-8082-exec-1] Completed initialization in 1 ms
+2023-04-09 17:30:42,517 INFO o.h.v.i.u.Version [background-preinit] HV000001: Hibernate Validator 6.2.3.Final
+2023-04-09 17:30:42,547 INFO o.s.b.StartupInfoLogger [restartedMain] Starting SigevApplication using Java 17.0.6 on DESKTOP-3VNE2CJ with PID 11472 (C:\Users\HP\Desktop\integradora8\Sigev3\target\classes started by HP in C:\Users\HP\Desktop\integradora8\Sigev3)
+2023-04-09 17:30:42,554 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2023-04-09 17:30:42,604 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-04-09 17:30:42,617 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-04-09 17:30:43,484 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-04-09 17:30:43,614 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 121 ms. Found 12 JPA repository interfaces.
+2023-04-09 17:30:44,604 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port(s): 8082 (http)
+2023-04-09 17:30:44,614 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8082"]
+2023-04-09 17:30:44,614 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2023-04-09 17:30:44,614 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/9.0.62]
+2023-04-09 17:30:44,739 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2023-04-09 17:30:44,739 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 2115 ms
+2023-04-09 17:30:44,985 INFO o.h.j.i.u.LogHelper [restartedMain] HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-04-09 17:30:45,024 INFO o.h.Version [restartedMain] HHH000412: Hibernate ORM core version 5.6.8.Final
+2023-04-09 17:30:45,207 INFO o.h.a.c.r.j.JavaReflectionManager [restartedMain] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-04-09 17:30:45,330 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2023-04-09 17:30:45,504 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2023-04-09 17:30:45,520 INFO o.h.d.Dialect [restartedMain] HHH000400: Using dialect: org.hibernate.dialect.MySQL57Dialect
+2023-04-09 17:30:46,784 INFO o.h.e.t.j.p.i.JtaPlatformInitiator [restartedMain] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-04-09 17:30:46,784 INFO o.s.o.j.AbstractEntityManagerFactoryBean [restartedMain] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-04-09 17:30:47,544 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-04-09 17:30:47,854 INFO m.e.u.s.s.WebSecurityConfiguration [restartedMain] Todo salio bien
+2023-04-09 17:30:47,914 INFO o.s.s.w.DefaultSecurityFilterChain [restartedMain] Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@2267a0f3, org.springframework.security.web.context.SecurityContextPersistenceFilter@1a1d4fe7, org.springframework.security.web.header.HeaderWriterFilter@7fe89c92, org.springframework.security.web.csrf.CsrfFilter@5a771306, org.springframework.security.web.authentication.logout.LogoutFilter@16bcddf, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@58e05c5b, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@aed1336, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@5a09e1bf, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@1c5288af, org.springframework.security.web.session.SessionManagementFilter@294b103, org.springframework.security.web.access.ExceptionTranslationFilter@51d39a86, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@3849b506]
+2023-04-09 17:30:48,185 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2023-04-09 17:30:48,394 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2023-04-09 17:30:48,439 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8082"]
+2023-04-09 17:30:48,470 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port(s): 8082 (http) with context path ''
+2023-04-09 17:30:48,486 INFO o.s.b.StartupInfoLogger [restartedMain] Started SigevApplication in 6.359 seconds (JVM running for 8.083)
+2023-04-09 17:30:48,486 INFO m.e.u.s.u.Runner [restartedMain] STARTING RUNNER
+2023-04-09 17:30:48,614 INFO m.e.u.s.u.Runner [restartedMain] END RUNNER
+2023-04-09 17:30:52,149 INFO o.a.j.l.DirectJDKLog [http-nio-8082-exec-2] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-04-09 17:30:52,149 INFO o.s.w.s.FrameworkServlet [http-nio-8082-exec-2] Initializing Servlet 'dispatcherServlet'
+2023-04-09 17:30:52,149 INFO o.s.w.s.FrameworkServlet [http-nio-8082-exec-2] Completed initialization in 0 ms

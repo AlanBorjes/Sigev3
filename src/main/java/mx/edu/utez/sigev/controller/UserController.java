@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/users")
@@ -44,15 +45,14 @@ public class UserController {
     @Autowired
     private CityService cityService;
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @RequestMapping(value = "/list/enlaces", method = RequestMethod.GET)
     public String findAll(Model model, Pageable pageable, Authentication authentication, HttpSession session) {
         Users user = userService.findByUsername(authentication.getName());
         user.setPassword(null);
         session.setAttribute("user", user);
-        Page<Users> listUsers = userService
-                .listPagination(PageRequest.of(pageable.getPageNumber(), 10, Sort.by("id").ascending()));
+        List<Users> listUsers = userService.findAllByRole(2);
         model.addAttribute("listUsers", listUsers);
-        return "users/list";
+        return "enlace/enlaces";
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)

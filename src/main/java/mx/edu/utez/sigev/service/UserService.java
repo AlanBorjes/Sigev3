@@ -19,6 +19,8 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public List<Users> findAllByRole(long id){return userRepository.findAllByRole(id);}
+
     public Users findById(long id) {
         return userRepository.findById(id);
     }
