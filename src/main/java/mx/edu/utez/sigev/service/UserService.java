@@ -33,10 +33,6 @@ public class UserService {
         return userRepository.findPasswordById(id);
     }
 
-    public  Boolean existByUsername(String username){return  userRepository.existsByUsername(username);}
-
-    public  Boolean existByEmail(String email){return  userRepository.existsByEmail(email);}
-
     public boolean save(Users obj) {
         boolean flag = false;
         Users tmp = userRepository.save(obj);

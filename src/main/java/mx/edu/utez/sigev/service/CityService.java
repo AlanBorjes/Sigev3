@@ -16,8 +16,8 @@ public class CityService {
     @Autowired
     private ICityRepository cityRepository;
 
-    public List<City> findAll(int status) {
-        return cityRepository.findAllByStatus(status);
+    public List<City> findAll() {
+        return cityRepository.findAll();
     }
 
     public List<City> findAllCitiesByStateId(long id) {

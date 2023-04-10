@@ -23,6 +23,10 @@ public class City implements Serializable {
     @Column(name = "status", nullable = false)
     private int status;
 
+    @ManyToOne
+    @JoinColumn(name = "state", nullable = false)
+    @NotNull(message="Este campo no puede estar vacio")
+    private State state;
 
     public City() {
         this.status = 1;
@@ -52,5 +56,12 @@ public class City implements Serializable {
         this.status = status;
     }
 
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    } 
 
 }

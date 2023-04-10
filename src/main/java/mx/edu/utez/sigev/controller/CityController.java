@@ -1,6 +1,5 @@
 package mx.edu.utez.sigev.controller;
 
-import mx.edu.utez.sigev.entity.Category;
 import mx.edu.utez.sigev.entity.City;
 import mx.edu.utez.sigev.security.BlacklistController;
 import mx.edu.utez.sigev.service.CityService;
@@ -17,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
-
 @Controller
 @RequestMapping(value = "/city")
 public class CityController {
@@ -31,9 +28,10 @@ public class CityController {
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String list(Model model, Pageable pageable) {
-        List<City> listCities = cityService.findAll(1);
+        Page<City> listCities = cityService
+                .listarPaginacion(PageRequest.of(pageable.getPageNumber(), 110, Sort.by("id").descending()));
         model.addAttribute("listCities", listCities);
-        return "city/municipios";
+        return "city/list";
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.GET)
@@ -76,6 +74,7 @@ public class CityController {
         if (!BlacklistController.checkBlacklistedWords(city.getName())) {
             City tmp = cityService.findOne(id);
             if (!tmp.equals(null)) {
+                tmp.setState(city.getState());
                 tmp.setName(city.getName());
                 boolean res = cityService.save(tmp);
                 if (res) {
@@ -91,30 +90,6 @@ public class CityController {
             model.addAttribute("msg_error", "Ingresó una o más palabras prohibidas");
         }
         return ("redirect:/city/edit/" + id);
-    }
-
-    @RequestMapping(value = "/desactivate/{id}", method = RequestMethod.GET)
-    public String categoryDesactivate(Model model, RedirectAttributes redirectAttributes, @PathVariable("id") long id,
-                                      City city) {
-        City tmp = cityService.findOne(id);
-        if (!tmp.equals(null)) {
-            if (!BlacklistController.checkBlacklistedWords(tmp.getName())) {
-                tmp.setStatus(0);
-                boolean res = cityService.save(tmp);
-                if (res) {
-                    redirectAttributes.addFlashAttribute("msg_success", "Se inhabilitó el municipio");
-                    return "redirect:/city/list";
-                } else {
-                    redirectAttributes.addFlashAttribute("msg_error",
-                            "Ocurrió un error al actualizar el municipio");
-                }
-            } else {
-                redirectAttributes.addFlashAttribute("msg_error", "Ingresó una o más palabras prohibidas");
-            }
-        } else {
-            redirectAttributes.addFlashAttribute("msg_error", "El municipio solicitado no existe.");
-        }
-        return "redirect:/city/edit/" + id;
     }
 
 }

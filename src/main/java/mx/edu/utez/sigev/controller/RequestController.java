@@ -8,7 +8,6 @@ import mx.edu.utez.sigev.security.BlacklistController;
 import mx.edu.utez.sigev.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -98,8 +97,9 @@ public class RequestController {
         Users user = userService.findByUsername(authentication.getName());
         user.setPassword(null);
         session.setAttribute("user", user);
-        Page<Request> listRequests = requestService.listarPaginacion(PageRequest.of(pageable.getPageNumber(), 4, Sort.by("startDate").descending()));
-        model.addAttribute("listRequests", listRequests);
+        /*Page<Request> listRequests = requestService
+                .listarPaginacion(PageRequest.of(pageable.getPageNumber(), 2, Sort.by("startDate").descending()));*/
+        model.addAttribute("listRequests", requestService.findAllByCityId(linkService.findByUserId(user.getId()).getCity().getId()));
         return "requests/listRequests";
     }
 

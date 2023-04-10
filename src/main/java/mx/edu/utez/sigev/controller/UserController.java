@@ -3,15 +3,12 @@ package mx.edu.utez.sigev.controller;
 import mx.edu.utez.sigev.entity.CityLink;
 import mx.edu.utez.sigev.entity.DataTransferObject.RecoverPasswordDto;
 import mx.edu.utez.sigev.entity.DataTransferObject.UserDto;
-import mx.edu.utez.sigev.entity.RequestAttachment;
 import mx.edu.utez.sigev.entity.Users;
 import mx.edu.utez.sigev.security.BlacklistController;
 import mx.edu.utez.sigev.service.CityLinkService;
 import mx.edu.utez.sigev.service.CityService;
 import mx.edu.utez.sigev.service.RolesService;
 import mx.edu.utez.sigev.service.UserService;
-import mx.edu.utez.sigev.util.FileUtil;
-import mx.edu.utez.sigev.util.ImagenUtileria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,20 +18,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -57,23 +46,13 @@ public class UserController {
     private CityService cityService;
 
     @RequestMapping(value = "/list/enlaces", method = RequestMethod.GET)
-    public String findAllEnlaces(Model model, Authentication authentication, HttpSession session) {
+    public String findAll(Model model, Pageable pageable, Authentication authentication, HttpSession session) {
         Users user = userService.findByUsername(authentication.getName());
         user.setPassword(null);
         session.setAttribute("user", user);
         List<Users> listUsers = userService.findAllByRole(2);
         model.addAttribute("listUsers", listUsers);
         return "enlace/enlaces";
-    }
-
-    @RequestMapping(value = "/list/administradores", method = RequestMethod.GET)
-    public String findAllAdmins(Model model, Authentication authentication, HttpSession session) {
-        Users user = userService.findByUsername(authentication.getName());
-        user.setPassword(null);
-        session.setAttribute("user", user);
-        List<Users> listUsers = userService.findAllByRole(1);
-        model.addAttribute("listUsers", listUsers);
-        return "administrador/administradores";
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
@@ -91,13 +70,8 @@ public class UserController {
 
     @RequestMapping(value = "/create", method = RequestMethod.GET)
     public String create(UserDto userDto, Model modelo) {
-        modelo.addAttribute("listCities", cityService.findAll(1));
+        modelo.addAttribute("listCities", cityService.findAll());
         return "users/create";
-    }
-
-    @RequestMapping(value = "/create/admin", method = RequestMethod.GET)
-    public String createAdmin(UserDto userDto, Users users, Model modelo) {
-        return "administrador/create";
     }
 
     @RequestMapping(value = "/recover/{id}", method = RequestMethod.POST)
@@ -174,54 +148,6 @@ public class UserController {
         }
 
         return "redirect:/users/create";
-    }
-
-    @RequestMapping(value = "/admin/signup", method = RequestMethod.POST)
-    public String adminSignup( @Valid Users users, BindingResult result, @RequestParam("confirmarContraseña") String confirmarContraseña,
-                               Model model, RedirectAttributes redirectAttributes, @RequestParam("profilePicture")  MultipartFile multipartFile) throws IOException {
-        if (result.hasErrors()){
-            return "administrador/create";
-        }else{
-            if (!(BlacklistController.checkBlacklistedWords(users.getName())
-                    || BlacklistController.checkBlacklistedWords(users.getLastname())
-                    || BlacklistController.checkBlacklistedWords(users.getUsername())
-                    || BlacklistController.checkBlacklistedWords(users.getPhone())
-                    || BlacklistController.checkBlacklistedWords(users.getPassword()))) {
-                if (!users.getPassword().equals(confirmarContraseña)) {
-                    result.rejectValue("password", "error.password", "Las contraseñas no coinciden");
-                    return "administrador/create";
-                }else if (userService.existByUsername(users.getUsername())){
-                    result.rejectValue("username", "error.username", "El nombre de usuario ya existe en el sistema");
-                    return "administrador/create";
-                }if (userService.existByEmail(users.getEmail())) {
-                    result.rejectValue("email", "error.email", "El correo ya existe en el sistema");
-                    return "administrador/create";
-                }
-
-                if (!multipartFile.isEmpty()) {
-                    String ruta = "C:/projects/";
-                    String nombreImagen = ImagenUtileria.guardarImagen(multipartFile, ruta);
-                    if (nombreImagen != null) {
-                        users.setProfilePicture(nombreImagen);
-                    }
-                }
-
-                users.setPassword(passwordEncoder.encode(users.getPassword()));
-                users.addRole(rolesService.findByAuthority("ROL_ADMINISTRADOR"));
-
-                boolean res = userService.save(users);
-                if (res) {
-                    redirectAttributes.addFlashAttribute("msg_success","Administrador registrado correctamente");
-                    return "redirect:/users/list/administradores";
-                } else {
-                    redirectAttributes.addFlashAttribute("msg_error", "Ocurrió un error al registrar al Enlace");
-                }
-
-            }else{
-                redirectAttributes.addFlashAttribute("msg_error", "Ingresó una o más palabras prohibidas");
-            }
-        }
-        return "redirect:/users/create/admin";
     }
 
     @RequestMapping(value = "/disable/{id}", method = RequestMethod.GET)
