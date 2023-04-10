@@ -3,6 +3,7 @@ package mx.edu.utez.sigev.entity;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
@@ -42,6 +43,7 @@ public class Users implements Serializable {
     @Column(name = "phone", nullable = false, length = 10)
     @Size(min = 10, max = 10, message = "El teléfono debe tener mínimo 10 caracteres")
     @NotBlank(message = "El teléfono no puede estar vacío")
+    @Pattern(regexp = "\\d+", message = "Este campo solo puede contener números")
     private String phone;
 
     @Column(name = "password", nullable = false, length = 255)
@@ -64,6 +66,9 @@ public class Users implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date registeredDate;
 
+    @Column(name = "profilePicture", nullable = true, unique = true, length = 150)
+    private String profilePicture;
+
     @ManyToMany()
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user"), inverseJoinColumns = @JoinColumn(name = "role"))
     private Set<Roles> roles;
@@ -85,6 +90,21 @@ public class Users implements Serializable {
     public Users() {
         this.enabled = 1;
         this.registeredDate = new Date();
+    }
+
+    public Users(Long id, String name, String lastname, String surname, String username, String phone, String password, int enabled, String email, Date registeredDate, String profilePicture, Set<Roles> roles) {
+        this.id = id;
+        this.name = name;
+        this.lastname = lastname;
+        this.surname = surname;
+        this.username = username;
+        this.phone = phone;
+        this.password = password;
+        this.enabled = enabled;
+        this.email = email;
+        this.registeredDate = registeredDate;
+        this.profilePicture = profilePicture;
+        this.roles = roles;
     }
 
     public Long getId() {
@@ -173,6 +193,14 @@ public class Users implements Serializable {
 
     public void setRoles(Set<Roles> roles) {
         this.roles = roles;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     public void addRole(Roles role) {

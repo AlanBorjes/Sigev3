@@ -6,68 +6,69 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Registrar Municipio</title>
-    <link rel="stylesheet" th:href="@{/css/toast.min.css}" />
-    <!-- <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"> -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
-
-    <style>
-        li {
-            text-decoration: none;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+          integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.13.4/datatables.min.css" rel="stylesheet" />
 </head>
 
 <body>
-    <div th:insert="~{fragments/header :: header}"></div>
-    <div class="container">
-        <div class="card">
-            <div class="card-header">REGISTRAR</div>
-            <div class="card-body">
-                <div class="col d-flex justify-content-between bg-white border-bottom mb-2">
-                    <h5 class="card-title">NUEVO MUNICIPIO</h5>
-                </div>
-                <form th:action="@{/city/save}" method="POST" th:object="${city}">
-                    <div class="col">
-                        <div class="row">
-                            <div class="col-8">
-                                <label class="form-label">Estado</label>
-                                <select class="form-control" th:field="*{state}" required>
-                                    <option th:each="state : ${listStates}" th:value="${state.id}" th:text="${state.name}">
-                                    </option>
-                                </select>
+<div class="d-flex">
+    <div th:insert="~{fragments/sideBar :: sideBar}"></div>
+
+    <div class="w-100">
+        <div th:insert="~{fragments/navBar :: navBar}"></div>
+
+        <!-- contenido de pagina -->
+        <div id="content">
+            <div class="container d-flex align-items-center ">
+                <h1>Municipios</h1>
+                <button class="btn btn-add ms-auto "><a th:href="@{/city/create}">Registrar </a><i class="fa-solid fa-plus "></i></button>
+            </div>
+            <div class="container">
+                <div class="container">
+                    <div class="card">
+                        <div class="card-header">REGISTRAR</div>
+                        <div class="card-body">
+                            <div class="col d-flex justify-content-between bg-white border-bottom mb-2">
+                                <h5 class="card-title">NUEVO MUNICIPIO</h5>
                             </div>
-                            <div class="col-4">
-                                <label class="form-label">Nombre</label>
-                                <input type="text" minlength="2" class="form-control" maxlength="150" placeholder="Nombre" th:field="*{name}" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer mt-3">
-                        <div class="row float-right">
-                            <div class="col float-right">
-                                <a th:href="@{/city/list}" class="btn btn-secondary">
-                                    <ion-icon name="arrow-back-outline"></ion-icon>&nbsp;<span
-                                        class="d-sm-none d-md-none d-lg-inline d-xl-iniline"> Cancelar</span>
-                                </a>
-                                <button id="btnReg" class="btn btn-primary" type="submit">
-                                    <ion-icon name="checkmark"></ion-icon>&nbsp;<span
-                                        class="d-sm-none d-md-none d-lg-inline d-xl-iniline">
+                            <form th:action="@{/city/save}" method="POST" th:object="${city}">
+                                <div class="col">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <label class="form-label">Nombre</label>
+                                            <input type="text" minlength="2" class="form-control" maxlength="150" placeholder="Nombre" th:field="*{name}" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer mt-3">
+                                    <div class="row float-right">
+                                        <div class="col float-right">
+                                            <a th:href="@{/city/list}" class="btn btn-secondary">
+                                                <ion-icon name="arrow-back-outline"></ion-icon>&nbsp;<span
+                                                    class="d-sm-none d-md-none d-lg-inline d-xl-iniline"> Cancelar</span>
+                                            </a>
+                                            <button id="btnReg" class="btn btn-main" type="submit">
+                                                <ion-icon name="checkmark"></ion-icon>&nbsp;<span
+                                                    class="d-sm-none d-md-none d-lg-inline d-xl-iniline">
                                         Guardar
                                     </span>
-                                </button>
-                            </div>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                </form>
-            </div>
+                </div>
         </div>
+
     </div>
-    <!-- <script th:src="@{/js/bootstrap.min.js}"></script> -->
-    <!--Ionicons-->
-    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+</div>
 
     <script th:src="@{/js/toast.min.js}"></script>
 
