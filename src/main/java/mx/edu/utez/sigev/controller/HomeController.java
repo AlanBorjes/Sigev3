@@ -1,12 +1,17 @@
 package mx.edu.utez.sigev.controller;
 
+import mx.edu.utez.sigev.entity.Color;
+import mx.edu.utez.sigev.entity.ContentApp;
 import mx.edu.utez.sigev.entity.Users;
+import mx.edu.utez.sigev.service.ColorService;
+import mx.edu.utez.sigev.service.ContentAppService;
 import mx.edu.utez.sigev.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,6 +28,11 @@ public class HomeController {
     private UserService userService;
 
     @Autowired
+    private ColorService colorService;
+    @Autowired
+    private ContentAppService ContentAppService;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @RequestMapping( value = "/", method = RequestMethod.GET)
@@ -31,7 +41,16 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String showLogin() {
+
+    public String showLogin(Model model) {
+        Color color = colorService.findById(1);
+        ContentApp conten = ContentAppService.findById(1);
+        model.addAttribute("logo1", conten.getLogo1());
+        model.addAttribute("logo2", conten.getLogo2());
+        model.addAttribute("colorFondo", color.getColorMain());
+        model.addAttribute("colorSecundario", color.getColorSecundary());
+        model.addAttribute("color_text", color.getColorText());
+        model.addAttribute("color_title", color.getColorTitle());
         return "login";
     }
 
