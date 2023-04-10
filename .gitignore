@@ -32,3 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 logs/sigev-log4j2.log
+logs/sigev-log4j2.log
