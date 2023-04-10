@@ -13,13 +13,9 @@ public interface IUserRepository extends JpaRepository<Users, Long>, PagingAndSo
 
     Users findByUsername(String username);
 
-    Boolean existsByUsername(String username);
-
-    Boolean existsByEmail(String email);
-
     @Query(value = "SELECT u.password FROM users u WHERE u.id = :id", nativeQuery = true)
     String findPasswordById(@Param("id")long id);
 
-    @Query(value = "select u.id, u.email, u.enabled, u.lastname, u.name, u.password, u.phone, u.registered_date, u.surname, u.username, u.profile_picture from users u inner join user_role r on u.id = r.user where r.role = :id", nativeQuery = true)
+    @Query(value = "select u.id, u.email, u.enabled, u.lastname, u.name, u.password, u.phone, u.registered_date, u.surname, u.username from users u inner join user_role r on u.id = r.user where r.role = :id", nativeQuery = true)
     List<Users> findAllByRole(@Param("id")long id);
 }

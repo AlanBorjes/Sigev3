@@ -116,7 +116,7 @@ public class RequestControllerPresident {
         Users user = usersService.findByUsername(authentication.getName());
         user.setPassword(null);
         session.setAttribute("user", user);
-        model.addAttribute("categoryList", categoryService.findAll(1));
+        model.addAttribute("categoryList", categoryService.findAll());
         return "president-request/create";
     }
 
