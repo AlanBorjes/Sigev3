@@ -54,7 +54,7 @@ public class SuburbController {
         session.setAttribute("user", user);
         model.addAttribute("listCities",
                 cityService
-                        .findAllCitiesByStateId(linkService.findByUserId(user.getId()).getCity().getState().getId()));
+                        .findAllCitiesByStateId(linkService.findByUserId(user.getId()).getCity().getId()));
         return "suburb/create";
     }
 
@@ -89,8 +89,8 @@ public class SuburbController {
             Users user = userService.findByUsername(authentication.getName());
             user.setPassword(null);
             session.setAttribute("user", user);
-            model.addAttribute("listCities",
-                    cityService.findAllCitiesByStateId(linkService.findOne(user.getId()).getCity().getState().getId()));
+            //model.addAttribute("listCities",
+                    //cityService.findAllCitiesByStateId(linkService.findOne(user.getId()).getCity().getState().getId()));
             model.addAttribute("suburb", tmp);
             return "suburb/edit";
         } else {

@@ -8,6 +8,7 @@
   <title>Enlaces</title>
   <link rel="stylesheet" th:href="@{/css/style.css}">
   <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+  <link rel="stylesheet" th:href="@{/css/toast.min.css}" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
     integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -52,7 +53,7 @@
                       src="https://i0.wp.com/tracklist.com.br/wp-content/uploads/2022/08/lana-1.png?fit=1200%2C675&ssl=1"
                       alt="...">
                   </td>
-                  <td th:text="${tmpUser.name}"></td>
+                  <td th:text="${tmpUser.name} + ' ' + ${tmpUser.lastname} + ' ' + ${tmpUser.surname}"></td>
                   <td>Municipio</td>
                   <td th:text="${tmpUser.phone}"></td>
                   <td th:text="${tmpUser.email}"></td>

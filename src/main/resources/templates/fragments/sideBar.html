@@ -11,7 +11,7 @@
         <a th:href="@{/administrador/dashboard}" sec:authorize="hasAnyAuthority('ROL_ADMINISTRADOR')" class="d-block text-white p-3"> <i class="fa-solid fa-gauge"></i> Dashboard</a>
         <a th:href="@{/admin/tema}" sec:authorize="hasAnyAuthority('ROL_ADMINISTRADOR')" class="d-block text-white p-3"><i class="fa-solid fa-brush"></i> Tema y contenido</a>
         <a th:href="@{/users/list/enlaces}" sec:authorize="hasAnyAuthority('ROL_ADMINISTRADOR')" class="d-block text-white p-3"><i class="fa-solid fa-users"></i> Enlaces</a>
-        <a th:href="@{/admin/administradores}" sec:authorize="hasAnyAuthority('ROL_ADMINISTRADOR')" class="d-block text-white p-3"><i class="fa-solid fa-users-gear"></i> Administradores</a>
+        <a th:href="@{/users/list/administradores}" sec:authorize="hasAnyAuthority('ROL_ADMINISTRADOR')" class="d-block text-white p-3"><i class="fa-solid fa-users-gear"></i> Administradores</a>
         <a th:href="@{/category/list}" sec:authorize="hasAnyAuthority('ROL_ADMINISTRADOR')" class="d-block text-white p-3"><i class="fa-solid fa-shapes"></i> Categorías</a>
         <a th:href="@{/city/list}" sec:authorize="hasAnyAuthority('ROL_ADMINISTRADOR')" class="d-block text-white p-3"><img
                 src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Blank_map_of_Morelos.svg/1280px-Blank_map_of_Morelos.svg.png"

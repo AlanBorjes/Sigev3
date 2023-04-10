@@ -51,7 +51,7 @@ public class CommitteeController {
         Users user = userService.findByUsername(authentication.getName());
         user.setPassword(null);
         session.setAttribute("user", user);
-        model.addAttribute("listCities", cityService.findAllCitiesByStateId(linkService.findByUserId(user.getId()).getCity().getState().getId()));
+        //model.addAttribute("listCities", cityService.findAllCitiesByStateId(linkService.findByUserId(user.getId()).getCity().getState().getId()));
         model.addAttribute("listSuburbs", suburbService.findAll());
         model.addAttribute("listStates", stateService.findAll());
         return "committee/create";
