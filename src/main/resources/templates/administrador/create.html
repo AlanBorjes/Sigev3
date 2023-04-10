@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registrar administrador</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/toast.min.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+          integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.13.4/datatables.min.css" rel="stylesheet" />
+</head>
+
+<body>
+
+<div class="d-flex">
+    <div th:insert="~{fragments/sideBar :: sideBar}"></div>
+
+    <div class="w-100">
+        <div th:insert="~{fragments/navBar :: navBar}"></div>
+
+        <!-- contenido de pagina -->
+        <div id="content">
+            <div class="container">
+                <div class="card">
+                    <div class="card-header">REGISTRAR</div>
+                    <div class="card-body">
+                        <div class="col d-flex justify-content-between bg-white border-bottom mb-2">
+                            <h5 class="card-title">NUEVO ADMINISTRADOR</h5>
+                        </div>
+                        <form th:action="@{/users/admin/signup}" method="POST" th:object="${users}" enctype="multipart/form-data">
+                            <div class="col">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <label class="form-label">Nombre(s)</label>
+                                        <input id="name" class="form-control" type="text" minlength="2" maxlength="150"
+                                               placeholder="Nombre(s)" th:field="*{name}" onchange="checkInputs()" required>
+                                        <small class="form-text text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></small>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label">Primer Apellido</label>
+                                        <input id="lastname" class="form-control" type="text" minlength="2" maxlength="150"
+                                               placeholder="Primer Apellido" th:field="*{lastname}" onchange="checkInputs()"
+                                               required>
+                                        <small class="form-text text-danger" th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}"></small>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label">Segundo Apellido</label>
+                                        <input id="surname" class="form-control" type="text" minlength="2" maxlength="150"
+                                               placeholder="Segundo Apellido" th:field="*{surname}" onchange="checkInputs()">
+                                        <small class="form-text text-danger" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></small>
+                                    </div>
+                                    <div class="col-8 mt-3">
+                                        <label class="form-label">Correo electrónico</label>
+                                        <input id="email" class="form-control" type="email"
+                                               placeholder="Correo@Electronico.com" th:field="*{email}" onchange="checkInputs()"
+                                               required>
+                                        <small class="form-text text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+                                    </div>
+                                    <div class="col-4 mt-3">
+                                        <label class="form-label">Imagen de perfil</label>
+                                        <input name="profilePicture" class="form-control" type="file" accept="image/*">
+                                        <small class="form-text text-danger" th:if="${#fields.hasErrors('profilePicture')}" th:errors="*{profilePicture}"></small>
+                                    </div>
+                                    <div class="col-6 mt-3">
+                                        <label class="form-label">Nombre de Usuario</label>
+                                        <input id="username" class="form-control" type="text" minlength="2" maxlength="150"
+                                               placeholder="Nombre de Usuario" th:field="*{username}" onchange="checkInputs()"
+                                               required>
+                                        <small class="form-text text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></small>
+                                    </div>
+                                    <div class="col-6 mt-3">
+                                        <label class="form-label">Teléfono</label>
+                                        <input id="phone" class="form-control" type="text" minlength="10" maxlength="10"
+                                               placeholder="Teléfono" th:field="*{phone}" onchange="checkInputs()" required>
+                                        <small class="form-text text-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></small>
+                                    </div>
+                                    <div class="col-6 mt-3 mb-3">
+                                        <label class="form-label">Contraseña</label>
+                                        <input id="pass1" class="form-control" type="password" minlength="5" maxlength="255"
+                                               placeholder="*****" th:field="*{password}" onchange="checkInputs()" required>
+                                        <small class="form-text text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></small>
+                                    </div>
+                                    <div class="col-6 mt-3 mb-3">
+                                        <label class="form-label">Confirmar Contraseña</label>
+                                        <input id="confirmarContraseña" name="confirmarContraseña" class="form-control" type="password" minlength="5" maxlength="255"
+                                               placeholder="*****"  onchange="checkInputs()" required>
+                                        <small class="form-text text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="row float-right">
+                                    <div class="col float-right">
+                                        <a th:href="@{/users/list}" class="btn btn-secondary">
+                                            <ion-icon name="arrow-back-outline"></ion-icon>&nbsp;<span
+                                                class="d-sm-none d-md-none d-lg-inline d-xl-iniline"> Cancelar</span>
+                                        </a>
+                                        <button id="btnReg"  class="btn btn-main" type="submit">
+                                            <ion-icon name="checkmark"></ion-icon>&nbsp;<span
+                                                class="d-sm-none d-md-none d-lg-inline d-xl-iniline">
+                                        Guardar
+                                    </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    checkInputs = () => {
+        var pass1 = $("#pass1").val();
+        var pass2 = $("#pass2").val();
+        var btn = $("#btnReg");
+        var name = $("#name").val();
+        var lastname = $("#lastname").val();
+        var phone = $("#phone").val();
+        var mail = $("#mail").val();
+        var username = $("#username").val();
+
+        if (name != "" && lastname != "" && phone != "" && mail != "" && pass1 != "" && pass2 != "" && username != "") {
+            if (pass1 !== pass2) {
+                btn.attr('disabled', false);
+                event.preventDefault();
+            } else {
+                btn.attr('disabled', false);
+            }
+        }
+    }
+</script>
+
+    <script th:src="@{/js/toast.min.js}"></script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <script th:if="${msg_success != null}">
+        new Toast({
+            message: "[[${msg_success}]]",
+            type: "success",
+        });
+    </script>
+    <script th:if="${msg_error != null}">
+        new Toast({
+            message: "[[${msg_error}]]",
+            type: "danger",
+        });
+    </script>
+
+</body>
+
+</html>
