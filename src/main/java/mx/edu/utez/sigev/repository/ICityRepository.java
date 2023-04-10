@@ -11,6 +11,8 @@ import java.util.List;
 public interface ICityRepository extends JpaRepository<City, Long> , PagingAndSortingRepository<City, Long> {
     public City findById(long id);
 
+    public  List<City> findAllByStatus(int status);
+
     @Query(value = "SELECT c.* FROM city c WHERE c.state = :id", nativeQuery = true)
     public List<City> findAllCitiesByStateId(@Param("id") long id);
 }

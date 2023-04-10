@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/category")
@@ -28,10 +29,9 @@ public class CategoryController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String listCategories(Model model, RedirectAttributes redirectAttributes, Pageable pageable,
             Authentication authentication, HttpSession session) {
-        Page<Category> listCategory = categoryService
-                .listPagination(PageRequest.of(pageable.getPageNumber(), 10, Sort.by("id").ascending()));
+        List<Category> listCategory = categoryService.findAll(1);
         model.addAttribute("listCategories", listCategory);
-        return "category/list";
+        return "category/categorias";
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.GET)
@@ -76,10 +76,35 @@ public class CategoryController {
         return "redirect:/category/edit/" + id;
     }
 
+    @RequestMapping(value = "/desactivate/{id}", method = RequestMethod.GET)
+    public String categoryDesactivate(Model model, RedirectAttributes redirectAttributes, @PathVariable("id") long id,
+                                 Category category) {
+        Category tmp = categoryService.findById(id);
+        if (!tmp.equals(null)) {
+            if (!BlacklistController.checkBlacklistedWords(tmp.getName())) {
+                tmp.setStatus(0);
+                boolean res = categoryService.save(tmp);
+                if (res) {
+                    redirectAttributes.addFlashAttribute("msg_success", "Se inhabilitó la categoría");
+                    return "redirect:/category/list";
+                } else {
+                    redirectAttributes.addFlashAttribute("msg_error",
+                            "Ocurrió un error al actualizar la categoría");
+                }
+            } else {
+                redirectAttributes.addFlashAttribute("msg_error", "Ingresó una o más palabras prohibidas");
+            }
+        } else {
+            redirectAttributes.addFlashAttribute("msg_error", "La categoría solicitada no existe.");
+        }
+        return "redirect:/category/edit/" + id;
+    }
+
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(Model model, RedirectAttributes redirectAttributes, Category category) {
         if (!categoryService.exists(category.getName())) {
             if (!BlacklistController.checkBlacklistedWords(category.getName())) {
+                category.setStatus(1);
                 boolean res = categoryService.save(category);
                 if (res) {
                     redirectAttributes.addFlashAttribute("msg_success", "Servicio Público registrado exitosamente");

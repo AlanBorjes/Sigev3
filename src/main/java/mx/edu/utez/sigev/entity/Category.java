@@ -1,5 +1,7 @@
 package mx.edu.utez.sigev.entity;
 
+import net.bytebuddy.implementation.bind.annotation.Default;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -18,6 +20,9 @@ public class Category implements Serializable {
         @Size(min = 2, message="El nombre debe ser minimo de 2 caracteres")
         @Size(max = 150, message="El nombre debe ser maximo de 150 caracteres")
         private String name;
+
+        @Column(name = "status", nullable = true)
+        private int status;
     
         public Long getId() {
             return id;
@@ -34,6 +39,13 @@ public class Category implements Serializable {
         public void setName(String name) {
             this.name = name;
         }
-        
+
+    public int getStatus() {
+        return status;
     }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+}
     

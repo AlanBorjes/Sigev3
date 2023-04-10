@@ -19,6 +19,8 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public List<Users> findAllByRole(long id){return userRepository.findAllByRole(id);}
+
     public Users findById(long id) {
         return userRepository.findById(id);
     }
@@ -30,6 +32,10 @@ public class UserService {
     public String findPasswordById(long id) {
         return userRepository.findPasswordById(id);
     }
+
+    public  Boolean existByUsername(String username){return  userRepository.existsByUsername(username);}
+
+    public  Boolean existByEmail(String email){return  userRepository.existsByEmail(email);}
 
     public boolean save(Users obj) {
         boolean flag = false;
