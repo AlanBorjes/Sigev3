@@ -102,6 +102,7 @@ public class RequestControllerPresident {
         Users user = usersService.findByUsername(authentication.getName());
         user.setPassword(null);
         session.setAttribute("user", user);
+        System.out.println(presidentService.findByUser(user.getId()));
         CommitteePresident president = presidentService.findByUser(user.getId());
         Page<Request> listRequests = requestService
                 .listarPaginacion(PageRequest.of(pageable.getPageNumber(), 2, Sort.by("startDate").descending()));
@@ -116,7 +117,7 @@ public class RequestControllerPresident {
         Users user = usersService.findByUsername(authentication.getName());
         user.setPassword(null);
         session.setAttribute("user", user);
-        model.addAttribute("categoryList", categoryService.findAll());
+        model.addAttribute("categoryList", categoryService.findAllByStatus(1));
         return "president-request/create";
     }
 
@@ -130,13 +131,14 @@ public class RequestControllerPresident {
         session.setAttribute("user", user);
         if (!BlacklistController.checkBlacklistedWords(requestDto.getDescription())) {
             Request obj = new Request();
+            System.out.println(obj);
             obj.setCategory(requestDto.getCategory());
             obj.setDescription(requestDto.getDescription());
             obj.setStartDate(new Date());
             obj.setStatus(2);
             obj.setPaymentStatus(1);
             obj.setPresident(presidentService.findByUser(user.getId()));
-            obj.getPresident().getUser().setPassword(usersService.findPasswordById(tmpuser.getId()));
+            //obj.getPresident().getUser().setPassword(usersService.findPasswordById(tmpuser.getId()));
             boolean res1 = requestService.save(obj);
             if (res1) {
                 if (!multipartFile.isEmpty()) {

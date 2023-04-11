@@ -1,12 +1,17 @@
 package mx.edu.utez.sigev.controller;
 
+import mx.edu.utez.sigev.entity.Category;
+import mx.edu.utez.sigev.entity.City;
 import mx.edu.utez.sigev.entity.Users;
+import mx.edu.utez.sigev.service.CategoryService;
+import mx.edu.utez.sigev.service.CityService;
 import mx.edu.utez.sigev.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,12 +20,19 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 public class HomeController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
+    private CityService cityService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -36,12 +48,27 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/administrador/dashboard", method = RequestMethod.GET)
-	public String dashboardAdministrador(Authentication authentication, HttpSession session) {
+	public String dashboardAdministrador(Authentication authentication, HttpSession session, Model model) {
 		if (session.getAttribute("user") == null) {
 			Users user = userService.findByUsername(authentication.getName());
 			user.setPassword(null);
 			session.setAttribute("user", user);
 		}
+
+        List<Users> listEnlaces = userService.findAllByRole(2);
+        listEnlaces = listEnlaces.subList(0, Math.min(listEnlaces.size(), 2));
+        List<Users> listAdmins = userService.findAllByRole(1);
+        listAdmins = listAdmins.subList(0, Math.min(listAdmins.size(), 2));
+        List<Category> listCategories = categoryService.findAll();
+        listCategories = listCategories.subList(0, Math.min(listCategories.size(), 6));
+        List<City> listMunicipios = cityService.findAll();
+        listMunicipios = listMunicipios.subList(0, Math.min(listMunicipios.size(), 4));
+
+        model.addAttribute("enlaces", listEnlaces);
+        model.addAttribute("administradores", listAdmins);
+        model.addAttribute("categorias", listCategories);
+        model.addAttribute("municipios", listMunicipios);
+
 		return "administrador/dashboard";
 	}
 

@@ -23,10 +23,9 @@ public class City implements Serializable {
     @Column(name = "status", nullable = false)
     private int status;
 
-    @ManyToOne
-    @JoinColumn(name = "state", nullable = false)
-    @NotNull(message="Este campo no puede estar vacio")
-    private State state;
+    @Column(name = "shield", nullable = true, length = 150)
+    private String shield;
+
 
     public City() {
         this.status = 1;
@@ -56,12 +55,11 @@ public class City implements Serializable {
         this.status = status;
     }
 
-    public State getState() {
-        return state;
+    public String getShield() {
+        return shield;
     }
 
-    public void setState(State state) {
-        this.state = state;
-    } 
-
+    public void setShield(String shield) {
+        this.shield = shield;
+    }
 }
