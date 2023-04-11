@@ -23,6 +23,9 @@ public class City implements Serializable {
     @Column(name = "status", nullable = false)
     private int status;
 
+    @Column(name = "shield", nullable = true, length = 150)
+    private String shield;
+
 
     public City() {
         this.status = 1;
@@ -52,5 +55,11 @@ public class City implements Serializable {
         this.status = status;
     }
 
+    public String getShield() {
+        return shield;
+    }
 
+    public void setShield(String shield) {
+        this.shield = shield;
+    }
 }

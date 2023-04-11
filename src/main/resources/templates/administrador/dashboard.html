@@ -28,27 +28,19 @@
             <div class="card mb-3 bg-card shadow border-0" style="border-radius: 0%;">
               <div class="card-header border-0 d-flex align-items-center">
                 <h2>Administradores </h2>
-                <h3 class="ms-auto "><i class="fa-solid fa-arrow-right pointer"></i></h3>
+                <h3 class="ms-auto "><a style="color: black" th:href="@{/users/list/administradores}"><i class="fa-solid fa-arrow-right pointer"></i></a></h3>
               </div>
               <div class="card-body mt-2">
-                <div class="d-flex align-items-center mb-4" style="margin-left: 20px;">
+                <div th:each="admin : ${administradores}" class="d-flex align-items-center mb-4" style="margin-left: 20px;">
                   <div class="flex-shrink-0">
                     <img class="imgRedonda"
-                         src="https://i0.wp.com/tracklist.com.br/wp-content/uploads/2022/08/lana-1.png?fit=1200%2C675&ssl=1"
+                         th:if="${admin.profilePicture != null}" th:src="@{/docs/{i} (i = ${admin.profilePicture})}"
                          alt="...">
-                  </div>
-                  <div class="flex-grow-1 ms-3" style="font-size: 22px;">
-                    Nombre del administrador
-                  </div>
-                </div>
-                <div class="d-flex align-items-center mb-4" style="margin-left: 20px;">
-                  <div class="flex-shrink-0">
                     <img class="imgRedonda"
-                         src="https://i0.wp.com/tracklist.com.br/wp-content/uploads/2022/08/lana-1.png?fit=1200%2C675&ssl=1"
+                         th:if="${admin.profilePicture == null}" th:src="@{'https://definicion.de/wp-content/uploads/2019/07/perfil-de-usuario.png'}"
                          alt="...">
                   </div>
-                  <div class="flex-grow-1 ms-3" style="font-size: 22px;">
-                    Nombre del administrador
+                  <div class="flex-grow-1 ms-3" style="font-size: 22px;" th:text="${admin.name} + ' ' + ${admin.lastname} + ' ' + ${admin.surname}">
                   </div>
                 </div>
               </div>
@@ -57,28 +49,20 @@
             <div class="card mb-3 bg-card shadow border-0" style="border-radius: 0%;">
               <div class="card-header border-0 d-flex align-items-center">
                 <h2>Enlaces</h2>
-                <h3 class="ms-auto "><i class="fa-solid fa-arrow-right pointer"></i></h3>
+                <h3 class="ms-auto "><a style="color: black" th:href="@{/users/list/enlaces}"><i  class="fa-solid fa-arrow-right pointer"></i></a></h3>
               </div>
               <div class="card-body ">
-                <div class="d-flex align-items-center mb-4" style="margin-left: 20px;">
+                <div th:each="enlace : ${enlaces}" class="d-flex align-items-center mb-4" style="margin-left: 20px;">
                   <div class="flex-shrink-0">
                     <img class="imgRedonda"
-                         src="https://i0.wp.com/tracklist.com.br/wp-content/uploads/2022/08/lana-1.png?fit=1200%2C675&ssl=1"
+                         th:if="${enlace.profilePicture != null}" th:src="@{/docs/{i} (i = ${enlace.profilePicture})}"
+                         alt="...">
+                    <img class="imgRedonda"
+                         th:if="${enlace.profilePicture == null}" th:src="@{'https://definicion.de/wp-content/uploads/2019/07/perfil-de-usuario.png'}"
                          alt="...">
                   </div>
                   <div class="flex-grow-1 ms-3">
-                    <h5 class="mt-3">Nombre del Enlace</h5>
-                    <p style="margin-top: -7px;">Municipio</p>
-                  </div>
-                </div>
-                <div class="d-flex align-items-center mb-4" style="margin-left: 20px;">
-                  <div class="flex-shrink-0">
-                    <img class="imgRedonda"
-                         src="https://i0.wp.com/tracklist.com.br/wp-content/uploads/2022/08/lana-1.png?fit=1200%2C675&ssl=1"
-                         alt="...">
-                  </div>
-                  <div class="flex-grow-1 ms-3">
-                    <h5 class="mt-3">Nombre del Enlace</h5>
+                    <h5 class="mt-3" th:text="${enlace.name} + ' ' + ${enlace.lastname} + ' ' + ${enlace.surname}"></h5>
                     <p style="margin-top: -7px;">Municipio</p>
                   </div>
                 </div>
@@ -88,18 +72,18 @@
             <div class="card mb-3 bg-card shadow-lg border-0" style="border-radius: 0%;">
               <div class="card-header border-0 d-flex align-items-center">
                 <h2>Categorías</h2>
-                <h3 class="ms-auto "><i class="fa-solid fa-arrow-right pointer"></i></h3>
+                <h3 class="ms-auto "><a style="color: black" th:href="@{/category/list}"><i class="fa-solid fa-arrow-right pointer"></i></a></h3>
               </div>
               <div class="card-body mt-2 ">
-                <div class="d-flex justify-content-around" style="font-size: 20px;">
-                  <p>Categoría</p>
-                  <p>Categoría</p>
-                  <p>Categoría</p>
+                <div class="d-flex justify-content-around"  style="font-size: 20px;">
+                  <p th:each="categoria, iterStat : ${categorias}" th:if="${iterStat.index} lt 3">
+                    <span th:text="${categoria.name}"></span>
+                  </p>
                 </div>
-                <div class="d-flex justify-content-around" style="font-size: 20px;">
-                  <p>Categoría</p>
-                  <p>Categoría</p>
-                  <p>Categoría</p>
+                <div class="d-flex justify-content-around"  style="font-size: 20px;">
+                  <p th:each="categoria, iterStat : ${categorias}" th:if="${iterStat.index} gt 2">
+                    <span th:text="${categoria.name}"></span>
+                  </p>
                 </div>
               </div>
             </div>
@@ -128,46 +112,19 @@
             <div class="card mb-3 bg-card shadow-lg border-0" style="border-radius: 0%;">
               <div class="card-header border-0 d-flex align-items-center">
                 <h2>Municipios</h2>
-                <h3 class="ms-auto "><i class="fa-solid fa-arrow-right pointer"></i></h3>
+                <h3 class="ms-auto "><a style="color: black" th:href="@{/city/list}"><i class="fa-solid fa-arrow-right pointer"></i></a></h3>
               </div>
               <div class="card-body mt-2 ">
-                <div class="d-flex align-items-center mb-4" style="margin-left: 20px;">
+                <div th:each="municipio : ${municipios}" class="d-flex align-items-center mb-4" style="margin-left: 20px;">
                   <div class="flex-shrink-0">
                     <img class="imgMunicipio"
-                         src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Escudo_Emiliano_Zapata.jpg"
+                         th:if="${municipio.shield != null}" th:src="@{/docs/{i} (i = ${municipio.shield})}"
                          alt="...">
-                  </div>
-                  <div class="flex-grow-1 ms-3" style="font-size: 22px;">
-                    Nombre del municipio
-                  </div>
-                </div>
-                <div class="d-flex align-items-center mb-4" style="margin-left: 20px;">
-                  <div class="flex-shrink-0">
                     <img class="imgMunicipio"
-                         src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Escudo_Emiliano_Zapata.jpg"
+                         th:if="${municipio.shield == null}" th:src="@{'https://definicion.de/wp-content/uploads/2019/07/perfil-de-usuario.png'}"
                          alt="...">
                   </div>
-                  <div class="flex-grow-1 ms-3" style="font-size: 22px;">
-                    Nombre del municipio
-                  </div>
-                </div>
-                <div class="d-flex align-items-center mb-4" style="margin-left: 20px;">
-                  <div class="flex-shrink-0">
-                    <img class="imgMunicipio"
-                         src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Escudo_Emiliano_Zapata.jpg"
-                         alt="...">
-                  </div>
-                  <div class="flex-grow-1 ms-3" style="font-size: 22px;">
-                    Nombre del municipio
-                  </div>
-                </div>
-                <div class="d-flex align-items-center mb-4" style="margin-left: 20px;">
-                  <div class="flex-shrink-0">
-                    <img class="imgMunicipio"
-                         src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Escudo_Emiliano_Zapata.jpg"
-                         alt="...">
-                  </div>
-                  <div class="flex-grow-1 ms-3" style="font-size: 22px;">
+                  <div class="flex-grow-1 ms-3" th:text="${municipio.name}" style="font-size: 22px;">
                     Nombre del municipio
                   </div>
                 </div>

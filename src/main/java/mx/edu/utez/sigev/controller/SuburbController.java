@@ -53,8 +53,7 @@ public class SuburbController {
         user.setPassword(null);
         session.setAttribute("user", user);
         model.addAttribute("listCities",
-                cityService
-                        .findAllCitiesByStateId(linkService.findByUserId(user.getId()).getCity().getId()));
+                cityService.findAllByStatus(1));
         return "suburb/create";
     }
 

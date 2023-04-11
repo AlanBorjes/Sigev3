@@ -15,7 +15,11 @@ public class CategoryService {
     @Autowired
     private ICategoryRepository categoryRepository;
 
-    public List<Category> findAll(int status) {
+    public List<Category> findAll() {
+        return categoryRepository.findAll();
+    }
+
+    public List<Category> findAllByStatus(int status) {
         return categoryRepository.findAllByStatus(status);
     }
 

@@ -35,12 +35,17 @@
                             <div class="col d-flex justify-content-between bg-white border-bottom mb-2">
                                 <h5 class="card-title">NUEVO MUNICIPIO</h5>
                             </div>
-                            <form th:action="@{/city/save}" method="POST" th:object="${city}">
+                            <form th:action="@{/city/save}" method="POST" th:object="${city}"  enctype="multipart/form-data">
                                 <div class="col">
                                     <div class="row">
-                                        <div class="col-12">
+                                        <div class="col-8 mt-3">
                                             <label class="form-label">Nombre</label>
                                             <input type="text" minlength="2" class="form-control" maxlength="150" placeholder="Nombre" th:field="*{name}" required>
+                                            <small class="form-text text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></small>
+                                        </div>
+                                        <div class="col-4 mt-3">
+                                            <label class="form-label">Imagen de perfil</label>
+                                            <input id="picture" name="picture" class="form-control" type="file" accept="image/*" required>
                                         </div>
                                     </div>
                                 </div>

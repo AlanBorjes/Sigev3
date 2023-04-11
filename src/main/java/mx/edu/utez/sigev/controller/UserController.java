@@ -10,6 +10,7 @@ import mx.edu.utez.sigev.service.CityLinkService;
 import mx.edu.utez.sigev.service.CityService;
 import mx.edu.utez.sigev.service.RolesService;
 import mx.edu.utez.sigev.service.UserService;
+import mx.edu.utez.sigev.util.DocumentoUtileria;
 import mx.edu.utez.sigev.util.FileUtil;
 import mx.edu.utez.sigev.util.ImagenUtileria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,8 +91,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.GET)
-    public String create(UserDto userDto, Model modelo) {
-        modelo.addAttribute("listCities", cityService.findAll(1));
+    public String create(UserDto userDto,Users users, Model modelo) {
+        modelo.addAttribute("listCities", cityService.findAllByStatus(1));
         return "users/create";
     }
 
@@ -178,7 +179,8 @@ public class UserController {
 
     @RequestMapping(value = "/admin/signup", method = RequestMethod.POST)
     public String adminSignup( @Valid Users users, BindingResult result, @RequestParam("confirmarContraseña") String confirmarContraseña,
-                               Model model, RedirectAttributes redirectAttributes, @RequestParam("profilePicture")  MultipartFile multipartFile) throws IOException {
+                               Model model, RedirectAttributes redirectAttributes, @RequestParam("picture")  MultipartFile file) throws IOException {
+        String contentType = file.getContentType();
         if (result.hasErrors()){
             return "administrador/create";
         }else{
@@ -198,11 +200,11 @@ public class UserController {
                     return "administrador/create";
                 }
 
-                if (!multipartFile.isEmpty()) {
-                    String ruta = "C:/projects/";
-                    String nombreImagen = ImagenUtileria.guardarImagen(multipartFile, ruta);
-                    if (nombreImagen != null) {
-                        users.setProfilePicture(nombreImagen);
+                if (!file.isEmpty()) {
+                    String ruta = "C:/sigev/docs";
+                    String nombre = DocumentoUtileria.guardarDocumento(file, ruta);
+                    if (nombre != null) {
+                        users.setProfilePicture(nombre);
                     }
                 }
 
@@ -222,6 +224,72 @@ public class UserController {
             }
         }
         return "redirect:/users/create/admin";
+    }
+
+    @RequestMapping(value = "/enlace/signup", method = RequestMethod.POST)
+    public String enlaceSignup( @Valid UserDto userDto, BindingResult result, @RequestParam("confirmarContraseña") String confirmarContraseña,
+                               Model model, RedirectAttributes redirectAttributes, @RequestParam("picture")  MultipartFile file) throws IOException {
+        model.addAttribute("listCities", cityService.findAllByStatus(1));
+        Users users = new Users();
+        if (result.hasErrors()){
+            return "users/create";
+        }else{
+            if (!(BlacklistController.checkBlacklistedWords(userDto.getName())
+                    || BlacklistController.checkBlacklistedWords(userDto.getLastname())
+                    || BlacklistController.checkBlacklistedWords(userDto.getUsername())
+                    || BlacklistController.checkBlacklistedWords(userDto.getPhone())
+                    || BlacklistController.checkBlacklistedWords(userDto.getPassword()))) {
+                if (!userDto.getPassword().equals(confirmarContraseña)) {
+                    result.rejectValue("password", "error.password", "Las contraseñas no coinciden");
+                    return "users/create";
+                }else if (userService.existByUsername(userDto.getUsername())){
+                    result.rejectValue("username", "error.username", "El nombre de usuario ya existe en el sistema");
+                    return "users/create";
+                }if (userService.existByEmail(userDto.getEmail())) {
+                    result.rejectValue("email", "error.email", "El correo ya existe en el sistema");
+                    return "users/create";
+                }
+                if (!linkService.hasCityLink(userDto.getCity())) {
+                    Users obj = new Users();
+                    obj.setName(userDto.getName());
+                    obj.setLastname(userDto.getLastname());
+                    obj.setSurname(userDto.getSurname());
+                    obj.setUsername(userDto.getUsername());
+                    obj.setPhone(userDto.getPhone());
+                    obj.setEmail(userDto.getEmail());
+                    obj.setPassword(passwordEncoder.encode(userDto.getPassword()));
+                    obj.addRole(rolesService.findByAuthority("ROL_ENLACE"));
+
+                    if (!file.isEmpty()) {
+                        String ruta = "C:/sigev/docs";
+                        String nombre = DocumentoUtileria.guardarDocumento(file, ruta);
+                        if (nombre != null) {
+                            obj.setProfilePicture(nombre);
+                        }
+                    }
+
+                    boolean res = userService.save(obj);
+
+                    CityLink tmpLink = new CityLink();
+                    tmpLink.setCity(cityService.findOne(userDto.getCity()));
+                    tmpLink.setUser(obj);
+                    boolean res2 = linkService.save(tmpLink);
+                    if (res && res2) {
+                        redirectAttributes.addFlashAttribute("msg_success",
+                                "Enlace registrado correctamente, Ahora puede iniciar sesión con este usuario");
+                        return "redirect:/users/list/enlaces";
+                    } else {
+                        redirectAttributes.addFlashAttribute("msg_error", "Ocurrió un error al registrar al Enlace");
+                    }
+                } else {
+                    redirectAttributes.addFlashAttribute("msg_error", "El municipio ya tiene un enlace asignado");
+                }
+
+            }else{
+                redirectAttributes.addFlashAttribute("msg_error", "Ingresó una o más palabras prohibidas");
+            }
+        }
+        return "redirect:/users/create";
     }
 
     @RequestMapping(value = "/disable/{id}", method = RequestMethod.GET)

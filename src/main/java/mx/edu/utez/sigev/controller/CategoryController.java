@@ -29,7 +29,7 @@ public class CategoryController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String listCategories(Model model, RedirectAttributes redirectAttributes, Pageable pageable,
             Authentication authentication, HttpSession session) {
-        List<Category> listCategory = categoryService.findAll(1);
+        List<Category> listCategory = categoryService.findAll();
         model.addAttribute("listCategories", listCategory);
         return "category/categorias";
     }
@@ -47,7 +47,7 @@ public class CategoryController {
             model.addAttribute("category", tmp);
             return "category/edit";
         } else {
-            redirectAttributes.addFlashAttribute("msg_error", "El Servicio público solicitado no existe.");
+            redirectAttributes.addFlashAttribute("msg_error", "La categoría solicitada no existe.");
             return "redirect:/category/list";
         }
     }
@@ -61,7 +61,7 @@ public class CategoryController {
                 tmp.setName(category.getName());
                 boolean res = categoryService.save(tmp);
                 if (res) {
-                    redirectAttributes.addFlashAttribute("msg_success", "Servicio Público actualizado");
+                    redirectAttributes.addFlashAttribute("msg_success", "Categoría actualizada");
                     return "redirect:/category/list";
                 } else {
                     redirectAttributes.addFlashAttribute("msg_error",
@@ -71,7 +71,7 @@ public class CategoryController {
                 redirectAttributes.addFlashAttribute("msg_error", "Ingresó una o más palabras prohibidas");
             }
         } else {
-            redirectAttributes.addFlashAttribute("msg_error", "El Servicio público solicitado no existe.");
+            redirectAttributes.addFlashAttribute("msg_error", "La categoría solicitada no existe.");
         }
         return "redirect:/category/edit/" + id;
     }
@@ -79,13 +79,20 @@ public class CategoryController {
     @RequestMapping(value = "/desactivate/{id}", method = RequestMethod.GET)
     public String categoryDesactivate(Model model, RedirectAttributes redirectAttributes, @PathVariable("id") long id,
                                  Category category) {
+        String msg;
         Category tmp = categoryService.findById(id);
         if (!tmp.equals(null)) {
             if (!BlacklistController.checkBlacklistedWords(tmp.getName())) {
-                tmp.setStatus(0);
+                if (tmp.getStatus() == 1){
+                    tmp.setStatus(0);
+                    msg = "Se inhabilitó la categoría";
+                }else{
+                    tmp.setStatus(1);
+                    msg = "Se habilitó la categoría";
+                }
                 boolean res = categoryService.save(tmp);
                 if (res) {
-                    redirectAttributes.addFlashAttribute("msg_success", "Se inhabilitó la categoría");
+                    redirectAttributes.addFlashAttribute("msg_success", msg);
                     return "redirect:/category/list";
                 } else {
                     redirectAttributes.addFlashAttribute("msg_error",
@@ -107,16 +114,16 @@ public class CategoryController {
                 category.setStatus(1);
                 boolean res = categoryService.save(category);
                 if (res) {
-                    redirectAttributes.addFlashAttribute("msg_success", "Servicio Público registrado exitosamente");
+                    redirectAttributes.addFlashAttribute("msg_success", "Categoría registrada exitosamente");
                     return "redirect:/category/list";
                 } else {
-                    redirectAttributes.addFlashAttribute("msg_error", "No se pudo registrar el Servicio Público");
+                    redirectAttributes.addFlashAttribute("msg_error", "No se pudo registrar la categoría");
                 }
             } else {
                 redirectAttributes.addFlashAttribute("msg_error", "Ingresó una o más palabras prohibidas");
             }
         } else {
-            redirectAttributes.addFlashAttribute("msg_error", "Este servicio público ya existe");
+            redirectAttributes.addFlashAttribute("msg_error", "Esta categoría ya existe");
         }
         return "redirect:/category/create";
     }

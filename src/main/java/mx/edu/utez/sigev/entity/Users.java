@@ -66,7 +66,7 @@ public class Users implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date registeredDate;
 
-    @Column(name = "profilePicture", nullable = true, unique = true, length = 150)
+    @Column(name = "profilePicture", nullable = true, unique = false, length = 150)
     private String profilePicture;
 
     @ManyToMany()
