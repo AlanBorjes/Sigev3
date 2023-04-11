@@ -43,6 +43,7 @@
                   <th scope="col"></th>
                   <th scope="col"></th>
                   <th scope="col"></th>
+                  <th scope="col"></th>
                 </tr>
               </thead>
               <tbody>
@@ -50,7 +51,7 @@
                   <th th:text="${iter.index + 1}" scope="row"></th>
                   <td>
                     <img class="imgTable"
-                         th:if="${tmpUser.profilePicture != null}" th:src="@{'data:image/png;base64,' + #strings.encodeBase64(tmpUser.profilePicture)}"
+                         th:if="${tmpUser.profilePicture != null}" th:src="@{/docs/{i} (i = ${tmpUser.profilePicture})}"
                       alt="...">
                     <img class="imgTable"
                          th:if="${tmpUser.profilePicture == null}" th:src="@{'https://definicion.de/wp-content/uploads/2019/07/perfil-de-usuario.png'}"
@@ -59,6 +60,7 @@
                   <td th:text="${tmpUser.name} + ' ' + ${tmpUser.lastname} + ' ' + ${tmpUser.surname}"></td>
                   <td th:text="${tmpUser.phone}"></td>
                   <td th:text="${tmpUser.email}"></td>
+                  <td class="text-end"><h6 th:class="${tmpUser.enabled == 1 ? 'text-success' : 'text-danger'}"><i  class="fa-solid fa-circle"></i></h6></td>
                   <td class="text-end">
                     <button type="button" class="btn bg-main btn-circle m-1"><i
                         class="fa-solid fa-power-off"></i></button>

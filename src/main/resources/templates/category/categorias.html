@@ -8,6 +8,7 @@
     <title>Categorías</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/toast.min.css}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
         integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -39,15 +40,17 @@
                                     <th scope="col"></th>
                                     <th scope="col"></th>
                                     <th scope="col"></th>
+                                    <th scope="col"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr th:each="tmpCategory, iter : ${listCategories}">
                                     <th class="text-center" th:text="${iter.index + 1}"></th>
                                     <td class="text-start" th:text="${tmpCategory.name}"></td>
+                                    <td class="text-end"><h6 th:class="${tmpCategory.status == 1 ? 'text-success' : 'text-danger'}"><i  class="fa-solid fa-circle"></i></h6></td>
                                     <td class="text-end">
                                         <button type="button" class="btn bg-main btn-circle m-1"><a th:href="@{/category/desactivate/{id} (id=${tmpCategory.id})}"><i
-                                                class="fa-solid fa-trash"></i></a></button>
+                                                class="fa-solid fa-power-off"></i></a></button>
                                         <button type="button" class="btn bg-main btn-circle m-1"><a th:href="@{/category/edit/{id} (id=${tmpCategory.id})}"><i
                                                 class="fa-solid fa-pen-to-square "></i></a></button>
 
@@ -66,7 +69,20 @@
 
     <script th:src="@{/js/nav.js}"></script>
     <scrip th:src="@{/js/bootstrap.bundle.min.js}"></scrip>
+    <script th:src="@{/js/toast.min.js}"></script>
     <script src="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.13.4/datatables.min.js"></script>
+    <script th:if="${msg_success != null}">
+        new Toast({
+            message: "[[${msg_success}]]",
+            type: "success",
+        });
+    </script>
+    <script th:if="${msg_error != null}">
+        new Toast({
+            message: "[[${msg_error}]]",
+            type: "danger",
+        });
+    </script>
     <script>
         $(document).ready(function () {
             $('#categoriasTable').DataTable();

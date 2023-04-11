@@ -19,6 +19,11 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
 
+    public List<Category> findAllByStatus(int status) {
+        return categoryRepository.findAllByStatus(status);
+    }
+
+
     public Category findById(long id) {
         return categoryRepository.getById(id);
     }
