@@ -12,6 +12,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
           integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
           crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        :root {
+            --main: [[${color.colorMain}]];
+            --secondary: [[${color.colorSecundary}]];
+            --textMain: [[${color.colorText}]];
+            --textSecondary: [[${color.colorTitle}]];
+        }
+    </style>
 </head>
 
 <body>
@@ -36,7 +44,7 @@
                             <div class="col">
                                 <div class="row">
                                     <div class="col">
-                                        <label class="form-label">Nombre</label>
+                                        <label class="form-label">Nombre <span class="text-danger">*</span></label>
                                         <input type="text" minlength="2" class="form-control" maxlength="150" placeholder="Nombre" th:field="*{name}" required>
                                     </div>
                                 </div>

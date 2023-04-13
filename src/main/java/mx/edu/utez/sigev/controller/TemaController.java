@@ -4,9 +4,11 @@ import mx.edu.utez.sigev.entity.CityLink;
 import mx.edu.utez.sigev.entity.Color;
 import mx.edu.utez.sigev.entity.DataTransferObject.RecoverPasswordDto;
 import mx.edu.utez.sigev.entity.DataTransferObject.UserUpdateDTO;
+import mx.edu.utez.sigev.entity.Images;
 import mx.edu.utez.sigev.entity.Users;
 import mx.edu.utez.sigev.security.BlacklistController;
 import mx.edu.utez.sigev.service.ColorService;
+import mx.edu.utez.sigev.service.ImagesService;
 import mx.edu.utez.sigev.service.UserService;
 import mx.edu.utez.sigev.util.DocumentoUtileria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +38,20 @@ public class TemaController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    ImagesService imagesService;
+
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String findAllEnlaces(Model model, Authentication authentication, HttpSession session) {
         Color color = colorService.findColors(1);
+        Images image = imagesService.findImages(1);
         Users user = userService.findByUsername(authentication.getName());
         user.setPassword(null);
         session.setAttribute("user", user);
+        model.addAttribute("userLog", user);
         model.addAttribute("color", color);
+        model.addAttribute("image", image);
         return "administrador/tema";
     }
 
@@ -66,6 +75,93 @@ public class TemaController {
             return "redirect:/tema/";
         } else {
             redirectAttributes.addFlashAttribute("msg_error", "Ocurrió un problema al modificar los colores");
+        }
+
+        return ("redirect:/tema/");
+    }
+
+    @RequestMapping(value = "/update/logo1", method = RequestMethod.POST)
+    public String updateLogo1(Model model,RedirectAttributes redirectAttributes, Authentication authentication,
+                              HttpSession session, @RequestParam("logo1")  MultipartFile file) throws IOException{
+        Images tmp = imagesService.findImages(1);
+
+        if (!file.isEmpty()) {
+            String ruta = "C:/sigev/docs";
+            String nombre = DocumentoUtileria.guardarDocumento(file, ruta);
+            if (nombre != null) {
+                tmp.setLogo1(nombre);
+            }
+        }
+
+        Users user = userService.findByUsername(authentication.getName());
+        session.setAttribute("user", user);
+
+        boolean res;
+        res = imagesService.save(tmp);
+
+        if (res) {
+            redirectAttributes.addFlashAttribute("msg_success", "Se modificó el logo correctamente");
+            return "redirect:/tema/";
+        } else {
+            redirectAttributes.addFlashAttribute("msg_error", "Ocurrió un problema al modificar el logo");
+        }
+
+        return ("redirect:/tema/");
+    }
+
+    @RequestMapping(value = "/update/logo2", method = RequestMethod.POST)
+    public String updateLogo2(Model model,RedirectAttributes redirectAttributes, Authentication authentication,
+                              HttpSession session, @RequestParam("logo2")  MultipartFile file) throws IOException{
+        Images tmp = imagesService.findImages(1);
+
+        if (!file.isEmpty()) {
+            String ruta = "C:/sigev/docs";
+            String nombre = DocumentoUtileria.guardarDocumento(file, ruta);
+            if (nombre != null) {
+                tmp.setLogo2(nombre);
+            }
+        }
+
+        Users user = userService.findByUsername(authentication.getName());
+        session.setAttribute("user", user);
+
+        boolean res;
+        res = imagesService.save(tmp);
+
+        if (res) {
+            redirectAttributes.addFlashAttribute("msg_success", "Se modificó el logo correctamente");
+            return "redirect:/tema/";
+        } else {
+            redirectAttributes.addFlashAttribute("msg_error", "Ocurrió un problema al modificar el logo");
+        }
+
+        return ("redirect:/tema/");
+    }
+
+    @RequestMapping(value = "/update/imgLogin", method = RequestMethod.POST)
+    public String updateimgLogin(Model model,RedirectAttributes redirectAttributes, Authentication authentication,
+                              HttpSession session, @RequestParam("imgLogin")  MultipartFile file) throws IOException{
+        Images tmp = imagesService.findImages(1);
+
+        if (!file.isEmpty()) {
+            String ruta = "C:/sigev/docs";
+            String nombre = DocumentoUtileria.guardarDocumento(file, ruta);
+            if (nombre != null) {
+                tmp.setLogin(nombre);
+            }
+        }
+
+        Users user = userService.findByUsername(authentication.getName());
+        session.setAttribute("user", user);
+
+        boolean res;
+        res = imagesService.save(tmp);
+
+        if (res) {
+            redirectAttributes.addFlashAttribute("msg_success", "Se modificó la imagen correctamente");
+            return "redirect:/tema/";
+        } else {
+            redirectAttributes.addFlashAttribute("msg_error", "Ocurrió un problema al modificar la imagen");
         }
 
         return ("redirect:/tema/");

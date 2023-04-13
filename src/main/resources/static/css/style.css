@@ -9,13 +9,13 @@ body{
 }
 
 .menu a{
-    color: var(--textSecondary);
+    color: var(--textSecondary)!important;
 }
 
 /*estilod generales */
 
 .btn-add{
-    background-color: var(--secondary);
+    background-color: var(--secondary) !important;
     color: var(--textSecondary) !important;
 }
 
@@ -126,8 +126,7 @@ a{
 }
 
 .secondaryColor{
-    background-color: var(--secondary + "73");
-    opacity: 0.5;
+    background-color: var(--secondary);
 }
 
 #content{
@@ -143,6 +142,7 @@ a{
 }
 
 .menu a:hover{
+    text-decoration: none !important;
     background-color: var(--secondary) !important;
 }
 

@@ -12,6 +12,15 @@
           integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
           crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.13.4/datatables.min.css" rel="stylesheet" />
+
+    <style>
+        :root {
+            --main: [[${color.colorMain}]];
+            --secondary: [[${color.colorSecundary}]];
+            --textMain: [[${color.colorText}]];
+            --textSecondary: [[${color.colorTitle}]];
+        }
+    </style>
 </head>
 
 <body>
@@ -34,7 +43,7 @@
                             <div class="col">
                                 <div class="row">
                                     <div class="col-12">
-                                        <label class="form-label">Nombre</label>
+                                        <label class="form-label">Nombre <span class="text-danger">*</span></label>
                                         <input type="text" minlength="2" class="form-control" maxlength="150" placeholder="Nombre" th:field="*{name}" required>
                                     </div>
                                 </div>

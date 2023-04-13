@@ -1,17 +1,11 @@
 package mx.edu.utez.sigev.controller;
 
-import mx.edu.utez.sigev.entity.City;
-import mx.edu.utez.sigev.entity.CityLink;
+import mx.edu.utez.sigev.entity.*;
 import mx.edu.utez.sigev.entity.DataTransferObject.RecoverPasswordDto;
 import mx.edu.utez.sigev.entity.DataTransferObject.UserDto;
 import mx.edu.utez.sigev.entity.DataTransferObject.UserUpdateDTO;
-import mx.edu.utez.sigev.entity.RequestAttachment;
-import mx.edu.utez.sigev.entity.Users;
 import mx.edu.utez.sigev.security.BlacklistController;
-import mx.edu.utez.sigev.service.CityLinkService;
-import mx.edu.utez.sigev.service.CityService;
-import mx.edu.utez.sigev.service.RolesService;
-import mx.edu.utez.sigev.service.UserService;
+import mx.edu.utez.sigev.service.*;
 import mx.edu.utez.sigev.util.DocumentoUtileria;
 import mx.edu.utez.sigev.util.FileUtil;
 import mx.edu.utez.sigev.util.ImagenUtileria;
@@ -60,31 +54,46 @@ public class UserController {
     @Autowired
     private CityService cityService;
 
+    @Autowired
+    private ImagesService imagesService;
+
+    @Autowired
+    private  ColorService colorService;
+
     @RequestMapping(value = "/list/enlaces", method = RequestMethod.GET)
     public String findAllEnlaces(Model model, Authentication authentication, HttpSession session) {
         Users user = userService.findByUsername(authentication.getName());
+        Images image = imagesService.findImages(1);
+        Color color = colorService.findColors(1);
         user.setPassword(null);
         session.setAttribute("user", user);
         List<CityLink> listUsers = linkService.findAll();
-        System.out.println(listUsers.get(0).getUser().getName());
-        //List<Users> listUsers = userService.findAllByRole(2);
+        model.addAttribute("userLog", user);
         model.addAttribute("listUsers", listUsers);
+        model.addAttribute("image", image);
+        model.addAttribute("color", color);
         return "enlace/enlaces";
     }
 
     @RequestMapping(value = "/list/administradores", method = RequestMethod.GET)
     public String findAllAdmins(Model model, Authentication authentication, HttpSession session) {
         Users user = userService.findByUsername(authentication.getName());
+        Images image = imagesService.findImages(1);
+        Color color = colorService.findColors(1);
         user.setPassword(null);
         session.setAttribute("user", user);
         List<Users> listUsers = userService.findAllByRole(1);
+        model.addAttribute("userLog", user);
+        model.addAttribute("image", image);
+        model.addAttribute("color", color);
         model.addAttribute("listUsers", listUsers);
         return "administrador/administradores";
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String findOne(Model model, @PathVariable("id") long id, RedirectAttributes redirectAttributes,
-            RecoverPasswordDto recoverPasswordDto) {
+            RecoverPasswordDto recoverPasswordDto, Authentication authentication) {
+        Users userTmp = userService.findByUsername(authentication.getName());
         UserUpdateDTO userDto = new UserUpdateDTO();
         Users user = userService.findById(id);
         userDto.setName(user.getName());
@@ -92,6 +101,12 @@ public class UserController {
         userDto.setSurname(user.getSurname());
         userDto.setPhone(user.getPhone());
         if (!user.equals(null)) {
+            Images image = imagesService.findImages(1);
+            Color color = colorService.findColors(1);
+            model.addAttribute("userLog", userTmp);
+            model.addAttribute("image", image);
+            model.addAttribute("color", color);
+            model.addAttribute("user", user);
             model.addAttribute("userDto", userDto);
             model.addAttribute("user", user);
             return "/users/edit";
@@ -103,10 +118,16 @@ public class UserController {
 
     @RequestMapping(value = "/edit/password/{id}", method = RequestMethod.GET)
     public String editPassword(Model model, @PathVariable("id") long id, RedirectAttributes redirectAttributes,
-                          RecoverPasswordDto recoverPasswordDto) {
+                          RecoverPasswordDto recoverPasswordDto, Authentication authentication) {
+        Users userTmp = userService.findByUsername(authentication.getName());
         Users user = userService.findById(id);
         if (!user.equals(null)) {
+            Images image = imagesService.findImages(1);
+            Color color = colorService.findColors(1);
+            model.addAttribute("image", image);
+            model.addAttribute("color", color);
             model.addAttribute("user", user);
+            model.addAttribute("userLog", userTmp);
             return "/users/editPassword";
         } else {
             redirectAttributes.addFlashAttribute("msg_error", "No se encontró el usuario solicitado");
@@ -115,13 +136,25 @@ public class UserController {
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.GET)
-    public String create(UserDto userDto,Users users, Model modelo) {
+    public String create(UserDto userDto,Users users, Model modelo, Authentication authentication) {
+        Users userTmp = userService.findByUsername(authentication.getName());
+        Images image = imagesService.findImages(1);
+        Color color = colorService.findColors(1);
+        modelo.addAttribute("userLog", userTmp);
+        modelo.addAttribute("image", image);
+        modelo.addAttribute("color", color);
         modelo.addAttribute("listCities", cityService.findAllByStatus(1));
         return "users/create";
     }
 
     @RequestMapping(value = "/create/admin", method = RequestMethod.GET)
-    public String createAdmin(UserDto userDto, Users users, Model modelo) {
+    public String createAdmin(UserDto userDto, Users users, Model modelo, Authentication authentication) {
+        Users userTmp = userService.findByUsername(authentication.getName());
+        Images image = imagesService.findImages(1);
+        Color color = colorService.findColors(1);
+        modelo.addAttribute("userLog", userTmp);
+        modelo.addAttribute("image", image);
+        modelo.addAttribute("color", color);
         return "administrador/create";
     }
 
@@ -129,15 +162,21 @@ public class UserController {
     public String recoverPassword(@Valid RecoverPasswordDto recoverPasswordDto, BindingResult result, Model model,
             RedirectAttributes redirectAttributes, @PathVariable("id") long id, @RequestParam("confirmarContraseña") String confirmarContraseña,
             Authentication authentication, HttpSession session) {
+        Users user = userService.findByUsername(authentication.getName());
         if (!BlacklistController.checkBlacklistedWords(recoverPasswordDto.getPassword())) {
             Users tmpUser = userService.findById(id);
             if (!(recoverPasswordDto.getPassword().equals(confirmarContraseña))){
+                Images image = imagesService.findImages(1);
+                Color color = colorService.findColors(1);
+                model.addAttribute("image", image);
+                model.addAttribute("color", color);
                 result.rejectValue("password", "error.password", "Las contraseñas no coinciden");
                 model.addAttribute("user", tmpUser);
+                model.addAttribute("userLog", user);
                 return "users/editPassword";
             }
             boolean res;
-            Users user = userService.findByUsername(authentication.getName());
+
             user.setPassword(null);
             session.setAttribute("user", user);
             user.setPassword(userService.findPasswordById(id));
@@ -170,6 +209,9 @@ public class UserController {
     public String updateUser(Users users, @Valid UserUpdateDTO userDto, BindingResult results, RecoverPasswordDto recoverPasswordDto, Model model,
                              RedirectAttributes redirectAttributes, @PathVariable("id") long id,
                              Authentication authentication, HttpSession session, @RequestParam("picture")  MultipartFile file) throws IOException{
+        Users user = userService.findByUsername(authentication.getName());
+        Images image = imagesService.findImages(1);
+        Color color = colorService.findColors(1);
         boolean res;
 
         if (!(BlacklistController.checkBlacklistedWords(users.getName())
@@ -177,7 +219,6 @@ public class UserController {
                 || BlacklistController.checkBlacklistedWords(users.getSurname())
                 || BlacklistController.checkBlacklistedWords(users.getPhone()))) {
 
-            Users user = userService.findByUsername(authentication.getName());
             Users tmp = userService.findById(id);
             tmp.setName(userDto.getName());
             tmp.setLastname(userDto.getLastname());
@@ -189,6 +230,9 @@ public class UserController {
                 model.addAttribute("bindingResult", results);
                 model.addAttribute("user", tmp);
                 model.addAttribute("userDto", userDto);
+                model.addAttribute("image", image);
+                model.addAttribute("color", color);
+                model.addAttribute("userLog", user);
                 return "users/edit";
             }else{
 
@@ -259,9 +303,15 @@ public class UserController {
 
     @RequestMapping(value = "/admin/signup", method = RequestMethod.POST)
     public String adminSignup( @Valid Users users, BindingResult result, @RequestParam("confirmarContraseña") String confirmarContraseña,
-                               Model model, RedirectAttributes redirectAttributes, @RequestParam("picture")  MultipartFile file) throws IOException {
+                               Model model, Authentication authentication, RedirectAttributes redirectAttributes, @RequestParam("picture")  MultipartFile file) throws IOException {
         String contentType = file.getContentType();
+        Images image = imagesService.findImages(1);
+        Color color = colorService.findColors(1);
+        Users user = userService.findByUsername(authentication.getName());
         if (result.hasErrors()){
+            model.addAttribute("image", image);
+            model.addAttribute("color", color);
+            model.addAttribute("userLog", user);
             return "administrador/create";
         }else{
             if (!(BlacklistController.checkBlacklistedWords(users.getName())
@@ -271,12 +321,21 @@ public class UserController {
                     || BlacklistController.checkBlacklistedWords(users.getPassword()))) {
                 if (!users.getPassword().equals(confirmarContraseña)) {
                     result.rejectValue("password", "error.password", "Las contraseñas no coinciden");
+                    model.addAttribute("image", image);
+                    model.addAttribute("color", color);
+                    model.addAttribute("userLog", user);
                     return "administrador/create";
                 }else if (userService.existByUsername(users.getUsername())){
                     result.rejectValue("username", "error.username", "El nombre de usuario ya existe en el sistema");
+                    model.addAttribute("image", image);
+                    model.addAttribute("color", color);
+                    model.addAttribute("userLog", user);
                     return "administrador/create";
                 }if (userService.existByEmail(users.getEmail())) {
                     result.rejectValue("email", "error.email", "El correo ya existe en el sistema");
+                    model.addAttribute("image", image);
+                    model.addAttribute("color", color);
+                    model.addAttribute("userLog", user);
                     return "administrador/create";
                 }
 
@@ -308,10 +367,16 @@ public class UserController {
 
     @RequestMapping(value = "/enlace/signup", method = RequestMethod.POST)
     public String enlaceSignup( @Valid UserDto userDto, BindingResult result, @RequestParam("confirmarContraseña") String confirmarContraseña,
-                               Model model, RedirectAttributes redirectAttributes, @RequestParam("picture")  MultipartFile file) throws IOException {
+                               Model model, Authentication authentication, RedirectAttributes redirectAttributes, @RequestParam("picture")  MultipartFile file) throws IOException {
         model.addAttribute("listCities", cityService.findAllByStatus(1));
+        Images image = imagesService.findImages(1);
+        Color color = colorService.findColors(1);
+        Users user = userService.findByUsername(authentication.getName());
         Users users = new Users();
         if (result.hasErrors()){
+            model.addAttribute("image", image);
+            model.addAttribute("color", color);
+            model.addAttribute("userLog", user);
             return "users/create";
         }else{
             if (!(BlacklistController.checkBlacklistedWords(userDto.getName())
@@ -321,12 +386,21 @@ public class UserController {
                     || BlacklistController.checkBlacklistedWords(userDto.getPassword()))) {
                 if (!userDto.getPassword().equals(confirmarContraseña)) {
                     result.rejectValue("password", "error.password", "Las contraseñas no coinciden");
+                    model.addAttribute("image", image);
+                    model.addAttribute("color", color);
+                    model.addAttribute("userLog", user);
                     return "users/create";
                 }else if (userService.existByUsername(userDto.getUsername())){
                     result.rejectValue("username", "error.username", "El nombre de usuario ya existe en el sistema");
+                    model.addAttribute("image", image);
+                    model.addAttribute("color", color);
+                    model.addAttribute("userLog", user);
                     return "users/create";
                 }if (userService.existByEmail(userDto.getEmail())) {
                     result.rejectValue("email", "error.email", "El correo ya existe en el sistema");
+                    model.addAttribute("image", image);
+                    model.addAttribute("color", color);
+                    model.addAttribute("userLog", user);
                     return "users/create";
                 }
                 if (!linkService.hasCityLink(userDto.getCity())) {

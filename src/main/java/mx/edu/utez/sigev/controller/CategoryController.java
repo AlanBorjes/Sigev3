@@ -1,8 +1,14 @@
 package mx.edu.utez.sigev.controller;
 
 import mx.edu.utez.sigev.entity.Category;
+import mx.edu.utez.sigev.entity.Color;
+import mx.edu.utez.sigev.entity.Images;
+import mx.edu.utez.sigev.entity.Users;
 import mx.edu.utez.sigev.security.BlacklistController;
 import mx.edu.utez.sigev.service.CategoryService;
+import mx.edu.utez.sigev.service.ColorService;
+import mx.edu.utez.sigev.service.ImagesService;
+import mx.edu.utez.sigev.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,24 +32,51 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private ColorService colorService;
+
+    @Autowired
+    private ImagesService imagesService;
+
+    @Autowired
+    private UserService userService;
+
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String listCategories(Model model, RedirectAttributes redirectAttributes, Pageable pageable,
             Authentication authentication, HttpSession session) {
+        Users user = userService.findByUsername(authentication.getName());
+        Images image = imagesService.findImages(1);
+        Color color = colorService.findColors(1);
         List<Category> listCategory = categoryService.findAll();
+        model.addAttribute("userLog", user);
+        model.addAttribute("image", image);
+        model.addAttribute("color", color);
         model.addAttribute("listCategories", listCategory);
         return "category/categorias";
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.GET)
-    public String createCategory(Model model, RedirectAttributes redirectAttributes, Category category) {
+    public String createCategory(Model model, RedirectAttributes redirectAttributes, Category category, Authentication authentication) {
+        Users user = userService.findByUsername(authentication.getName());
+        model.addAttribute("userLog", user);
+        Images image = imagesService.findImages(1);
+        Color color = colorService.findColors(1);
+        model.addAttribute("image", image);
+        model.addAttribute("color", color);
         return "category/create";
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String categoryEdit(Model model, RedirectAttributes redirectAttributes, @PathVariable("id") long id,
-            Category category) {
+            Category category, Authentication authentication) {
+        Users user = userService.findByUsername(authentication.getName());
         Category tmp = categoryService.findById(id);
         if (!tmp.equals(null)) {
+            Images image = imagesService.findImages(1);
+            Color color = colorService.findColors(1);
+            model.addAttribute("userLog", user);
+            model.addAttribute("image", image);
+            model.addAttribute("color", color);
             model.addAttribute("category", tmp);
             return "category/edit";
         } else {
