@@ -12,6 +12,14 @@
           integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
           crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.13.4/datatables.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --main: [[${color.colorMain}]];
+            --secondary: [[${color.colorSecundary}]];
+            --textMain: [[${color.colorText}]];
+            --textSecondary: [[${color.colorTitle}]];
+        }
+    </style>
 </head>
 
 <body>
@@ -23,10 +31,6 @@
 
         <!-- contenido de pagina -->
         <div id="content">
-            <div class="container d-flex align-items-center ">
-                <h1>Municipios</h1>
-                <button class="btn btn-add ms-auto "><a th:href="@{/city/create}">Registrar </a><i class="fa-solid fa-plus "></i></button>
-            </div>
             <div class="container">
                 <div class="container">
                     <div class="card">
@@ -39,12 +43,12 @@
                                 <div class="col">
                                     <div class="row">
                                         <div class="col-8 mt-3">
-                                            <label class="form-label">Nombre</label>
+                                            <label class="form-label">Nombre <span class="text-danger">*</span></label>
                                             <input type="text" minlength="2" class="form-control" maxlength="150" placeholder="Nombre" th:field="*{name}" required>
                                             <small class="form-text text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></small>
                                         </div>
                                         <div class="col-4 mt-3">
-                                            <label class="form-label">Imagen de perfil</label>
+                                            <label class="form-label">Imagen de perfil <span class="text-danger">*</span></label>
                                             <input id="picture" name="picture" class="form-control" type="file" accept="image/*" required>
                                         </div>
                                     </div>

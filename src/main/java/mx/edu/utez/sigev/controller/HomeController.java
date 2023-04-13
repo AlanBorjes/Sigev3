@@ -39,6 +39,9 @@ public class HomeController {
     @Autowired
     private ColorService colorService;
 
+    @Autowired
+    private ImagesService imagesService;
+
 
 
 
@@ -54,8 +57,8 @@ public class HomeController {
 
     @RequestMapping(value = "/administrador/dashboard", method = RequestMethod.GET)
 	public String dashboardAdministrador(Authentication authentication, HttpSession session, Model model) {
+        Users user = userService.findByUsername(authentication.getName());
 		if (session.getAttribute("user") == null) {
-			Users user = userService.findByUsername(authentication.getName());
 			user.setPassword(null);
 			session.setAttribute("user", user);
 		}
@@ -70,7 +73,10 @@ public class HomeController {
         listMunicipios = listMunicipios.subList(0, Math.min(listMunicipios.size(), 4));
 
         Color color = colorService.findColors(1);
+        Images image = imagesService.findImages(1);
+        model.addAttribute("userLog", user);
         model.addAttribute("color", color);
+        model.addAttribute("image", image);
         model.addAttribute("enlaces", listEnlaces);
         model.addAttribute("administradores", listAdmins);
         model.addAttribute("categorias", listCategories);

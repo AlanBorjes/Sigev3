@@ -42,15 +42,13 @@
                             <div class="card mb-3 bg-card shadow border-0 " style="border-radius: 0%;">
                                 <div class="card-header border-0 d-flex ">
                                     <h2>Imagen login</h2>
-                                    <form class="text-end ms-auto">
+                                    <form class="text-end ms-auto" th:action="@{/tema/update/imgLogin}" method="POST" enctype="multipart/form-data">
                                         <button type="submit" class="btn btn-main text-end">Guardar</button>
-                                    </form>
                                 </div>
                                 <div class="card-body mt-2">
                                     <div class="container">
-                                        <form action="">
                                             <div class="mb-3">
-                                                <input class="form-control" type="file" id="formFile">
+                                                <input name="imgLogin" class="form-control" required type="file">
                                             </div>
                                         </form>
                                     </div>
@@ -84,15 +82,14 @@
                             <div class="card mb-3 bg-card shadow border-0" style="border-radius: 0%;">
                                 <div class="card-header border-0 d-flex ">
                                     <h2>Logo 1</h2>
-                                    <form class="text-end ms-auto">
-                                        <button type="submit" class="btn btn-main text-end">Guardar</button>
-                                    </form>
+                                    <form th:action="@{/tema/update/logo1}" method="POST" class="text-end ms-auto" enctype="multipart/form-data">
+                                        <button  type="submit" class="btn btn-main text-end">Guardar</button>
+
                                 </div>
                                 <div class="card-body mt-2">
                                     <div class="container">
-                                        <form action="">
                                             <div class="mb-3">
-                                                <input class="form-control" type="file" id="formFile">
+                                                <input required name="logo1" class="form-control" type="file" accept="image/*">
                                             </div>
                                         </form>
                                     </div>
@@ -101,15 +98,13 @@
                             <div class="card mb-3 bg-card shadow border-0" style="border-radius: 0%;">
                                 <div class="card-header border-0 d-flex ">
                                     <h2>Logo 2</h2>
-                                    <form class="text-end ms-auto">
+                                    <form class="text-end ms-auto" th:action="@{/tema/update/logo2}" method="POST" enctype="multipart/form-data">
                                         <button type="submit" class="btn btn-main text-end">Guardar</button>
-                                    </form>
                                 </div>
                                 <div class="card-body mt-2">
                                     <div class="container">
-                                        <form action="">
                                             <div class="mb-3">
-                                                <input class="form-control" type="file" id="formFile">
+                                                <input required name="logo2" class="form-control" type="file">
                                             </div>
                                         </form>
                                     </div>

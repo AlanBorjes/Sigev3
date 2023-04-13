@@ -1,16 +1,15 @@
 package mx.edu.utez.sigev.controller;
 
-import mx.edu.utez.sigev.entity.Category;
-import mx.edu.utez.sigev.entity.City;
+import mx.edu.utez.sigev.entity.*;
 import mx.edu.utez.sigev.security.BlacklistController;
-import mx.edu.utez.sigev.service.CityService;
-import mx.edu.utez.sigev.service.StateService;
+import mx.edu.utez.sigev.service.*;
 import mx.edu.utez.sigev.util.DocumentoUtileria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -35,23 +34,50 @@ public class CityController {
     @Autowired
     private StateService stateService;
 
+    @Autowired
+    private ColorService colorService;
+
+    @Autowired
+    private ImagesService imagesService;
+
+    @Autowired
+    private UserService userService;
+
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public String list(Model model, Pageable pageable) {
+    public String list(Model model, Pageable pageable, Authentication authentication) {
+        Users user = userService.findByUsername(authentication.getName());
+        Images image = imagesService.findImages(1);
+        Color color = colorService.findColors(1);
         List<City> listCities = cityService.findAll();
+        model.addAttribute("userLog", user);
+        model.addAttribute("image", image);
+        model.addAttribute("color", color);
         model.addAttribute("listCities", listCities);
         return "city/municipios";
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.GET)
-    public String create(Model model, RedirectAttributes redirectAttributes, City city) {
+    public String create(Model model, RedirectAttributes redirectAttributes, City city, Authentication authentication) {
+        Users user = userService.findByUsername(authentication.getName());
+        Images image = imagesService.findImages(1);
+        Color color = colorService.findColors(1);
+        model.addAttribute("userLog", user);
+        model.addAttribute("image", image);
+        model.addAttribute("color", color);
         model.addAttribute("listStates", stateService.findAll());
         return "city/create";
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public String save(Model model, RedirectAttributes redirectAttributes, @Valid City city, BindingResult result, @RequestParam("picture") MultipartFile file) throws IOException {
-
+    public String save(Model model, RedirectAttributes redirectAttributes,
+                       Authentication authentication, @Valid City city, BindingResult result, @RequestParam("picture") MultipartFile file) throws IOException {
+        Users user = userService.findByUsername(authentication.getName());
         if (result.hasErrors()){
+            Images image = imagesService.findImages(1);
+            Color color = colorService.findColors(1);
+            model.addAttribute("image", image);
+            model.addAttribute("color", color);
+            model.addAttribute("userLog", user);
             return "city/create";
         }else{
             if (!BlacklistController.checkBlacklistedWords(city.getName())) {
@@ -79,11 +105,17 @@ public class CityController {
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-    public String edit(Model model, RedirectAttributes redirectAttributes, City category, @PathVariable("id") long id) {
+    public String edit(Model model, RedirectAttributes redirectAttributes, Authentication authentication, City category, @PathVariable("id") long id) {
+        Users user = userService.findByUsername(authentication.getName());
         City tmp = cityService.findOne(id);
         if (!tmp.equals(null)) {
+            Images image = imagesService.findImages(1);
+            Color color = colorService.findColors(1);
+            model.addAttribute("image", image);
+            model.addAttribute("color", color);
             model.addAttribute("listStates", stateService.findAll());
             model.addAttribute("city", tmp);
+            model.addAttribute("userLog", user);
             return "city/edit";
         } else {
             redirectAttributes.addFlashAttribute("msg_error", "El municipio seleccionado no existe");

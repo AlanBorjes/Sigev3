@@ -13,6 +13,14 @@
           integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
           crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.13.4/datatables.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --main: [[${color.colorMain}]];
+            --secondary: [[${color.colorSecundary}]];
+            --textMain: [[${color.colorText}]];
+            --textSecondary: [[${color.colorTitle}]];
+        }
+    </style>
 </head>
 
 <body>
@@ -27,19 +35,19 @@
                     <div class="card-header">MODIFICAR</div>
                     <div class="card-body">
                         <div class="col d-flex justify-content-between bg-white border-bottom mb-2">
-                            <h5 class="card-title">MODIFICAR ENLACE</h5>
+                            <h5 class="card-title">MODIFICAR USUARIO</h5>
                         </div>
                         <form th:action="@{/users/update/{id} (id=${user.id})}" method="POST" th:object="${userDto}" enctype="multipart/form-data">
                             <div class="col">
                                 <div class="row">
                                     <div class="col-4">
-                                        <label class="form-label">Nombre(s)</label>
+                                        <label class="form-label">Nombre(s) <span class="text-danger">*</span></label>
                                         <input id="name" class="form-control" type="text" minlength="2" maxlength="150"
                                                placeholder="Nombre(s)" th:value="${user.name}" th:field="*{name}" onchange="checkInputs()" required>
                                         <small class="form-text text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></small>
                                     </div>
                                     <div class="col-4">
-                                        <label class="form-label">Primer Apellido</label>
+                                        <label class="form-label">Primer Apellido <span class="text-danger">*</span></label>
                                         <input id="lastname" class="form-control" type="text" minlength="2" maxlength="150"
                                                placeholder="Primer Apellido" th:value="${user.lastname}" th:field="*{lastname}" onchange="checkInputs()"
                                                required>
@@ -52,8 +60,8 @@
                                         <small class="form-text text-danger" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></small>
                                     </div>
                                     <div class="col-4 mt-3 mb-3">
-                                        <label class="form-label">Teléfono</label>
-                                        <input id="phone" name="phone" class="form-control" type="text" minlength="10" maxlength="10"
+                                        <label class="form-label">Teléfono <span class="text-danger">*</span></label>
+                                        <input id="phone" name="phone" class="form-control" type="number" minlength="10" maxlength="10"
                                                placeholder="Teléfono" th:value="${user.phone}" th:field="*{phone}" onchange="checkInputs()" required>
                                         <div th:if="${bindingResult}">
                                             <small class="form-text text-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></small>
