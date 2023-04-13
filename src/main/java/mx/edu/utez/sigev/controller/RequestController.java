@@ -1,9 +1,6 @@
 package mx.edu.utez.sigev.controller;
 
-import mx.edu.utez.sigev.entity.Commentary;
-import mx.edu.utez.sigev.entity.Request;
-import mx.edu.utez.sigev.entity.Roles;
-import mx.edu.utez.sigev.entity.Users;
+import mx.edu.utez.sigev.entity.*;
 import mx.edu.utez.sigev.security.BlacklistController;
 import mx.edu.utez.sigev.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +27,9 @@ public class RequestController {
     RequestAttachmentsService attachmentsService;
     @Autowired
     private CityLinkService linkService;
+
+    @Autowired
+    private ColorService colorService;
 
     @RequestMapping(value = "/amount/{id}", method = RequestMethod.GET)
     public String amount(Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
@@ -100,6 +100,8 @@ public class RequestController {
         /*Page<Request> listRequests = requestService
                 .listarPaginacion(PageRequest.of(pageable.getPageNumber(), 2, Sort.by("startDate").descending()));*/
         model.addAttribute("listRequests", requestService.findAllByCityId(linkService.findByUserId(user.getId()).getCity().getId()));
+        Color color = colorService.findColors(1);
+        model.addAttribute("color", color);
         return "requests/listRequests";
     }
 

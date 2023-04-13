@@ -80,12 +80,14 @@ public class HomeController {
 	}
 
     @RequestMapping(value = "/enlace/dashboard", method = RequestMethod.GET)
-	public String dashboardEnlace(Authentication authentication, HttpSession session) {
+	public String dashboardEnlace(Authentication authentication, HttpSession session,Model model) {
 		if (session.getAttribute("user") == null) {
 			Users user = userService.findByUsername(authentication.getName());
 			user.setPassword(null);
 			session.setAttribute("user", user);
 		}
+        Color color = colorService.findColors(1);
+        model.addAttribute("color", color);
 		return "enlace/dashboard";
 	}
 
