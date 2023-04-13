@@ -51,22 +51,23 @@
                   <th th:text="${iter.index + 1}" scope="row">1</th>
                   <td>
                     <img class="imgTable"
-                         th:if="${tmpUser.profilePicture != null}" th:src="@{/docs/{i} (i = ${tmpUser.profilePicture})}"
+                         th:if="${tmpUser.user.profilePicture != null}" th:src="@{/docs/{i} (i = ${tmpUser.user.profilePicture})}"
                          alt="...">
                     <img class="imgTable"
-                         th:if="${tmpUser.profilePicture == null}" th:src="@{'https://definicion.de/wp-content/uploads/2019/07/perfil-de-usuario.png'}"
+                         th:if="${tmpUser.user.profilePicture == null}" th:src="@{'https://definicion.de/wp-content/uploads/2019/07/perfil-de-usuario.png'}"
                          alt="...">
                   </td>
-                  <td th:text="${tmpUser.name} + ' ' + ${tmpUser.lastname} + ' ' + ${tmpUser.surname}"></td>
-                  <td>Municipio</td>
-                  <td th:text="${tmpUser.phone}"></td>
-                  <td th:text="${tmpUser.email}"></td>
-                  <td class="text-end"><h6 th:class="${tmpUser.enabled == 1 ? 'text-success' : 'text-danger'}"><i  class="fa-solid fa-circle"></i></h6></td>
+                  <td th:text="${tmpUser.user.name} + ' ' + ${tmpUser.user.lastname} + ' ' + ${tmpUser.user.surname}"></td>
+                  <td th:text="${tmpUser.city.name}">Municipio</td>
+                  <td th:text="${tmpUser.user.phone}"></td>
+                  <td th:text="${tmpUser.user.email}"></td>
+                  <td class="text-end"><h6 th:class="${tmpUser.user.enabled == 1 ? 'text-success' : 'text-danger'}"><i  class="fa-solid fa-circle"></i></h6></td>
                   <td class="text-end">
-                    <button type="button" class="btn bg-main btn-circle m-1"><i
-                        class="fa-solid fa-power-off"></i></button>
-                    <button type="button" class="btn bg-main btn-circle m-1"><i class="fa-solid fa-key"></i></button>
-                    <button type="button" class="btn bg-main btn-circle m-1"><a th:href="@{/users/edit/{id} (id=${tmpUser.id})}"><i
+                    <button type="button" class="btn bg-main btn-circle m-1"><a th:href="@{/users/disable/{id} (id=${tmpUser.user.id})}"><i
+                            class="fa-solid fa-power-off"></i></a></button>
+                    <button type="button" class="btn bg-main btn-circle m-1"><a th:href="@{/users/edit/password/{id} (id=${tmpUser.user.id})}">
+                      <i class="fa-solid fa-key"></i></a></button>
+                    <button type="button" class="btn bg-main btn-circle m-1"><a th:href="@{/users/edit/{id} (id=${tmpUser.user.id})}"><i
                             class="fa-solid fa-pen-to-square"></i></a></button>
                   </td>
                 </tr>
@@ -83,6 +84,20 @@
 
   <script th:src="@{/js/nav.js}"></script>
   <scrip th:src="@{/js/bootstrap.bundle.min.js}"></scrip>
+  <script th:src="@{/js/toast.min.js}"></script>
+
+  <script th:if="${msg_success != null}">
+    new Toast({
+      message: "[[${msg_success}]]",
+      type: "success",
+    });
+  </script>
+  <script th:if="${msg_error != null}">
+    new Toast({
+      message: "[[${msg_error}]]",
+      type: "danger",
+    });
+  </script>
 
   <script src="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.13.4/datatables.min.js"></script>
   <script>
@@ -102,7 +117,7 @@
         infoPostFix: "",
         loadingRecords: "Cargando...",
         zeroRecords: "No se encontraron registros coincidentes",
-        emptyTable: "Aucune donnée disponible dans le tableau",
+        emptyTable: "No hay registros que mostrar",
         paginate: {
           first: "Primero",
           previous: "Anterior",

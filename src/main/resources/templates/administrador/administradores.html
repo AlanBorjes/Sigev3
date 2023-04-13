@@ -62,11 +62,12 @@
                   <td th:text="${tmpUser.email}"></td>
                   <td class="text-end"><h6 th:class="${tmpUser.enabled == 1 ? 'text-success' : 'text-danger'}"><i  class="fa-solid fa-circle"></i></h6></td>
                   <td class="text-end">
-                    <button type="button" class="btn bg-main btn-circle m-1"><i
-                        class="fa-solid fa-power-off"></i></button>
-                    <button type="button" class="btn bg-main btn-circle m-1"><i class="fa-solid fa-key"></i></button>
-                    <button type="button" class="btn bg-main btn-circle m-1"><i
-                        class="fa-solid fa-pen-to-square"></i></button>
+                    <button type="button" class="btn bg-main btn-circle m-1"><a th:href="@{/users/disable/admin/{id} (id=${tmpUser.id})}"><i
+                            class="fa-solid fa-power-off"></i></a></button>
+                    <button type="button" class="btn bg-main btn-circle m-1"><a th:href="@{/users/edit/password/{id} (id=${tmpUser.id})}">
+                      <i class="fa-solid fa-key"></i></a></button>
+                    <button type="button" class="btn bg-main btn-circle m-1"><a th:href="@{/users/edit/{id} (id=${tmpUser.id})}"><i
+                        class="fa-solid fa-pen-to-square"></i></a></button>
                   </td>
                 </tr>
               </tbody>
@@ -84,6 +85,20 @@
   <script th:src="@{/js/nav.js}"></script>
   <scrip th:src="@{/js/bootstrap.bundle.min.js}"></scrip>
   <script src="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.13.4/datatables.min.js"></script>
+  <script th:src="@{/js/toast.min.js}"></script>
+
+  <script th:if="${msg_success != null}">
+    new Toast({
+      message: "[[${msg_success}]]",
+      type: "success",
+    });
+  </script>
+  <script th:if="${msg_error != null}">
+    new Toast({
+      message: "[[${msg_error}]]",
+      type: "danger",
+    });
+  </script>
   <script>
     $(document).ready(function () {
       $('#adminsTable').DataTable();

@@ -1,11 +1,7 @@
 package mx.edu.utez.sigev.controller;
 
-import mx.edu.utez.sigev.entity.Category;
-import mx.edu.utez.sigev.entity.City;
-import mx.edu.utez.sigev.entity.Users;
-import mx.edu.utez.sigev.service.CategoryService;
-import mx.edu.utez.sigev.service.CityService;
-import mx.edu.utez.sigev.service.UserService;
+import mx.edu.utez.sigev.entity.*;
+import mx.edu.utez.sigev.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,7 +31,16 @@ public class HomeController {
     private CityService cityService;
 
     @Autowired
+    private CityLinkService linkService;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private ColorService colorService;
+
+
+
 
     @RequestMapping( value = "/", method = RequestMethod.GET)
     public String index() {
@@ -55,7 +60,7 @@ public class HomeController {
 			session.setAttribute("user", user);
 		}
 
-        List<Users> listEnlaces = userService.findAllByRole(2);
+        List<CityLink> listEnlaces = linkService.findAll();
         listEnlaces = listEnlaces.subList(0, Math.min(listEnlaces.size(), 2));
         List<Users> listAdmins = userService.findAllByRole(1);
         listAdmins = listAdmins.subList(0, Math.min(listAdmins.size(), 2));
@@ -64,6 +69,8 @@ public class HomeController {
         List<City> listMunicipios = cityService.findAll();
         listMunicipios = listMunicipios.subList(0, Math.min(listMunicipios.size(), 4));
 
+        Color color = colorService.findColors(1);
+        model.addAttribute("color", color);
         model.addAttribute("enlaces", listEnlaces);
         model.addAttribute("administradores", listAdmins);
         model.addAttribute("categorias", listCategories);

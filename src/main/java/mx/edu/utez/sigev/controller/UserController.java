@@ -1,8 +1,10 @@
 package mx.edu.utez.sigev.controller;
 
+import mx.edu.utez.sigev.entity.City;
 import mx.edu.utez.sigev.entity.CityLink;
 import mx.edu.utez.sigev.entity.DataTransferObject.RecoverPasswordDto;
 import mx.edu.utez.sigev.entity.DataTransferObject.UserDto;
+import mx.edu.utez.sigev.entity.DataTransferObject.UserUpdateDTO;
 import mx.edu.utez.sigev.entity.RequestAttachment;
 import mx.edu.utez.sigev.entity.Users;
 import mx.edu.utez.sigev.security.BlacklistController;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,7 +65,9 @@ public class UserController {
         Users user = userService.findByUsername(authentication.getName());
         user.setPassword(null);
         session.setAttribute("user", user);
-        List<Users> listUsers = userService.findAllByRole(2);
+        List<CityLink> listUsers = linkService.findAll();
+        System.out.println(listUsers.get(0).getUser().getName());
+        //List<Users> listUsers = userService.findAllByRole(2);
         model.addAttribute("listUsers", listUsers);
         return "enlace/enlaces";
     }
@@ -80,14 +85,33 @@ public class UserController {
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String findOne(Model model, @PathVariable("id") long id, RedirectAttributes redirectAttributes,
             RecoverPasswordDto recoverPasswordDto) {
+        UserUpdateDTO userDto = new UserUpdateDTO();
         Users user = userService.findById(id);
+        userDto.setName(user.getName());
+        userDto.setLastname(user.getLastname());
+        userDto.setSurname(user.getSurname());
+        userDto.setPhone(user.getPhone());
         if (!user.equals(null)) {
+            model.addAttribute("userDto", userDto);
             model.addAttribute("user", user);
             return "/users/edit";
         } else {
             redirectAttributes.addFlashAttribute("msg_error", "No se encontró el usuario solicitado");
         }
         return "redirect:/users/list";
+    }
+
+    @RequestMapping(value = "/edit/password/{id}", method = RequestMethod.GET)
+    public String editPassword(Model model, @PathVariable("id") long id, RedirectAttributes redirectAttributes,
+                          RecoverPasswordDto recoverPasswordDto) {
+        Users user = userService.findById(id);
+        if (!user.equals(null)) {
+            model.addAttribute("user", user);
+            return "/users/editPassword";
+        } else {
+            redirectAttributes.addFlashAttribute("msg_error", "No se encontró el usuario solicitado");
+        }
+        return "redirect:/users/list/enlaces";
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.GET)
@@ -102,16 +126,22 @@ public class UserController {
     }
 
     @RequestMapping(value = "/recover/{id}", method = RequestMethod.POST)
-    public String recoverPassword(RecoverPasswordDto recoverPasswordDto, Model model,
-            RedirectAttributes redirectAttributes, @PathVariable("id") long id,
+    public String recoverPassword(@Valid RecoverPasswordDto recoverPasswordDto, BindingResult result, Model model,
+            RedirectAttributes redirectAttributes, @PathVariable("id") long id, @RequestParam("confirmarContraseña") String confirmarContraseña,
             Authentication authentication, HttpSession session) {
         if (!BlacklistController.checkBlacklistedWords(recoverPasswordDto.getPassword())) {
+            Users tmpUser = userService.findById(id);
+            if (!(recoverPasswordDto.getPassword().equals(confirmarContraseña))){
+                result.rejectValue("password", "error.password", "Las contraseñas no coinciden");
+                model.addAttribute("user", tmpUser);
+                return "users/editPassword";
+            }
             boolean res;
             Users user = userService.findByUsername(authentication.getName());
             user.setPassword(null);
             session.setAttribute("user", user);
             user.setPassword(userService.findPasswordById(id));
-            Users tmpUser = userService.findById(id);
+
             tmpUser.setPassword(passwordEncoder.encode(recoverPasswordDto.getPassword()));
             if(user.getUsername().equals(tmpUser.getUsername())) {
                 res = userService.save(tmpUser);
@@ -126,9 +156,59 @@ public class UserController {
             }
             if (res) {
                 redirectAttributes.addFlashAttribute("msg_success", "Se modificó la contraseña correctamente");
-                return "redirect:/users/list";
+                return "redirect:/users/list/enlaces";
             } else {
                 redirectAttributes.addFlashAttribute("msg_error", "Ocurrió un problema al modificar la contraseña");
+            }
+        } else {
+            redirectAttributes.addFlashAttribute("msg_error", "Ingresó una o más palabras prohibidas");
+        }
+        return ("redirect:/users/edit/" + id);
+    }
+
+    @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
+    public String updateUser(Users users, @Valid UserUpdateDTO userDto, BindingResult results, RecoverPasswordDto recoverPasswordDto, Model model,
+                             RedirectAttributes redirectAttributes, @PathVariable("id") long id,
+                             Authentication authentication, HttpSession session, @RequestParam("picture")  MultipartFile file) throws IOException{
+        boolean res;
+
+        if (!(BlacklistController.checkBlacklistedWords(users.getName())
+                || BlacklistController.checkBlacklistedWords(users.getLastname())
+                || BlacklistController.checkBlacklistedWords(users.getSurname())
+                || BlacklistController.checkBlacklistedWords(users.getPhone()))) {
+
+            Users user = userService.findByUsername(authentication.getName());
+            Users tmp = userService.findById(id);
+            tmp.setName(userDto.getName());
+            tmp.setLastname(userDto.getLastname());
+            tmp.setSurname(userDto.getSurname());
+            tmp.setPhone(userDto.getPhone());
+
+            if (results.hasErrors()){
+                System.out.println(results);
+                model.addAttribute("bindingResult", results);
+                model.addAttribute("user", tmp);
+                model.addAttribute("userDto", userDto);
+                return "users/edit";
+            }else{
+
+                session.setAttribute("user", user);
+
+                if (!file.isEmpty()) {
+                    String ruta = "C:/sigev/docs";
+                    String nombre = DocumentoUtileria.guardarDocumento(file, ruta);
+                    if (nombre != null) {
+                        tmp.setProfilePicture(nombre);
+                    }
+                }
+
+                res = userService.save(tmp);
+                if (res) {
+                    redirectAttributes.addFlashAttribute("msg_success", "Se modificó el registro correctamente");
+                    return "redirect:/users/list/enlaces";
+                } else {
+                    redirectAttributes.addFlashAttribute("msg_error", "Ocurrió un problema al modificar el registro");
+                }
             }
         } else {
             redirectAttributes.addFlashAttribute("msg_error", "Ingresó una o más palabras prohibidas");
@@ -303,7 +383,7 @@ public class UserController {
         tmp.setPassword(userService.findPasswordById(id));
         if (user.getUsername().equals(tmp.getUsername())) {
             redirectAttributes.addFlashAttribute("msg_error", "No puedes deshabilitarte");
-            return "redirect:/users/list";
+            return "redirect:/users/list/enlaces";
         } else {
             if (tmp.getEnabled() == 1) {
                 tmp.setEnabled(0);
@@ -314,7 +394,32 @@ public class UserController {
             }
         }
         userService.save(tmp);
-        return "redirect:/users/list";
+        return "redirect:/users/list/enlaces";
+    }
+
+    @RequestMapping(value = "/disable/admin/{id}", method = RequestMethod.GET)
+    public String disableAdmin(@PathVariable("id") long id, RedirectAttributes redirectAttributes,
+                              Authentication authentication, HttpSession session) {
+        Users user = userService.findByUsername(authentication.getName());
+        user.setPassword(null);
+        session.setAttribute("user", user);
+        user.setPassword(userService.findPasswordById(user.getId()));
+        Users tmp = userService.findById(id);
+        tmp.setPassword(userService.findPasswordById(id));
+        if (user.getUsername().equals(tmp.getUsername())) {
+            redirectAttributes.addFlashAttribute("msg_error", "No puedes deshabilitarte");
+            return "redirect:/users/list/administradores";
+        } else {
+            if (tmp.getEnabled() == 1) {
+                tmp.setEnabled(0);
+                redirectAttributes.addFlashAttribute("msg_success", "Usuario deshabilitado");
+            } else {
+                tmp.setEnabled(1);
+                redirectAttributes.addFlashAttribute("msg_success", "Usuario habilitado");
+            }
+        }
+        userService.save(tmp);
+        return "redirect:/users/list/administradores";
     }
 
 }

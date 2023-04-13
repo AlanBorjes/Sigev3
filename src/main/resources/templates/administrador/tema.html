@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/toast.min.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+        integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Tema y contenido</title>
+
+    <style>
+        :root {
+            --main: [[${color.colorMain}]];
+            --secondary: [[${color.colorSecundary}]];
+            --textMain: [[${color.colorText}]];
+            --textSecondary: [[${color.colorTitle}]];
+        }
+    </style>
+</head>
+
+<body>
+    <div class="d-flex">
+        <div th:insert="~{fragments/sideBar :: sideBar}"></div>
+
+        <div class="w-100">
+            <div th:insert="~{fragments/navBar :: navBar}"></div>
+
+            <!-- contenido de pagina -->
+            <div id="content" class="container">
+                <div class="container d-flex align-items-center ">
+                    <h1>Tema y contenido</h1>
+                </div>
+                <hr size="5px">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6 col-12 h-100">
+                            <div class="card mb-3 bg-card shadow border-0 " style="border-radius: 0%;">
+                                <div class="card-header border-0 d-flex ">
+                                    <h2>Imagen login</h2>
+                                    <form class="text-end ms-auto">
+                                        <button type="submit" class="btn btn-main text-end">Guardar</button>
+                                    </form>
+                                </div>
+                                <div class="card-body mt-2">
+                                    <div class="container">
+                                        <form action="">
+                                            <div class="mb-3">
+                                                <input class="form-control" type="file" id="formFile">
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card mb-3 bg-card shadow border-0" style="border-radius: 0%;">
+                                <div class="card-header border-0 d-flex ">
+                                    <h2>Colores</h2>
+                                </div>
+                                <div class="card-body mt-2">
+                                    <div class="container">
+                                        <form th:action="@{/tema/update/color}" method="POST" th:object="${color}">
+                                            <div class="d-flex justify-content-around mb-3">
+                                                <input th:field="*{colorMain}" type="color" pattern="^#[0-9a-fA-F]{6}$" class="form-control form-control-color"
+                                                       id="exampleColorInput" th:value="${color.colorMain}" title="Choose your color">
+                                                <input th:field="*{colorSecundary}" type="color" pattern="^#[0-9a-fA-F]{6}$" class="form-control form-control-color"
+                                                       id="exampleColorInput" th:value="${color.colorSecundary}" title="Choose your color">
+                                                <input th:field="*{colorText}" type="color" pattern="^#[0-9a-fA-F]{6}$" class="form-control form-control-color"
+                                                       id="exampleColorInput" th:value="${color.colorText}" title="Choose your color">
+                                                <input th:field="*{colorTitle}" type="color" pattern="^#[0-9a-fA-F]{6}$" class="form-control form-control-color"
+                                                       id="exampleColorInput"  th:value="${color.colorTitle}" title="Choose your color">
+                                            </div>
+                                            <button type="submit" class="btn btn-main text-end">Guardar</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-12 h-100">
+
+                            <div class="card mb-3 bg-card shadow border-0" style="border-radius: 0%;">
+                                <div class="card-header border-0 d-flex ">
+                                    <h2>Logo 1</h2>
+                                    <form class="text-end ms-auto">
+                                        <button type="submit" class="btn btn-main text-end">Guardar</button>
+                                    </form>
+                                </div>
+                                <div class="card-body mt-2">
+                                    <div class="container">
+                                        <form action="">
+                                            <div class="mb-3">
+                                                <input class="form-control" type="file" id="formFile">
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card mb-3 bg-card shadow border-0" style="border-radius: 0%;">
+                                <div class="card-header border-0 d-flex ">
+                                    <h2>Logo 2</h2>
+                                    <form class="text-end ms-auto">
+                                        <button type="submit" class="btn btn-main text-end">Guardar</button>
+                                    </form>
+                                </div>
+                                <div class="card-body mt-2">
+                                    <div class="container">
+                                        <form action="">
+                                            <div class="mb-3">
+                                                <input class="form-control" type="file" id="formFile">
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script th:src="@{/js/toast.min.js}"></script>
+    <script th:if="${msg_success != null}">
+        new Toast({
+            message: "[[${msg_success}]]",
+            type: "success",
+        });
+    </script>
+    <script th:if="${msg_error != null}">
+        new Toast({
+            message: "[[${msg_error}]]",
+            type: "danger",
+        });
+    </script>
+    <script th:src="@{/js/nav.js}"></script>
+    <scrip th:src="@{/js/bootstrap.bundle.min.js}"></scrip>
+</body>
+
+</html>

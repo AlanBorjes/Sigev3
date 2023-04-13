@@ -1,5 +1,7 @@
 package mx.edu.utez.sigev.entity.DataTransferObject;
 
+import javax.validation.constraints.NotNull;
+
 public class UserDto {
     
     private String name;

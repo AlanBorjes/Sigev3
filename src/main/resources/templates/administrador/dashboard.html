@@ -11,8 +11,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
           integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
           crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+           :root {
+             --main: [[${color.colorMain}]];
+             --secondary: [[${color.colorSecundary}]];
+             --textMain: [[${color.colorText}]];
+             --textSecondary: [[${color.colorTitle}]];
+           }
+    </style>
+
   </head>
   <body>
+
+
   <div class="d-flex">
     <div th:insert="~{fragments/sideBar :: sideBar}"></div>
 
@@ -55,15 +67,15 @@
                 <div th:each="enlace : ${enlaces}" class="d-flex align-items-center mb-4" style="margin-left: 20px;">
                   <div class="flex-shrink-0">
                     <img class="imgRedonda"
-                         th:if="${enlace.profilePicture != null}" th:src="@{/docs/{i} (i = ${enlace.profilePicture})}"
+                         th:if="${enlace.user.profilePicture != null}" th:src="@{/docs/{i} (i = ${enlace.user.profilePicture})}"
                          alt="...">
                     <img class="imgRedonda"
-                         th:if="${enlace.profilePicture == null}" th:src="@{'https://definicion.de/wp-content/uploads/2019/07/perfil-de-usuario.png'}"
+                         th:if="${enlace.user.profilePicture == null}" th:src="@{'https://definicion.de/wp-content/uploads/2019/07/perfil-de-usuario.png'}"
                          alt="...">
                   </div>
                   <div class="flex-grow-1 ms-3">
-                    <h5 class="mt-3" th:text="${enlace.name} + ' ' + ${enlace.lastname} + ' ' + ${enlace.surname}"></h5>
-                    <p style="margin-top: -7px;">Municipio</p>
+                    <h5 class="mt-3" th:text="${enlace.user.name} + ' ' + ${enlace.user.lastname} + ' ' + ${enlace.user.surname}"></h5>
+                    <p th:text="${enlace.city?.name}" style="margin-top: -7px;"></p>
                   </div>
                 </div>
               </div>

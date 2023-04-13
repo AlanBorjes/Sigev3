@@ -1,10 +1,4 @@
-:root{
-    --main: #632878;
-    --secondary: #73286B;
-    --textMain: #000000;
-    --textSecondary: #ffffff;
 
-}
 
 @import url('https://fonts.googleapis.com/css?family=Muli&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Quicksand&display=swap');
@@ -14,11 +8,15 @@ body{
     /* color: var(--textSecondary); */
 }
 
+.menu a{
+    color: var(--textSecondary);
+}
+
 /*estilod generales */
 
 .btn-add{
-    background-color: #73286B !important;
-    color: white !important;
+    background-color: var(--secondary);
+    color: var(--textSecondary) !important;
 }
 
 button a{
@@ -29,7 +27,7 @@ button a{
 
 .btn-main{
     background-color: var(--main) !important;
-    color: #ffffff !important;
+    color: var(--textSecondary) !important;
 }
 
 
@@ -57,7 +55,7 @@ button a{
     text-align: center !important;
     font-size: 12px !important;
     line-height: 1.42857 !important;
-    color: #ffffff !important;
+    color: var(--textSecondary) !important;
 	top: 6rem !important;
 }
 
@@ -128,7 +126,8 @@ a{
 }
 
 .secondaryColor{
-    background-color: #73286B76;
+    background-color: var(--secondary + "73");
+    opacity: 0.5;
 }
 
 #content{
@@ -163,13 +162,13 @@ a{
 }
 
 .profile h5{
-    color: #ffffff;
+    color: var(--textSecondary);
     margin: 10px 0 5px;
 }
 
 .profile p{
     margin-top: 1rem;
-    color: white;
+    color: var(--textSecondary);
     font-size: 16px;
 }
 
