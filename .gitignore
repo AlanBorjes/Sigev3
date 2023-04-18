@@ -31,3 +31,19 @@ build/
 
 ### VS Code ###
 .vscode/
+logs/2023-04/warehouse-sigev--16-abril-2023-1.log.gz
+logs/2023-04/warehouse-sigev--16-abril-2023-2.log.gz
+logs/2023-04/warehouse-sigev--16-abril-2023-3.log.gz
+logs/2023-04/warehouse-sigev--16-abril-2023-5.log.gz
+logs/2023-04/warehouse-sigev--16-abril-2023-6.log.gz
+logs/2023-04/warehouse-sigev--16-abril-2023-7.log.gz
+logs/2023-04/warehouse-sigev--17-abril-2023-1.log.gz
+logs/2023-04/warehouse-sigev--17-abril-2023-2.log.gz
+logs/2023-04/warehouse-sigev--17-abril-2023-3.log.gz
+logs/2023-04/warehouse-sigev--17-abril-2023-4.log.gz
+logs/2023-04/warehouse-sigev--17-abril-2023-5.log.gz
+logs/2023-04/warehouse-sigev--17-abril-2023-6.log.gz
+logs/2023-04/warehouse-sigev--17-abril-2023-7.log.gz
+logs/sigev-log4j2.log
+*.log
+logs/sigev-log4j2.log
