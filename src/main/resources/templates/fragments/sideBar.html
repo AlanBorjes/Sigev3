@@ -1,12 +1,13 @@
 <div id="sidebar-container" class="bg-main" th:fragment="sideBar">
     <div class="logo ">
         <div class="profile">
+            <!--
             <img
                  th:if="${userLog.profilePicture != null}" th:src="@{/docs/{i} (i = ${userLog.profilePicture})}"
                  alt="...">
             <img
-                 th:if="${userLog.profilePicture == null}" th:src="@{'https://definicion.de/wp-content/uploads/2019/07/perfil-de-usuario.png'}"
-                 alt="...">
+                 th:unless="${userLog.profilePicture != null}" th:src="@{'https://definicion.de/wp-content/uploads/2019/07/perfil-de-usuario.png'}"
+                 alt="...">-->
             <p th:text="${userLog.name} + ' ' + ${userLog.lastname} + ' ' + ${userLog.surname}"></p>
         </div>
     </div>

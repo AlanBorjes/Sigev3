@@ -20,9 +20,8 @@ public class Request implements Serializable {
     @NotNull(message = "La categoría no puede estar vacía")
     private Category category;
 
-    @Column(name = "description", length = 255)
+    @Column(name = "description")
     @Size(min = 2, message = "La descripción debe tener mínimo 2 caracteres")
-    @Size(max = 255, message = "La descripción debe tener máximo 255 caracteres")
     @NotBlank(message = "La descripción no puede estar vacía")
     private String description;
 
@@ -46,11 +45,12 @@ public class Request implements Serializable {
     @NotNull(message = "El estatus no puede estar vacío")
     private int status;
 
-    public Request() {
-        this.status = 2;
-        this.paymentStatus = 1;
+    public Request(int state, int paymentStatus ) {
+        this.status = state;
+        this.paymentStatus = paymentStatus;
     }
-
+    public Request() {
+    }
     public Long getId() {
         return id;
     }
@@ -114,5 +114,4 @@ public class Request implements Serializable {
     public void setStatus(int status) {
         this.status = status;
     }
-    
 }

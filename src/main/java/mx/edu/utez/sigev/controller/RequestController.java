@@ -3,6 +3,9 @@ package mx.edu.utez.sigev.controller;
 import mx.edu.utez.sigev.entity.*;
 import mx.edu.utez.sigev.security.BlacklistController;
 import mx.edu.utez.sigev.service.*;
+import mx.edu.utez.sigev.util.Runner;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -12,10 +15,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.nio.file.LinkOption;
 
 @Controller
 @RequestMapping(value = "/request")
 public class RequestController {
+
+    private static final Logger logger = LogManager.getLogger(Runner.class);
 
     @Autowired
     private RequestService requestService;
@@ -27,6 +33,9 @@ public class RequestController {
     RequestAttachmentsService attachmentsService;
     @Autowired
     private CityLinkService linkService;
+
+    @Autowired
+    private ImagesService imagesService;
 
     @Autowired
     private ColorService colorService;
@@ -45,7 +54,16 @@ public class RequestController {
     }
 
     @RequestMapping(value = "/details/{id}", method = RequestMethod.GET)
-    public String details(Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+    public String details(Authentication authentication,Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes,Commentary commentary,Request request) {
+        Users user = userService.findByUsername(authentication.getName());
+        Color color = colorService.findColors(1);
+        Images image = imagesService.findImages(1);
+
+        model.addAttribute("userLog", user);
+        model.addAttribute("image", image);
+        model.addAttribute("color", color);
+        model.addAttribute("listComents", commentaryService.findAllByRequestId(id));
+
         if (!requestService.findById(id).equals(null)) {
             model.addAttribute("request", requestService.findById(id));
             model.addAttribute("attachment", attachmentsService.findByRequestId(id));
@@ -95,12 +113,18 @@ public class RequestController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String findAll(Model model, Pageable pageable, Authentication authentication, HttpSession session) {
         Users user = userService.findByUsername(authentication.getName());
+        Images image = imagesService.findImages(1);
+
         user.setPassword(null);
         session.setAttribute("user", user);
         /*Page<Request> listRequests = requestService
                 .listarPaginacion(PageRequest.of(pageable.getPageNumber(), 2, Sort.by("startDate").descending()));*/
         model.addAttribute("listRequests", requestService.findAllByCityId(linkService.findByUserId(user.getId()).getCity().getId()));
         Color color = colorService.findColors(1);
+        model.addAttribute("userLog", user);
+        model.addAttribute("image", image);
+        System.out.println(user.getName());
+        System.out.println(user.getProfilePicture());
         model.addAttribute("color", color);
         return "requests/listRequests";
     }
@@ -149,6 +173,57 @@ public class RequestController {
 
     }
 
+    @PostMapping(value = "/save/paymentAmount")
+    public String savepaymentAmount(Model model, Request request, RedirectAttributes redirectAttributes) {
+        Request obj = requestService.findById(request.getId());
+        obj.setPaymentAmount(request.getPaymentAmount());
+        String msgOk = "";
+        String msgError = "";
+            if (obj.getId() != null) {
+                msgOk = "Solictud Actualizada correctamente";
+                msgError = "La solicitud NO pudo ser Actualizada correctamente";
+            } else {
+                msgOk = "Solicitud Guardada correctamente";
+                msgError = "La solicitud NO pudo ser Guardada correctamente";
+            }
+
+            boolean res = requestService.save(obj);
+            if (res) {
+                redirectAttributes.addFlashAttribute("msg_success", msgOk);
+            } else {
+                redirectAttributes.addFlashAttribute("msg_error", msgError);
+            }
+        return ("redirect:/request/details/"+obj.getId());
+
+    }
+
+    @PostMapping(value = "/save/savepaymentStatus")
+    public String savepaymentStatus(Model model, Request request, RedirectAttributes redirectAttributes) {
+        Request obj = requestService.findById(request.getId());
+        System.out.println(obj.getPaymentStatus());
+        obj.setPaymentStatus(request.getPaymentStatus());
+        System.out.println(obj.getPaymentStatus());
+        System.out.println(request.getPaymentStatus());
+
+        String msgOk = "";
+        String msgError = "";
+        if (obj.getId() != null) {
+            msgOk = "Solictud Actualizada correctamente";
+            msgError = "La solicitud NO pudo ser Actualizada correctamente";
+        } else {
+            msgOk = "Solicitud Guardada correctamente";
+            msgError = "La solicitud NO pudo ser Guardada correctamente";
+        }
+
+        boolean res = requestService.save(obj);
+        if (res) {
+            redirectAttributes.addFlashAttribute("msg_success", msgOk);
+        } else {
+            redirectAttributes.addFlashAttribute("msg_error", msgError);
+        }
+        return ("redirect:/request/details/"+obj.getId());
+
+    }
     @RequestMapping(value = "/commentary/{id}", method = RequestMethod.GET)
     public String chat(@PathVariable("id") long id, Authentication authentication, HttpSession session, Model model,
                        RedirectAttributes redirectAttributes, Commentary commentary) {
@@ -157,16 +232,22 @@ public class RequestController {
         session.setAttribute("user", user);
         model.addAttribute("listComents", commentaryService.findAllByRequestId(id));
         model.addAttribute("request", requestService.findById(id));
-        return "requests/comments";
+        return "/requests/detailsRequests";
     }
 
     @RequestMapping(value = "/commentary/save/{id}", method = RequestMethod.POST)
     public String saveCommentary(Model model, Commentary commentary, Authentication authentication,
                                  HttpSession session, @PathVariable("id") long id, RedirectAttributes redirectAttributes) {
         Users user = userService.findByUsername(authentication.getName());
-        user.setPassword(null);
+        Color color = colorService.findColors(1);
+        Images image = imagesService.findImages(1);
+        model.addAttribute("userLog", user);
+        model.addAttribute("image", image);
+        model.addAttribute("color", color);
+        model.addAttribute("listComents", commentaryService.findAllByRequestId(id));
         session.setAttribute("user", user);
         commentary.setRequest(requestService.findById(id));
+         Long Idrequesr = commentary.getRequest().getId();
         if (!BlacklistController.checkBlacklistedWords(commentary.getContent())) {
             Users tmp = userService.findById(user.getId());
             tmp.setPassword(userService.findPasswordById(tmp.getId()));
@@ -186,6 +267,6 @@ public class RequestController {
         } else {
             redirectAttributes.addFlashAttribute("msg_error", "Ingresó una o más palabras prohibidas.");
         }
-        return ("redirect:/request/commentary/" + id);
+        return ("redirect:/request/details/"+Idrequesr);
     }
 }

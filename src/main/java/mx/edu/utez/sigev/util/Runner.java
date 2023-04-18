@@ -61,7 +61,6 @@ public class Runner implements CommandLineRunner {
             userRepository.save(personModel2);
             userRepository.save(personModel3);
             userRepository.save(personModel4);
-
         }
         logger.info("END RUNNER");
 

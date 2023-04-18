@@ -39,6 +39,8 @@ public class RequestControllerPresident {
 
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private CityLinkService linkService;
 
     @Autowired
     private RequestAttachmentsService attachmentsService;
@@ -48,7 +50,11 @@ public class RequestControllerPresident {
 
     @Autowired
     private CommitteePresidentService presidentService;
+    @Autowired
+    private ImagesService imagesService;
 
+    @Autowired
+    private ColorService colorService;
     @RequestMapping(value = "/list/unpaid", method = RequestMethod.GET)
     public String listAllPresidentUnpaidRequests(Authentication authentication, HttpSession session, Model model,
             RedirectAttributes redirectAttributes) {
@@ -102,12 +108,16 @@ public class RequestControllerPresident {
         Users user = usersService.findByUsername(authentication.getName());
         user.setPassword(null);
         session.setAttribute("user", user);
-        System.out.println(presidentService.findByUser(user.getId()));
+        Images image = imagesService.findImages(1);
         CommitteePresident president = presidentService.findByUser(user.getId());
         Page<Request> listRequests = requestService
-                .listarPaginacion(PageRequest.of(pageable.getPageNumber(), 2, Sort.by("startDate").descending()));
-        model.addAttribute("requestList", requestService.findAllByCommitteeId(president.getCommittee().getId()));
-        model.addAttribute("requestList2", listRequests);
+                .listarPaginacion(PageRequest.of(pageable.getPageNumber(), 2, Sort.by("startDate").descending()));        model.addAttribute("listRequests", requestService.findAllByCityId(linkService.findByUserId(user.getId()).getCity().getId()));
+        Color color = colorService.findColors(1);
+        model.addAttribute("userLog", user);
+        model.addAttribute("image", image);
+        System.out.println(user.getName());
+        System.out.println(user.getProfilePicture());
+        model.addAttribute("color", color);
         return "president-request/list";
     }
 

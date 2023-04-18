@@ -1,12 +1,11 @@
 package mx.edu.utez.sigev.controller;
 
+import mx.edu.utez.sigev.entity.Color;
+import mx.edu.utez.sigev.entity.Images;
 import mx.edu.utez.sigev.entity.Suburb;
 import mx.edu.utez.sigev.entity.Users;
 import mx.edu.utez.sigev.security.BlacklistController;
-import mx.edu.utez.sigev.service.CityLinkService;
-import mx.edu.utez.sigev.service.CityService;
-import mx.edu.utez.sigev.service.SuburbService;
-import mx.edu.utez.sigev.service.UserService;
+import mx.edu.utez.sigev.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,9 +36,20 @@ public class SuburbController {
 
     @Autowired
     private CityLinkService linkService;
+    @Autowired
+    private ImagesService imagesService;
+
+    @Autowired
+    private ColorService colorService;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public String list(Model model, RedirectAttributes redirectAttributes, Pageable pageable) {
+    public String list(Model model, RedirectAttributes redirectAttributes, Pageable pageable,Authentication authentication) {
+        Users user = userService.findByUsername(authentication.getName());
+        Color color = colorService.findColors(1);
+        Images image = imagesService.findImages(1);
+        model.addAttribute("userLog", user);
+        model.addAttribute("image", image);
+        model.addAttribute("color", color);
         Page<Suburb> listSuburbs = suburbService
                 .listPagination(PageRequest.of(pageable.getPageNumber(), 10, Sort.by("id").ascending()));
         model.addAttribute("listSuburbs", listSuburbs);
@@ -50,6 +60,11 @@ public class SuburbController {
     public String create(Model model, RedirectAttributes redirectAttributes, Suburb suburb,
             Authentication authentication, HttpSession session) {
         Users user = userService.findByUsername(authentication.getName());
+        Color color = colorService.findColors(1);
+        Images image = imagesService.findImages(1);
+        model.addAttribute("userLog", user);
+        model.addAttribute("image", image);
+        model.addAttribute("color", color);
         user.setPassword(null);
         session.setAttribute("user", user);
         model.addAttribute("listCities",
@@ -83,13 +98,19 @@ public class SuburbController {
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String edit(Model model, RedirectAttributes redirectAttributes, Suburb suburb, @PathVariable("id") long id,
             Authentication authentication, HttpSession session) {
+
         Suburb tmp = suburbService.findOne(id);
         if (!tmp.equals(null)) {
             Users user = userService.findByUsername(authentication.getName());
             user.setPassword(null);
             session.setAttribute("user", user);
-            //model.addAttribute("listCities",
-                    //cityService.findAllCitiesByStateId(linkService.findOne(user.getId()).getCity().getState().getId()));
+            model.addAttribute("userLog", user);
+            Color color = colorService.findColors(1);
+            Images image = imagesService.findImages(1);
+            model.addAttribute("image", image);
+            model.addAttribute("color", color);
+            model.addAttribute("listCities",
+                    cityService.findAllCitiesByStateId(linkService.findOne(user.getId()).getCity().getState().getId()));
             model.addAttribute("suburb", tmp);
             return "suburb/edit";
         } else {

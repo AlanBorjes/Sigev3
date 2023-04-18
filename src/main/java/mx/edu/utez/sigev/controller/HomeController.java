@@ -87,12 +87,15 @@ public class HomeController {
 
     @RequestMapping(value = "/enlace/dashboard", method = RequestMethod.GET)
 	public String dashboardEnlace(Authentication authentication, HttpSession session,Model model) {
-		if (session.getAttribute("user") == null) {
-			Users user = userService.findByUsername(authentication.getName());
+        Users user = userService.findByUsername(authentication.getName());
+        if (session.getAttribute("user") == null) {
 			user.setPassword(null);
 			session.setAttribute("user", user);
 		}
         Color color = colorService.findColors(1);
+        Images image = imagesService.findImages(1);
+        model.addAttribute("userLog", user);
+        model.addAttribute("image", image);
         model.addAttribute("color", color);
 		return "enlace/dashboard";
 	}
