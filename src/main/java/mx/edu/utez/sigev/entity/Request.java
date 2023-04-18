@@ -27,8 +27,7 @@ public class Request implements Serializable {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "president", nullable = false)
-    @NotNull(message = "El presidente no puede estar vacío")
+    @JoinColumn(name = "president")
     private CommitteePresident president;
 
     @Column(name = "start_date")
@@ -46,7 +45,7 @@ public class Request implements Serializable {
     @NotNull(message = "El estatus no puede estar vacío")
     private int status;
 
-    @ManyToMany()
+    @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(name = "attachment", joinColumns = @JoinColumn(name = "requests"), inverseJoinColumns = @JoinColumn(name = "attachments"))
     private Set<RequestAttachment> RequestAttachment;
 

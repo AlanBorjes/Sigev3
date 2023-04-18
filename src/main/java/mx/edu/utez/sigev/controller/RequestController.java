@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.csrf.CsrfLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -64,10 +65,10 @@ public class RequestController {
         model.addAttribute("image", image);
         model.addAttribute("color", color);
         model.addAttribute("listComents", commentaryService.findAllByRequestId(id));
-
+        Request sa = requestService.findById(id);
         if (!requestService.findById(id).equals(null)) {
-            model.addAttribute("request", requestService.findById(id));
-            model.addAttribute("attachment", attachmentsService.findByRequestId(id));
+            model.addAttribute("request", requestService.findById(id));;
+            System.out.println(sa.getRequestAttachment());
             return "/requests/detailsRequests";
         } else {
             redirectAttributes.addFlashAttribute("msg_error", "La solicitud que buscas no existe");

@@ -78,6 +78,7 @@ public class CityController {
             model.addAttribute("image", image);
             model.addAttribute("color", color);
             model.addAttribute("userLog", user);
+            redirectAttributes.addFlashAttribute("msg_error", "UPS");
             return "city/create";
         }else{
             if (!BlacklistController.checkBlacklistedWords(city.getName())) {

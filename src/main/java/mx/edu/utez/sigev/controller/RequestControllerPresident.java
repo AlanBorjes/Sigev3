@@ -110,12 +110,11 @@ public class RequestControllerPresident {
         CommitteePresident president = presidentService.findByUser(user.getId());
         Page<Request> listRequests = requestService
                 .listarPaginacion(PageRequest.of(pageable.getPageNumber(), 2, Sort.by("startDate").descending()));
-        model.addAttribute("listRequests", requestService.findAllByCityId(linkService.findByUserId(user.getId()).getCity().getId()));
+        model.addAttribute("listRequests", requestService.findAllByComitteeByUsers(user.getId()));
         System.out.println(user.getId());
-        System.out.println(linkService.findByUserId(user.getId()).getCity().getId());
-        System.out.println( requestService.findAllByCityId(linkService.findByUserId(user.getId()).getCity().getId()));
 
         Color color = colorService.findColors(1);
+        model.addAttribute("cat", "Enlace");
         model.addAttribute("userLog", user);
         model.addAttribute("image", image);
         model.addAttribute("color", color);
@@ -141,8 +140,11 @@ public class RequestControllerPresident {
     public String savePresidentRequest(Authentication authentication, HttpSession session, Model model,
             RedirectAttributes redirectAttributes, RequestDto requestDto,
             @RequestParam("attachment") MultipartFile multipartFile) {
+        System.out.println(authentication.getName());
         Users user = usersService.findByUsername(authentication.getName());
         Users tmpuser = user;
+        System.out.println(usersService.findPasswordById(tmpuser.getId()));
+
         user.setPassword(null);
         session.setAttribute("user", user);
         if (!BlacklistController.checkBlacklistedWords(requestDto.getDescription())) {
@@ -159,6 +161,7 @@ public class RequestControllerPresident {
             String path = "C:/sigev/docs";
             String filename = FileUtil.saveFile(multipartFile, path);
             attachments2.add(new RequestAttachment(filename.replaceAll(" ", "").replaceAll("-", "").replace("°", "")));
+            obj.setRequestAttachment(attachments2);
             boolean res1 = requestService.save(obj);
             if (res1) {
                 if (!multipartFile.isEmpty()) {
