@@ -23,12 +23,11 @@ public class City implements Serializable {
     @Column(name = "status", nullable = false)
     private int status;
 
-    @Column(name = "shield", nullable = true, length = 150)
+    @Column(name = "shield", nullable = true)
     private String shield;
 
     @ManyToOne
     @JoinColumn(name = "state", nullable = false)
-    @NotNull(message="Este campo no puede estar vacio")
     private State state;
 
     public City() {

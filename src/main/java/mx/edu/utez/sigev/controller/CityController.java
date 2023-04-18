@@ -43,6 +43,7 @@ public class CityController {
     @Autowired
     private UserService userService;
 
+
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String list(Model model, Pageable pageable, Authentication authentication) {
         Users user = userService.findByUsername(authentication.getName());
@@ -72,17 +73,28 @@ public class CityController {
     public String save(Model model, RedirectAttributes redirectAttributes,
                        Authentication authentication, @Valid City city, BindingResult result, @RequestParam("picture") MultipartFile file) throws IOException {
         Users user = userService.findByUsername(authentication.getName());
+        State state = stateService.findById(1);
+        city.setStatus(1);
+        city.setState(state);
+        System.out.println(city.getId());
+        System.out.println(city.getName());
+        System.out.println(city.getStatus());
+        System.out.println(city.getState());
+
+        Images image = imagesService.findImages(1);
+        Color color = colorService.findColors(1);
+        model.addAttribute("image", image);
+        model.addAttribute("color", color);
+        model.addAttribute("userLog", user);
         if (result.hasErrors()){
-            Images image = imagesService.findImages(1);
-            Color color = colorService.findColors(1);
-            model.addAttribute("image", image);
-            model.addAttribute("color", color);
-            model.addAttribute("userLog", user);
+            System.out.println("Entre");
             redirectAttributes.addFlashAttribute("msg_error", "UPS");
             return "city/create";
         }else{
+            System.out.println("Entre2");
             if (!BlacklistController.checkBlacklistedWords(city.getName())) {
                 if (!file.isEmpty()) {
+                    System.out.println("entre aca");
                     String ruta = "C:/sigev/docs";
                     String nombre = DocumentoUtileria.guardarDocumento(file, ruta);
                     if (nombre != null) {

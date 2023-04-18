@@ -416,7 +416,7 @@ public class UserController {
 
                     if (!file.isEmpty()) {
                         String ruta = "C:/sigev/docs";
-                        String nombre = DocumentoUtileria.guardarDocumento(file, ruta);
+                        String nombre = DocumentoUtileria.  guardarDocumento(file, ruta);
                         if (nombre != null) {
                             obj.setProfilePicture(nombre);
                         }
