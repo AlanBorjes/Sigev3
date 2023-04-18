@@ -6,7 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Solictudes</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/toast.min.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+          integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
@@ -19,50 +24,69 @@
         });
     </script>
     <style>
+        :root {
+            --main: [[${color.colorMain}]];
+            --secondary: [[${color.colorSecundary}]];
+            --textMain: [[${color.colorText}]];
+            --textSecondary: [[${color.colorTitle}]];
+        }
         li {
             text-decoration: none;
         }
+
     </style>
 </head>
 
 <body>
-    <div th:insert="~{fragments/header :: header}"></div>
-
-    <div class="container">
-        <div class="card">
-            <div class="card-header">NUEVA SOLICITUD</div>
-            <form th:object="${requestDto}" th:action="@{/president/save}" method="POST" enctype="multipart/form-data">
-                <div class="card-body">
-                    <div class="col-12">
-                        <div class="row">
-                            <div class="col-6 mb-3">
-                                <label class="form-label">Categoría</label>
-                                <select class="form-control" th:field="*{category}" required>
-                                    <option th:value="${tmp.id}" th:each="tmp : ${categoryList}" th:text="${tmp.name}">
-                                    </option>
-                                </select>
+    <div class="d-flex">
+    <div th:insert="~{fragments/sideBar :: sideBar}"></div>
+    <div class="w-100">
+        <div th:insert="~{fragments/navBar :: navBar}"></div>
+        <div class="container">
+            <div class="card">
+                <div class="card-header">NUEVA SOLICITUD</div>
+                <form th:object="${requestDto}" th:action="@{/president/save}" method="POST" enctype="multipart/form-data">
+                    <div class="card-body">
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <label class="form-label">Categoría</label>
+                                    <select class="form-control" th:field="*{category}" required>
+                                        <option th:value="${tmp.id}" th:each="tmp : ${categoryList}" th:text="${tmp.name}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="form-label">Evidencia</label>
+                                    <input type="file" class="form-control" accept="image/*, application/pdf"
+                                           name="attachment" required>
+                                    <input type="file" class="form-control" accept="image/*, application/pdf"
+                                           name="attachment" >
+                                    <input type="file" class="form-control" accept="image/*, application/pdf"
+                                           name="attachment" >
+                                    <input type="file" class="form-control" accept="image/*, application/pdf"
+                                           name="attachment" >
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label class="form-label">Descripción</label>
+                                    <textarea class="form-control form-control-lg" name="description" id="description" rows="10"
+                                              th:field="*{description}"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block mt-3">
+                                    <ion-icon name="checkmark"></ion-icon>&nbsp;Guardar
+                                </button>
                             </div>
-                            <div class="col-6 mb-3">
-                                <label class="form-label">Evidencia</label>
-                                <input type="file" class="form-control" accept="image/*, application/pdf"
-                                    name="attachment" required>
-                            </div>
-                            <div class="col-12 mb-3">
-                                <label class="form-label">Descripción</label>
-                                <textarea class="form-control form-control-lg" name="description" id="description" rows="10"
-                                    th:field="*{description}"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-block mt-3">
-                                <ion-icon name="checkmark"></ion-icon>&nbsp;Guardar
-                            </button>
                         </div>
                     </div>
-                </div>
-                <div class="card-footer">
-                </div>
-            </form>
+                    <div class="card-footer">
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
+    </div>
+
+
     <!-- <script th:src="@{/js/bootstrap.min.js}"></script> -->
     <!--Ionicons-->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>

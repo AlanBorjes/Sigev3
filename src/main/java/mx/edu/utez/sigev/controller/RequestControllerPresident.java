@@ -23,9 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/president")
@@ -111,12 +109,15 @@ public class RequestControllerPresident {
         Images image = imagesService.findImages(1);
         CommitteePresident president = presidentService.findByUser(user.getId());
         Page<Request> listRequests = requestService
-                .listarPaginacion(PageRequest.of(pageable.getPageNumber(), 2, Sort.by("startDate").descending()));        model.addAttribute("listRequests", requestService.findAllByCityId(linkService.findByUserId(user.getId()).getCity().getId()));
+                .listarPaginacion(PageRequest.of(pageable.getPageNumber(), 2, Sort.by("startDate").descending()));
+        model.addAttribute("listRequests", requestService.findAllByCityId(linkService.findByUserId(user.getId()).getCity().getId()));
+        System.out.println(user.getId());
+        System.out.println(linkService.findByUserId(user.getId()).getCity().getId());
+        System.out.println( requestService.findAllByCityId(linkService.findByUserId(user.getId()).getCity().getId()));
+
         Color color = colorService.findColors(1);
         model.addAttribute("userLog", user);
         model.addAttribute("image", image);
-        System.out.println(user.getName());
-        System.out.println(user.getProfilePicture());
         model.addAttribute("color", color);
         return "president-request/list";
     }
@@ -128,6 +129,11 @@ public class RequestControllerPresident {
         user.setPassword(null);
         session.setAttribute("user", user);
         model.addAttribute("categoryList", categoryService.findAllByStatus(1));
+        Color color = colorService.findColors(1);
+        Images image = imagesService.findImages(1);
+        model.addAttribute("userLog", user);
+        model.addAttribute("image", image);
+        model.addAttribute("color", color);
         return "president-request/create";
     }
 
@@ -148,16 +154,18 @@ public class RequestControllerPresident {
             obj.setStatus(2);
             obj.setPaymentStatus(1);
             obj.setPresident(presidentService.findByUser(user.getId()));
-            //obj.getPresident().getUser().setPassword(usersService.findPasswordById(tmpuser.getId()));
+            obj.getPresident().getUser().setPassword(usersService.findPasswordById(tmpuser.getId()));
+            Set<RequestAttachment> attachments2 = new HashSet<>();
+            String path = "C:/sigev/docs";
+            String filename = FileUtil.saveFile(multipartFile, path);
+            attachments2.add(new RequestAttachment(filename.replaceAll(" ", "").replaceAll("-", "").replace("°", "")));
             boolean res1 = requestService.save(obj);
             if (res1) {
                 if (!multipartFile.isEmpty()) {
                     RequestAttachment attachments = new RequestAttachment();
-                    String path = "C:/comve/docs";
-                    String filename = FileUtil.saveFile(multipartFile, path);
+
                     if (filename != null) {
                         attachments.setName(filename.replaceAll(" ", "").replaceAll("-", "").replace("°", ""));
-                        attachments.setRequest(obj);
                         boolean res2 = attachmentsService.save(attachments);
                         if (res2) {
                             redirectAttributes.addFlashAttribute("msg_success",

@@ -14,16 +14,23 @@ public class RequestAttachment implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "request", nullable = false)
-    @NotNull(message = "La solicitud no puede estar vacía")
-    private Request request;
-
     @Column(name = "name", length = 100, nullable = false)
     @Size(min = 2, message = "El nombre del archivo debe tener mínimo 2 caracteres")
     @Size(max = 100, message = "El nombre del archivo debe tener máximo 100 caracteres")
     @NotBlank(message = "El nombre del archivo no puede estar vacío")
     private String name;
+
+    public RequestAttachment(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public RequestAttachment(String name) {
+        this.name = name;
+    }
+
+    public RequestAttachment() {
+    }
 
     public Long getId() {
         return id;
@@ -33,13 +40,6 @@ public class RequestAttachment implements Serializable {
         this.id = id;
     }
 
-    public Request getRequest() {
-        return request;
-    }
-
-    public void setRequest(Request request) {
-        this.request = request;
-    }
 
     public String getName() {
         return name;

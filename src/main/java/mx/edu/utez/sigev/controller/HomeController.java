@@ -95,28 +95,38 @@ public class HomeController {
         Color color = colorService.findColors(1);
         Images image = imagesService.findImages(1);
         model.addAttribute("userLog", user);
-        model.addAttribute("image", image);
         model.addAttribute("color", color);
+        model.addAttribute("image", image);
 		return "enlace/dashboard";
 	}
 
     @RequestMapping(value = "/miembro/dashboard", method = RequestMethod.GET)
-	public String dashboardAMiembro(Authentication authentication, HttpSession session) {
-		if (session.getAttribute("user") == null) {
-			Users user = userService.findByUsername(authentication.getName());
+	public String dashboardAMiembro(Authentication authentication, HttpSession session,Model model) {
+        Users user = userService.findByUsername(authentication.getName());
+
+        if (session.getAttribute("user") == null) {
 			user.setPassword(null);
 			session.setAttribute("user", user);
 		}
+
+        Color color = colorService.findColors(1);
+        Images image = imagesService.findImages(1);
+        model.addAttribute("userLog", user);
+        model.addAttribute("image", image);
+        model.addAttribute("color", color);
 		return "miembro/dashboard";
 	}
 
     @RequestMapping(value = "/presidente/dashboard", method = RequestMethod.GET)
-	public String dashboardPresidente(Authentication authentication, HttpSession session) {
-		if (session.getAttribute("user") == null) {
-			Users user = userService.findByUsername(authentication.getName());
+	public String dashboardPresidente(Authentication authentication, HttpSession session,Model model) {
+            Users user = userService.findByUsername(authentication.getName());
 			user.setPassword(null);
-			session.setAttribute("user", user);
-		}
+            Color color = colorService.findColors(1);
+            Images image = imagesService.findImages(1);
+            model.addAttribute("userLog", user);
+            model.addAttribute("image", image);
+            model.addAttribute("color", color);
+
 		return "presidente/dashboard";
 	}
 

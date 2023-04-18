@@ -12,6 +12,17 @@
           integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
           crossorigin="anonymous" referrerpolicy="no-referrer" />
   </head>
+  <style>
+    :root {
+      --main: [[${color.colorMain}]];
+      --secondary: [[${color.colorSecundary}]];
+      --textMain: [[${color.colorText}]];
+      --textSecondary: [[${color.colorTitle}]];
+    }
+    li {
+      text-decoration: none;
+    }
+  </style>
   <body>
   <div class="d-flex">
     <div th:insert="~{fragments/sideBar :: sideBar}"></div>

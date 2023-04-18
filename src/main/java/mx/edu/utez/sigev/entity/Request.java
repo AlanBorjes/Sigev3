@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "request")
@@ -44,6 +45,10 @@ public class Request implements Serializable {
     @Column(name = "status", nullable = false)
     @NotNull(message = "El estatus no puede estar vacío")
     private int status;
+
+    @ManyToMany()
+    @JoinTable(name = "attachment", joinColumns = @JoinColumn(name = "requests"), inverseJoinColumns = @JoinColumn(name = "attachments"))
+    private Set<RequestAttachment> RequestAttachment;
 
     public Request(int state, int paymentStatus ) {
         this.status = state;
@@ -113,5 +118,13 @@ public class Request implements Serializable {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public Set<mx.edu.utez.sigev.entity.RequestAttachment> getRequestAttachment() {
+        return RequestAttachment;
+    }
+
+    public void setRequestAttachment(Set<mx.edu.utez.sigev.entity.RequestAttachment> requestAttachment) {
+        RequestAttachment = requestAttachment;
     }
 }

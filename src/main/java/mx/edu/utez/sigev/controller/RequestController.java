@@ -39,7 +39,8 @@ public class RequestController {
 
     @Autowired
     private ColorService colorService;
-
+    @Autowired
+    private RequestAttachmentsService requestAttachmentsService;
     @RequestMapping(value = "/amount/{id}", method = RequestMethod.GET)
     public String amount(Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         Request request = requestService.findById(id);
@@ -120,11 +121,10 @@ public class RequestController {
         /*Page<Request> listRequests = requestService
                 .listarPaginacion(PageRequest.of(pageable.getPageNumber(), 2, Sort.by("startDate").descending()));*/
         model.addAttribute("listRequests", requestService.findAllByCityId(linkService.findByUserId(user.getId()).getCity().getId()));
+
         Color color = colorService.findColors(1);
         model.addAttribute("userLog", user);
         model.addAttribute("image", image);
-        System.out.println(user.getName());
-        System.out.println(user.getProfilePicture());
         model.addAttribute("color", color);
         return "requests/listRequests";
     }

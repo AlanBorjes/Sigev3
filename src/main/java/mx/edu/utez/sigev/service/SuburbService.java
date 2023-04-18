@@ -1,5 +1,6 @@
 package mx.edu.utez.sigev.service;
 
+import mx.edu.utez.sigev.entity.Roles;
 import mx.edu.utez.sigev.entity.Suburb;
 import mx.edu.utez.sigev.repository.ISuburbRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ public class SuburbService {
     public Suburb findOne(long id) {
         return suburbRepository.getById(id);
     }
+
 
     public boolean save(Suburb obj) {
         boolean flag = false;

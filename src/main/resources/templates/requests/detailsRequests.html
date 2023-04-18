@@ -43,17 +43,10 @@
                             <div class="col-8">
                                 <div id="carouselExampleControls" style="background-color: black;"
                                      class="carousel slide" data-bs-ride="carousel">
-                                    <div class="carousel-inner">
+                                    <div class="carousel-inner" th:each="tmpRequestaaa : ${request.getRequestAttachment()}">
+
                                         <div class="carousel-item active">
-                                            <img src="https://ca-times.brightspotcdn.com/dims4/default/8133d88/2147483647/strip/true/crop/5695x3789+0+0/resize/1200x798!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Ff1%2F8e%2F0909b9b5a11d0eada3ea32b43bb6%2F237c505daf3e49faab155d607435f835"
-                                                 class="d-block imgCarousel" alt="...">
-                                        </div>
-                                        <div class="carousel-item">
-                                            <img src="https://cnnespanol.cnn.com/wp-content/uploads/2023/03/230312010724-01-california-flooding-031123.jpg?quality=100&strip=info"
-                                                 class="d-block imgCarousel" alt="...">
-                                        </div>
-                                        <div class="carousel-item">
-                                            <img src="https://es.amnesty.org/fileadmin/user_upload/2022-08-31_15_02_09-Window.jpg"
+                                            <img th:src="@{/docs/{i} (i = ${tmpRequestaaa.getName()})}"
                                                  class="d-block imgCarousel" alt="...">
                                         </div>
                                     </div>
@@ -136,9 +129,9 @@
                                 <p th:text="${request.startDate}"></p>
                                 <form class="input-group" th:object="${request}" th:action="@{/request/save/savepaymentStatus}"
                                       method="POST" >
-                                    <input type="number" class="form-control" th:field="${request.id}" th:value="${request.id}"
+                                    <input sec:authorize="hasAnyAuthority('ROL_ENLACE')"  type="number" class="form-control" th:field="${request.id}" th:value="${request.id}"
                                            aria-label="Recipient's username" aria-describedby="button-addon2" hidden>
-                                    <select class="form-select" id="inputGroupSelect04"
+                                    <select sec:authorize="hasAnyAuthority('ROL_ENLACE')" class="form-select" id="inputGroupSelect04"
                                             aria-label="Example select with button addon" block th:switch="${request.status}" th:field="*{paymentStatus}" >
                                         <div th:case="1">
                                             <option value="1" selected>Activo</option>
@@ -157,21 +150,23 @@
                                         </div>
 
                                     </select>
-                                    <button class="btn btn-main" type="submit">Button</button>
+                                    <button sec:authorize="hasAnyAuthority('ROL_ENLACE')" class="btn btn-main" type="submit">Button</button>
                                 </form>
 
                                 <p class="text-break mt-3 mb-5" th:utext="${request.description}">
                                 </p>
                                 <h5><span class="badge archivo"><i class="fa-solid fa-file-pdf"></i>
                                             Archivo.pdf</span></h5>
-                                <div class="input-group mt-3">
+                                <div class="input-group mt-3" >
                                     <form th:object="${request}" th:action="@{/request/save/paymentAmount}"
                                           method="POST" class="input-group mt-3"><input type="number" class="form-control" th:field="${request.id}" th:value="${request.id}"
                                                                                         aria-label="Recipient's username" aria-describedby="button-addon2" hidden>
                                         <input type="number" class="form-control" th:field="*{paymentAmount}" th:value="${request.paymentAmount}"
                                                aria-label="Recipient's username" aria-describedby="button-addon2">
                                         <button class="btn btn-main" type="submit"
-                                                id="button-addon2">Guardar</button>
+                                                id="button-addon2" sec:authorize="hasAnyAuthority('ROL_ENLACE')">Guardar</button>
+                                        <a class="btn btn-main"
+                                                id="button-addon" sec:authorize="hasAnyAuthority('ROL_PRESIDENTE')">Pagar</a>
                                     </form>
 
                                 </div>

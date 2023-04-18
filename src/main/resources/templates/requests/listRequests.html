@@ -39,21 +39,9 @@
                             <a th:href="@{/request/details/{id} (id=${tmpRequest.id})}"
                                class="btn mb-3" ><i style="" class="fa-solid fa-arrow-right fa-fade fa-2x"></i></a>
                         </div>
-                        <div class="row">
-                            <div class="col-md-3 col-6">
-                                <img src="https://ca-times.brightspotcdn.com/dims4/default/8133d88/2147483647/strip/true/crop/5695x3789+0+0/resize/1200x798!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Ff1%2F8e%2F0909b9b5a11d0eada3ea32b43bb6%2F237c505daf3e49faab155d607435f835"
-                                     class="imgIncidence" alt="...">
-                            </div>
-                            <div class="col-md-3 col-6">
-                                <img src="https://ca-times.brightspotcdn.com/dims4/default/8133d88/2147483647/strip/true/crop/5695x3789+0+0/resize/1200x798!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Ff1%2F8e%2F0909b9b5a11d0eada3ea32b43bb6%2F237c505daf3e49faab155d607435f835"
-                                     class="imgIncidence" alt="...">
-                            </div>
-                            <div class="col-md-3 col-6">
-                                <img src="https://ca-times.brightspotcdn.com/dims4/default/8133d88/2147483647/strip/true/crop/5695x3789+0+0/resize/1200x798!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Ff1%2F8e%2F0909b9b5a11d0eada3ea32b43bb6%2F237c505daf3e49faab155d607435f835"
-                                     class="imgIncidence" alt="...">
-                            </div>
-                            <div class="col-md-3 col-6">
-                                <img src="https://ca-times.brightspotcdn.com/dims4/default/8133d88/2147483647/strip/true/crop/5695x3789+0+0/resize/1200x798!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Ff1%2F8e%2F0909b9b5a11d0eada3ea32b43bb6%2F237c505daf3e49faab155d607435f835"
+                        <div class="row" th:each="tmpRequestaaa : ${tmpRequest.getRequestAttachment()}">
+                            <div class="col-md-3 col-6" >
+                                <img th:src="@{/docs/{i} (i = ${tmpRequestaaa.getName()})}"
                                      class="imgIncidence" alt="...">
                             </div>
                         </div>
