@@ -44,7 +44,7 @@
              -15px -15px 30px #ffffff; margin-top: 20px; border-radius: 30px; border: black 0px solid;  margin: 19px; padding: 10px"  th:each="tmpRequest : ${listRequests}">
                     <div class="col-12" >
                         <div class="" style="  float: right;">
-                            <a th:href="@{/request/details/{id} (id=${tmpRequest.id})}"
+                            <a th:href="@{/president/details/{id} (id=${tmpRequest.id})}"
                                class="btn mb-3" ><i style="" class="fa-solid fa-arrow-right fa-fade fa-2x"></i></a>
                         </div>
                         <div class="row"  th:each="tmpRequestaaa : ${tmpRequest.getRequestAttachment()}">

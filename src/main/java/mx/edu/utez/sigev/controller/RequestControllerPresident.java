@@ -91,13 +91,32 @@ public class RequestControllerPresident {
     @RequestMapping(value = "/details/{id}", method = RequestMethod.GET)
     public String showRequestDetails(@PathVariable("id") long id, Authentication authentication, HttpSession session,
             Model model,
-            RedirectAttributes redirectAttributes) {
-        Users user = usersService.findByUsername(authentication.getName());
-        user.setPassword(null);
-        session.setAttribute("user", user);
-        model.addAttribute("request", requestService.findById(id));
-        model.addAttribute("attachment", attachmentsService.findByRequestId(id));
-        return "president-request/details";
+            RedirectAttributes redirectAttributes,Commentary commentary,Request request) {
+                Users user = usersService.findByUsername(authentication.getName());
+                Request sa = requestService.findById(id);
+                System.out.println(user.getId());
+                System.out.println(sa.getPresident().getUser().getId());
+                if(user.getId() == sa.getPresident().getUser().getId()){
+                    Color color = colorService.findColors(1);
+                    Images image = imagesService.findImages(1);
+                    System.out.println("Entre");
+                    model.addAttribute("userLog", user);
+                    model.addAttribute("image", image);
+                    model.addAttribute("color", color);
+                    model.addAttribute("listComents", commentaryService.findAllByRequestId(id));               
+                    if (!requestService.findById(id).equals(null)) {
+                        model.addAttribute("request", requestService.findById(id));;
+                        System.out.println(sa.getRequestAttachment());
+                        return "president-request/details";
+                    } else {
+                        redirectAttributes.addFlashAttribute("msg_error", "La solicitud que buscas no existe");
+                        return "redirect:/president/list";
+                    }
+                }else{
+                    System.out.println("Entre2");
+                    redirectAttributes.addFlashAttribute("msg_error", "Error no tienes permiso para entrar a esas incidencias ");
+                    return "redirect:/president/list";
+                }
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
@@ -198,22 +217,28 @@ public class RequestControllerPresident {
 
     @RequestMapping(value = "/commentary/{id}", method = RequestMethod.GET)
     public String chat(@PathVariable("id") long id, Authentication authentication, HttpSession session, Model model,
-            RedirectAttributes redirectAttributes, Commentary commentary) {
+                       RedirectAttributes redirectAttributes, Commentary commentary) {
         Users user = usersService.findByUsername(authentication.getName());
         user.setPassword(null);
         session.setAttribute("user", user);
         model.addAttribute("listComents", commentaryService.findAllByRequestId(id));
         model.addAttribute("request", requestService.findById(id));
-        return "president-request/comments";
+        return "/requests/detailsRequests";
     }
 
     @RequestMapping(value = "/commentary/save/{id}", method = RequestMethod.POST)
     public String saveCommentary(Model model, Commentary commentary, Authentication authentication,
-            HttpSession session, @PathVariable("id") long id, RedirectAttributes redirectAttributes) {
+                                 HttpSession session, @PathVariable("id") long id, RedirectAttributes redirectAttributes) {
         Users user = usersService.findByUsername(authentication.getName());
-        user.setPassword(null);
+        Color color = colorService.findColors(1);
+        Images image = imagesService.findImages(1);
+        model.addAttribute("userLog", user);
+        model.addAttribute("image", image);
+        model.addAttribute("color", color);
+        model.addAttribute("listComents", commentaryService.findAllByRequestId(id));
         session.setAttribute("user", user);
         commentary.setRequest(requestService.findById(id));
+         Long Idrequesr = commentary.getRequest().getId();
         if (!BlacklistController.checkBlacklistedWords(commentary.getContent())) {
             Users tmp = usersService.findById(user.getId());
             tmp.setPassword(usersService.findPasswordById(tmp.getId()));
@@ -233,7 +258,7 @@ public class RequestControllerPresident {
         } else {
             redirectAttributes.addFlashAttribute("msg_error", "Ingresó una o más palabras prohibidas.");
         }
-        return ("redirect:/president/commentary/" + id);
+        return ("redirect:/request/details/"+Idrequesr);
     }
 
 }
