@@ -16,10 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -42,7 +39,7 @@ public class TemaController {
     ImagesService imagesService;
 
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @GetMapping(value = "/")
     public String findAllEnlaces(Model model, Authentication authentication, HttpSession session) {
         Color color = colorService.findColors(1);
         Images image = imagesService.findImages(1);
@@ -55,7 +52,7 @@ public class TemaController {
         return "administrador/tema";
     }
 
-    @RequestMapping(value = "/update/color", method = RequestMethod.POST)
+    @PostMapping(value = "/update/color")
     public String updateColor(Model model,RedirectAttributes redirectAttributes, Authentication authentication,
                               HttpSession session, Color color) {
         Color tmp = colorService.findColors(1);
@@ -80,7 +77,7 @@ public class TemaController {
         return ("redirect:/tema/");
     }
 
-    @RequestMapping(value = "/update/logo1", method = RequestMethod.POST)
+    @PostMapping(value = "/update/logo1")
     public String updateLogo1(Model model,RedirectAttributes redirectAttributes, Authentication authentication,
                               HttpSession session, @RequestParam("logo1")  MultipartFile file) throws IOException{
         Images tmp = imagesService.findImages(1);
@@ -109,7 +106,7 @@ public class TemaController {
         return ("redirect:/tema/");
     }
 
-    @RequestMapping(value = "/update/logo2", method = RequestMethod.POST)
+    @PostMapping(value = "/update/logo2")
     public String updateLogo2(Model model,RedirectAttributes redirectAttributes, Authentication authentication,
                               HttpSession session, @RequestParam("logo2")  MultipartFile file) throws IOException{
         Images tmp = imagesService.findImages(1);
@@ -138,7 +135,7 @@ public class TemaController {
         return ("redirect:/tema/");
     }
 
-    @RequestMapping(value = "/update/imgLogin", method = RequestMethod.POST)
+    @PostMapping(value = "/update/imgLogin")
     public String updateimgLogin(Model model,RedirectAttributes redirectAttributes, Authentication authentication,
                               HttpSession session, @RequestParam("imgLogin")  MultipartFile file) throws IOException{
         Images tmp = imagesService.findImages(1);

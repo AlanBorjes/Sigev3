@@ -14,9 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
@@ -42,7 +40,7 @@ public class SuburbController {
     @Autowired
     private ColorService colorService;
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @GetMapping(value = "/list")
     public String list(Model model, RedirectAttributes redirectAttributes, Pageable pageable,Authentication authentication) {
         Users user = userService.findByUsername(authentication.getName());
         Color color = colorService.findColors(1);
@@ -56,7 +54,7 @@ public class SuburbController {
         return "suburb/list";
     }
 
-    @RequestMapping(value = "/create", method = RequestMethod.GET)
+    @GetMapping(value = "/create")
     public String create(Model model, RedirectAttributes redirectAttributes, Suburb suburb,
             Authentication authentication, HttpSession session) {
         Users user = userService.findByUsername(authentication.getName());
@@ -72,7 +70,7 @@ public class SuburbController {
         return "suburb/create";
     }
 
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @PostMapping(value = "/save")
     public String save(Model model, RedirectAttributes redirectAttributes, Suburb suburb, Authentication authentication,
             HttpSession session) {
         Users user = userService.findByUsername(authentication.getName());
@@ -95,7 +93,7 @@ public class SuburbController {
         return "redirect:/suburb/create";
     }
 
-    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/edit/{id}")
     public String edit(Model model, RedirectAttributes redirectAttributes, Suburb suburb, @PathVariable("id") long id,
             Authentication authentication, HttpSession session) {
 
@@ -119,7 +117,7 @@ public class SuburbController {
         return "redirect:/suburb/list";
     }
 
-    @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
+    @PostMapping(value = "/update/{id}")
     public String update(Model model, RedirectAttributes redirectAttributes, Suburb suburb,
             @PathVariable("id") long id) {
         if (!(BlacklistController.checkBlacklistedWords(suburb.getName())

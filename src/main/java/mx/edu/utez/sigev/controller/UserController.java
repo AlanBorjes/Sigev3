@@ -22,10 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -60,7 +57,7 @@ public class UserController {
     @Autowired
     private  ColorService colorService;
 
-    @RequestMapping(value = "/list/enlaces", method = RequestMethod.GET)
+    @GetMapping(value = "/list/enlaces")
     public String findAllEnlaces(Model model, Authentication authentication, HttpSession session) {
         Users user = userService.findByUsername(authentication.getName());
         Images image = imagesService.findImages(1);
@@ -75,7 +72,7 @@ public class UserController {
         return "enlace/enlaces";
     }
 
-    @RequestMapping(value = "/list/administradores", method = RequestMethod.GET)
+    @GetMapping(value = "/list/administradores")
     public String findAllAdmins(Model model, Authentication authentication, HttpSession session) {
         Users user = userService.findByUsername(authentication.getName());
         Images image = imagesService.findImages(1);
@@ -90,7 +87,7 @@ public class UserController {
         return "administrador/administradores";
     }
 
-    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/edit/{id}")
     public String findOne(Model model, @PathVariable("id") long id, RedirectAttributes redirectAttributes,
             RecoverPasswordDto recoverPasswordDto, Authentication authentication) {
         Users userTmp = userService.findByUsername(authentication.getName());
@@ -116,7 +113,7 @@ public class UserController {
         return "redirect:/users/list";
     }
 
-    @RequestMapping(value = "/edit/password/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/edit/password/{id}")
     public String editPassword(Model model, @PathVariable("id") long id, RedirectAttributes redirectAttributes,
                           RecoverPasswordDto recoverPasswordDto, Authentication authentication) {
         Users userTmp = userService.findByUsername(authentication.getName());
@@ -135,7 +132,7 @@ public class UserController {
         return "redirect:/users/list/enlaces";
     }
 
-    @RequestMapping(value = "/create", method = RequestMethod.GET)
+    @GetMapping(value = "/create")
     public String create(UserDto userDto,Users users, Model modelo, Authentication authentication) {
         Users userTmp = userService.findByUsername(authentication.getName());
         Images image = imagesService.findImages(1);
@@ -147,7 +144,7 @@ public class UserController {
         return "users/create";
     }
 
-    @RequestMapping(value = "/create/admin", method = RequestMethod.GET)
+    @GetMapping(value = "/create/admin")
     public String createAdmin(UserDto userDto, Users users, Model modelo, Authentication authentication) {
         Users userTmp = userService.findByUsername(authentication.getName());
         Images image = imagesService.findImages(1);
@@ -158,7 +155,7 @@ public class UserController {
         return "administrador/create";
     }
 
-    @RequestMapping(value = "/recover/{id}", method = RequestMethod.POST)
+    @PostMapping(value = "/recover/{id}")
     public String recoverPassword(@Valid RecoverPasswordDto recoverPasswordDto, BindingResult result, Model model,
             RedirectAttributes redirectAttributes, @PathVariable("id") long id, @RequestParam("confirmarContraseña") String confirmarContraseña,
             Authentication authentication, HttpSession session) {
@@ -205,7 +202,7 @@ public class UserController {
         return ("redirect:/users/edit/" + id);
     }
 
-    @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
+    @PostMapping(value = "/update/{id}")
     public String updateUser(Users users, @Valid UserUpdateDTO userDto, BindingResult results, RecoverPasswordDto recoverPasswordDto, Model model,
                              RedirectAttributes redirectAttributes, @PathVariable("id") long id,
                              Authentication authentication, HttpSession session, @RequestParam("picture")  MultipartFile file) throws IOException{
@@ -260,7 +257,7 @@ public class UserController {
         return ("redirect:/users/edit/" + id);
     }
 
-    @RequestMapping(value = "/signup", method = RequestMethod.POST)
+    @PostMapping(value = "/signup")
     public String signup(UserDto userDto, Model model, RedirectAttributes redirectAttributes) {
         if (!(BlacklistController.checkBlacklistedWords(userDto.getName())
                 || BlacklistController.checkBlacklistedWords(userDto.getLastname())
@@ -301,7 +298,7 @@ public class UserController {
         return "redirect:/users/create";
     }
 
-    @RequestMapping(value = "/admin/signup", method = RequestMethod.POST)
+    @PostMapping(value = "/admin/signup")
     public String adminSignup( @Valid Users users, BindingResult result, @RequestParam("confirmarContraseña") String confirmarContraseña,
                                Model model, Authentication authentication, RedirectAttributes redirectAttributes, @RequestParam("picture")  MultipartFile file) throws IOException {
         String contentType = file.getContentType();
@@ -365,7 +362,7 @@ public class UserController {
         return "redirect:/users/create/admin";
     }
 
-    @RequestMapping(value = "/enlace/signup", method = RequestMethod.POST)
+    @PostMapping(value = "/enlace/signup")
     public String enlaceSignup( @Valid UserDto userDto, BindingResult result, @RequestParam("confirmarContraseña") String confirmarContraseña,
                                Model model, Authentication authentication, RedirectAttributes redirectAttributes, @RequestParam("picture")  MultipartFile file) throws IOException {
         model.addAttribute("listCities", cityService.findAllByStatus(1));
@@ -446,7 +443,7 @@ public class UserController {
         return "redirect:/users/create";
     }
 
-    @RequestMapping(value = "/disable/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/disable/{id}")
     public String disableUser(@PathVariable("id") long id, RedirectAttributes redirectAttributes,
             Authentication authentication, HttpSession session) {
         Users user = userService.findByUsername(authentication.getName());
@@ -471,7 +468,7 @@ public class UserController {
         return "redirect:/users/list/enlaces";
     }
 
-    @RequestMapping(value = "/disable/admin/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/disable/admin/{id}")
     public String disableAdmin(@PathVariable("id") long id, RedirectAttributes redirectAttributes,
                               Authentication authentication, HttpSession session) {
         Users user = userService.findByUsername(authentication.getName());

@@ -42,7 +42,7 @@ public class RequestController {
     private ColorService colorService;
     @Autowired
     private RequestAttachmentsService requestAttachmentsService;
-    @RequestMapping(value = "/amount/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/amount/{id}")
     public String amount(Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         Request request = requestService.findById(id);
         if (!request.equals(null)) {
@@ -55,7 +55,7 @@ public class RequestController {
         }
     }
 
-    @RequestMapping(value = "/details/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/details/{id}")
     public String details(Authentication authentication,Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes,Commentary commentary,Request request) {
         Users user = userService.findByUsername(authentication.getName());
         Color color = colorService.findColors(1);
@@ -112,7 +112,7 @@ public class RequestController {
 
     }
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @GetMapping(value = "/list")
     public String findAll(Model model, Pageable pageable, Authentication authentication, HttpSession session) {
         Users user = userService.findByUsername(authentication.getName());
         Images image = imagesService.findImages(1);
@@ -225,7 +225,7 @@ public class RequestController {
         return ("redirect:/request/details/"+obj.getId());
 
     }
-    @RequestMapping(value = "/commentary/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/commentary/{id}")
     public String chat(@PathVariable("id") long id, Authentication authentication, HttpSession session, Model model,
                        RedirectAttributes redirectAttributes, Commentary commentary) {
         Users user = userService.findByUsername(authentication.getName());
@@ -236,7 +236,7 @@ public class RequestController {
         return "/requests/detailsRequests";
     }
 
-    @RequestMapping(value = "/commentary/save/{id}", method = RequestMethod.POST)
+    @PostMapping(value = "/commentary/save/{id}")
     public String saveCommentary(Model model, Commentary commentary, Authentication authentication,
                                  HttpSession session, @PathVariable("id") long id, RedirectAttributes redirectAttributes) {
         Users user = userService.findByUsername(authentication.getName());

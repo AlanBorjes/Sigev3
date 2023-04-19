@@ -10,6 +10,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -38,7 +40,7 @@ public class CommitteePresidentController {
     @Autowired
     private CityLinkService linkService;
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @GetMapping(value = "/list")
     public String list(Model model, RedirectAttributes redirectAttributes, Authentication authentication,
             HttpSession session) {
         Users user = userService.findByUsername(authentication.getName());
@@ -48,13 +50,13 @@ public class CommitteePresidentController {
         return "committee_president/list";
     }
 
-    @RequestMapping(value = "/create", method = RequestMethod.GET)
+    @GetMapping(value = "/create")
     public String list(Model model, RedirectAttributes redirectAttributes, PresidentDto presidentDto) {
         model.addAttribute("committeeList", committeeService.findAll());
         return "committee_president/create";
     }
 
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @PostMapping(value = "/save")
     public String save(PresidentDto presidentDto, Model model, RedirectAttributes redirectAttributes) {
         if (!(BlacklistController.checkBlacklistedWords(presidentDto.getName())
                 || BlacklistController.checkBlacklistedWords(presidentDto.getLastname())

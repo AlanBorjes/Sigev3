@@ -15,10 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -53,7 +50,7 @@ public class RequestControllerPresident {
 
     @Autowired
     private ColorService colorService;
-    @RequestMapping(value = "/list/unpaid", method = RequestMethod.GET)
+    @GetMapping(value = "/list/unpaid")
     public String listAllPresidentUnpaidRequests(Authentication authentication, HttpSession session, Model model,
             RedirectAttributes redirectAttributes) {
         Users user = usersService.findByUsername(authentication.getName());
@@ -64,7 +61,7 @@ public class RequestControllerPresident {
         return "president-request/unpaidList";
     }
 
-    @RequestMapping(value = "/pay/{id}/{status}", method = RequestMethod.GET)
+    @GetMapping(value = "/pay/{id}/{status}")
     public ResponseEntity<Object> payRequest(@PathVariable("id") long id, @PathVariable("status") String status,
             RedirectAttributes redirectAttributes) {
         Map<String, Object> data = new HashMap<>();
@@ -88,7 +85,7 @@ public class RequestControllerPresident {
         }
     }
 
-    @RequestMapping(value = "/details/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/details/{id}")
     public String showRequestDetails(@PathVariable("id") long id, Authentication authentication, HttpSession session,
             Model model,
             RedirectAttributes redirectAttributes) {
@@ -100,7 +97,7 @@ public class RequestControllerPresident {
         return "president-request/details";
     }
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @GetMapping(value = "/list")
     public String listAllPresidentRequests(Authentication authentication, HttpSession session, Model model,
             RedirectAttributes redirectAttributes, Pageable pageable) {
         Users user = usersService.findByUsername(authentication.getName());
@@ -121,7 +118,7 @@ public class RequestControllerPresident {
         return "president-request/list";
     }
 
-    @RequestMapping(value = "/create", method = RequestMethod.GET)
+    @GetMapping(value = "/create")
     public String createPresidentRequest(Authentication authentication, HttpSession session, Model model,
             RedirectAttributes redirectAttributes, RequestDto requestDto) {
         Users user = usersService.findByUsername(authentication.getName());
@@ -136,7 +133,7 @@ public class RequestControllerPresident {
         return "president-request/create";
     }
 
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @PostMapping(value = "/save")
     public String savePresidentRequest(Authentication authentication, HttpSession session, Model model,
             RedirectAttributes redirectAttributes, RequestDto requestDto,
             @RequestParam("attachment") MultipartFile multipartFile) {
@@ -196,7 +193,7 @@ public class RequestControllerPresident {
         }
     }
 
-    @RequestMapping(value = "/commentary/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/commentary/{id}")
     public String chat(@PathVariable("id") long id, Authentication authentication, HttpSession session, Model model,
             RedirectAttributes redirectAttributes, Commentary commentary) {
         Users user = usersService.findByUsername(authentication.getName());
@@ -207,7 +204,7 @@ public class RequestControllerPresident {
         return "president-request/comments";
     }
 
-    @RequestMapping(value = "/commentary/save/{id}", method = RequestMethod.POST)
+    @PostMapping(value = "/commentary/save/{id}")
     public String saveCommentary(Model model, Commentary commentary, Authentication authentication,
             HttpSession session, @PathVariable("id") long id, RedirectAttributes redirectAttributes) {
         Users user = usersService.findByUsername(authentication.getName());

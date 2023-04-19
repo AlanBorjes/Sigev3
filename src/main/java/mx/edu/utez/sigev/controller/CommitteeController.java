@@ -105,7 +105,7 @@ public class CommitteeController {
         }
     }
 
-    @RequestMapping (value = "/details/{id}", method = RequestMethod.GET)
+    @GetMapping (value = "/details/{id}")
     public String detalles(Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes){
         Committee committee = committeeService.findById(id);
         if (!committee.equals(null)){

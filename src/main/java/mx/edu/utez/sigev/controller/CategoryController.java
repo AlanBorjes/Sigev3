@@ -17,9 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
@@ -41,7 +39,7 @@ public class CategoryController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @GetMapping(value = "/list")
     public String listCategories(Model model, RedirectAttributes redirectAttributes, Pageable pageable,
             Authentication authentication, HttpSession session) {
         Users user = userService.findByUsername(authentication.getName());
@@ -55,7 +53,7 @@ public class CategoryController {
         return "category/categorias";
     }
 
-    @RequestMapping(value = "/create", method = RequestMethod.GET)
+    @GetMapping(value = "/create")
     public String createCategory(Model model, RedirectAttributes redirectAttributes, Category category, Authentication authentication) {
         Users user = userService.findByUsername(authentication.getName());
         model.addAttribute("userLog", user);
@@ -66,7 +64,7 @@ public class CategoryController {
         return "category/create";
     }
 
-    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/edit/{id}")
     public String categoryEdit(Model model, RedirectAttributes redirectAttributes, @PathVariable("id") long id,
             Category category, Authentication authentication) {
         Users user = userService.findByUsername(authentication.getName());
@@ -85,7 +83,7 @@ public class CategoryController {
         }
     }
 
-    @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
+    @PostMapping(value = "/update/{id}")
     public String categoryUpdate(Model model, RedirectAttributes redirectAttributes, @PathVariable("id") long id,
             Category category) {
         Category tmp = categoryService.findById(id);
@@ -109,7 +107,7 @@ public class CategoryController {
         return "redirect:/category/edit/" + id;
     }
 
-    @RequestMapping(value = "/desactivate/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/desactivate/{id}")
     public String categoryDesactivate(Model model, RedirectAttributes redirectAttributes, @PathVariable("id") long id,
                                  Category category) {
         String msg;
@@ -140,7 +138,7 @@ public class CategoryController {
         return "redirect:/category/edit/" + id;
     }
 
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @PostMapping(value = "/save")
     public String save(Model model, RedirectAttributes redirectAttributes, Category category) {
         if (!categoryService.exists(category.getName())) {
             if (!BlacklistController.checkBlacklistedWords(category.getName())) {

@@ -13,10 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -44,7 +41,7 @@ public class CityController {
     private UserService userService;
 
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @GetMapping(value = "/list")
     public String list(Model model, Pageable pageable, Authentication authentication) {
         Users user = userService.findByUsername(authentication.getName());
         Images image = imagesService.findImages(1);
@@ -57,7 +54,7 @@ public class CityController {
         return "city/municipios";
     }
 
-    @RequestMapping(value = "/create", method = RequestMethod.GET)
+    @GetMapping(value = "/create")
     public String create(Model model, RedirectAttributes redirectAttributes, City city, Authentication authentication) {
         Users user = userService.findByUsername(authentication.getName());
         Images image = imagesService.findImages(1);
@@ -69,7 +66,7 @@ public class CityController {
         return "city/create";
     }
 
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @PostMapping(value = "/save")
     public String save(Model model, RedirectAttributes redirectAttributes,
                        Authentication authentication, @Valid City city, BindingResult result, @RequestParam("picture") MultipartFile file) throws IOException {
         Users user = userService.findByUsername(authentication.getName());
@@ -117,7 +114,7 @@ public class CityController {
         return "redirect:/city/create";
     }
 
-    @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/edit/{id}")
     public String edit(Model model, RedirectAttributes redirectAttributes, Authentication authentication, City category, @PathVariable("id") long id) {
         Users user = userService.findByUsername(authentication.getName());
         City tmp = cityService.findOne(id);
@@ -136,7 +133,7 @@ public class CityController {
         return "redirect:/city/list";
     }
 
-    @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
+    @PostMapping(value = "/update/{id}")
     public String update(Model model, RedirectAttributes redirectAttributes, City city, @PathVariable("id") long id) {
         if (!BlacklistController.checkBlacklistedWords(city.getName())) {
             City tmp = cityService.findOne(id);
@@ -158,7 +155,7 @@ public class CityController {
         return ("redirect:/city/edit/" + id);
     }
 
-    @RequestMapping(value = "/desactivate/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/desactivate/{id}")
     public String categoryDesactivate(Model model, RedirectAttributes redirectAttributes, @PathVariable("id") long id,
                                       City city) {
         String msg = "";
