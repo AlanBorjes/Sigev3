@@ -28,7 +28,7 @@ public class CommentaryService {
     public boolean save(Commentary obj) {
         boolean flag = false;
         Commentary tmp = commentaryRepository.save(obj);
-        if (!tmp.equals(null)) {
+        if (tmp!=null) {
             flag = true;
         }
         return flag;
@@ -37,7 +37,7 @@ public class CommentaryService {
     public boolean delete(long id) {
         boolean flag = false;
         Commentary tmp = commentaryRepository.findById(id);
-        if (!tmp.equals(null)) {
+        if (tmp!=null) {
             commentaryRepository.delete(tmp);
             flag = true;
         }

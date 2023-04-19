@@ -36,7 +36,7 @@ public class CityLinkService {
     public boolean save(CityLink obj) {
         boolean flag = false;
         CityLink tmp = linkRepository.save(obj);
-        if (!tmp.equals(null)) {
+        if (tmp!=null) {
             flag = true;
         }
         return flag;
@@ -45,7 +45,7 @@ public class CityLinkService {
     public boolean delete(long id) {
         boolean flag = false;
         CityLink tmp = linkRepository.getById(id);
-        if (!tmp.equals(null)) {
+        if (tmp!=null) {
             linkRepository.delete(tmp);
             flag = true;
         }

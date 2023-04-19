@@ -36,7 +36,7 @@ public class CommitteePresidentService {
     public boolean save (CommitteePresident obj) {
         boolean flag = false;
         CommitteePresident tmp = presidentRepository.save(obj);
-        if (!tmp.equals(null)) {
+        if (tmp!=null) {
             flag = true;
         }
         return flag;

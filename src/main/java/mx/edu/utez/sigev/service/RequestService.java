@@ -54,7 +54,7 @@ public class RequestService {
             requestRepository.save(obj);
             return true;
         }catch (Exception e){
-            e.printStackTrace();
+           // e.printStackTrace();
             return false;
         }
     }
@@ -62,7 +62,7 @@ public class RequestService {
     public boolean delete(long id) {
         boolean flag = false;
         Request tmp = requestRepository.findById(id);
-        if (!tmp.equals(null)) {
+        if (tmp!=null) {
             requestRepository.delete(tmp);
             flag = true;
         }

@@ -14,7 +14,7 @@ public class DocumentoUtileria {
             multipartFile.transferTo(documento);
             return nombreDocumento;
         }catch (Exception e){
-            e.printStackTrace();
+           // e.printStackTrace();
             return null;
         }
     }

@@ -19,7 +19,7 @@ public class ColorService {
     public boolean save(Color obj) {
         boolean flag = false;
         Color tmp = colorRepository.save(obj);
-        if (!tmp.equals(null)) {
+        if (tmp!=null) {
             flag = true;
         }
         return flag;

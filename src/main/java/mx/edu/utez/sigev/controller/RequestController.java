@@ -45,7 +45,7 @@ public class RequestController {
     @GetMapping(value = "/amount/{id}")
     public String amount(Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         Request request = requestService.findById(id);
-        if (!request.equals(null)) {
+        if (request != null) {
             model.addAttribute("request", requestService.findById(id));
             model.addAttribute("listRequests", requestService.findAll());
             return "requests/amountRequests";
@@ -66,7 +66,7 @@ public class RequestController {
         model.addAttribute("color", color);
         model.addAttribute("listComents", commentaryService.findAllByRequestId(id));
         Request sa = requestService.findById(id);
-        if (!requestService.findById(id).equals(null)) {
+        if (requestService.findById(id)!=null) {
             model.addAttribute("request", requestService.findById(id));;
             System.out.println(sa.getRequestAttachment());
             return "/requests/detailsRequests";
@@ -139,7 +139,7 @@ public class RequestController {
     @GetMapping(value = "/find/{id}")
     public String findOne(Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         Request request = requestService.findById(id);
-        if (!request.equals(null)) {
+        if (request != null) {
             model.addAttribute("request", request);
         } else {
             redirectAttributes.addFlashAttribute("msg_error", "No se encontró la solicitud solicitada");

@@ -32,7 +32,7 @@ public class SuburbService {
     public boolean save(Suburb obj) {
         boolean flag = false;
         Suburb tmp = suburbRepository.save(obj);
-        if (!tmp.equals(null)) {
+        if (tmp!=null) {
             flag = true;
         }
         return flag;
@@ -41,7 +41,7 @@ public class SuburbService {
     public boolean delete(long id) {
         boolean flag = false;
         Suburb tmp = suburbRepository.getById(id);
-        if (!tmp.equals(null)) {
+        if (tmp!=null) {
             suburbRepository.delete(tmp);
             flag = true;
         }

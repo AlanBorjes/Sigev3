@@ -24,7 +24,7 @@ public class RolesService {
     public boolean save(Roles obj) {
         boolean flag = false;
         Roles tmp = rolesRepository.save(obj);
-        if (!tmp.equals(null)) {
+        if (tmp!=null) {
             flag = true;
         }
         return flag;
@@ -33,7 +33,7 @@ public class RolesService {
     public boolean delete(long id) {
         boolean flag = false;
         Roles tmp = rolesRepository.findById(id);
-        if (!tmp.equals(null)) {
+        if (tmp!=null) {
             flag = true;
             rolesRepository.delete(tmp);
         }

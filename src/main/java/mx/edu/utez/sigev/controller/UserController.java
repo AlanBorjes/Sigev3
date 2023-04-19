@@ -97,7 +97,7 @@ public class UserController {
         userDto.setLastname(user.getLastname());
         userDto.setSurname(user.getSurname());
         userDto.setPhone(user.getPhone());
-        if (!user.equals(null)) {
+        if (user != null) {
             Images image = imagesService.findImages(1);
             Color color = colorService.findColors(1);
             model.addAttribute("userLog", userTmp);
@@ -118,7 +118,7 @@ public class UserController {
                           RecoverPasswordDto recoverPasswordDto, Authentication authentication) {
         Users userTmp = userService.findByUsername(authentication.getName());
         Users user = userService.findById(id);
-        if (!user.equals(null)) {
+        if (user != null) {
             Images image = imagesService.findImages(1);
             Color color = colorService.findColors(1);
             model.addAttribute("image", image);
@@ -162,7 +162,7 @@ public class UserController {
         Users user = userService.findByUsername(authentication.getName());
         if (!BlacklistController.checkBlacklistedWords(recoverPasswordDto.getPassword())) {
             Users tmpUser = userService.findById(id);
-            if (!(recoverPasswordDto.getPassword().equals(confirmarContraseña))){
+            if (!recoverPasswordDto.getPassword().equals(confirmarContraseña)){
                 Images image = imagesService.findImages(1);
                 Color color = colorService.findColors(1);
                 model.addAttribute("image", image);

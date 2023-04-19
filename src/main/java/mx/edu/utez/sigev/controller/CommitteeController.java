@@ -61,7 +61,7 @@ public class CommitteeController {
     @GetMapping(value = "/find/{id}")
     public String findOne(Model model, @PathVariable("id") long id, RedirectAttributes redirectAttributes) {
         Committee committee = committeeService.findById(id);
-        if (!committee.equals(null)) {
+        if (committee != null) {
             model.addAttribute("committee", committee);
             return "commitee/listCommittee";
         } else {
@@ -108,7 +108,7 @@ public class CommitteeController {
     @GetMapping (value = "/details/{id}")
     public String detalles(Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes){
         Committee committee = committeeService.findById(id);
-        if (!committee.equals(null)){
+        if (committee != null){
             model.addAttribute("committee", committeeService.findById(id));
             model.addAttribute("listCommittees", committeeService.findAll());
             return "committee/listCommittee";
@@ -124,7 +124,7 @@ public class CommitteeController {
     @DeleteMapping(value = "/delete/{id}")
     public String delete(Model model, @PathVariable("id") long id, RedirectAttributes redirectAttributes) {
         Committee committee = committeeService.findById(id);
-        if (!committee.equals(null)) {
+        if (committee != null) {
             boolean res = committeeService.delete(id);
             if (res) {
                 redirectAttributes.addFlashAttribute("msg_success", "Comité eliminado correctamente");

@@ -25,7 +25,7 @@ public class StateService {
     public boolean save(State obj) {
         boolean flag = false;
         State tmp = stateRepository.save(obj);
-        if (!tmp.equals(null)) {
+        if (tmp!=null) {
             flag = true;
         }
         return flag;
@@ -34,7 +34,7 @@ public class StateService {
     public boolean delete(long id) {
         boolean flag = false;
         State tmp = stateRepository.findById(id);
-        if (!tmp.equals(null)) {
+        if (tmp!=null) {
             stateRepository.delete(tmp);
             flag = true;
         }

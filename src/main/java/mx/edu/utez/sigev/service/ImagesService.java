@@ -17,7 +17,7 @@ public class ImagesService {
     public boolean save(Images obj){
         boolean flag = false;
         Images tmp = imagesRepository.save(obj);
-        if (!tmp.equals(null)){
+        if (tmp!=null){
             flag = true;
         }
         return flag;

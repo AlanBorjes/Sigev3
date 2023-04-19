@@ -41,14 +41,14 @@ public class CityService {
             cityRepository.save(obj);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+           // e.printStackTrace();
             return false;
         }
     }
 
     public boolean delete(long id) {
         City tmp = cityRepository.getById(id);
-        if (!tmp.equals(null)) {
+        if (tmp!=null) {
             cityRepository.delete(tmp);
             return true;
         }

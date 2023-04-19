@@ -43,7 +43,7 @@ public class CategoryService {
     public boolean save(Category obj) {
         boolean flag = false;
         Category tmp = categoryRepository.save(obj);
-        if (!tmp.equals(null)) {
+        if (tmp!=null) {
             flag = true;
         }
         return flag;
@@ -52,7 +52,7 @@ public class CategoryService {
     public boolean delete(long id) {
         boolean flag = false;
         Category tmp = categoryRepository.getById(id);
-        if (!tmp.equals(null)) {
+        if (tmp!=null) {
             categoryRepository.delete(tmp);
             flag = true;
         }

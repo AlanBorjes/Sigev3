@@ -98,7 +98,7 @@ public class SuburbController {
             Authentication authentication, HttpSession session) {
 
         Suburb tmp = suburbService.findOne(id);
-        if (!tmp.equals(null)) {
+        if (tmp!=null) {
             Users user = userService.findByUsername(authentication.getName());
             user.setPassword(null);
             session.setAttribute("user", user);
@@ -123,7 +123,7 @@ public class SuburbController {
         if (!(BlacklistController.checkBlacklistedWords(suburb.getName())
                 || BlacklistController.checkBlacklistedWords(suburb.getPostalCode()))) {
             Suburb tmp = suburbService.findOne(id);
-            if (!tmp.equals(null)) {
+            if (tmp!=null) {
                 suburb.setId(id);
                 boolean res = suburbService.save(suburb);
                 if (res) {

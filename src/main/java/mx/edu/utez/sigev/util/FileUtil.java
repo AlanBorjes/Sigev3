@@ -15,7 +15,7 @@ public class FileUtil {
             multipartFile.transferTo(file);
             return fileName;
         } catch (IOException e) {
-            e.printStackTrace();
+           // e.printStackTrace();
             return "null";
         }
     }

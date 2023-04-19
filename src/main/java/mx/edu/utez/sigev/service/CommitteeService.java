@@ -31,7 +31,7 @@ public class CommitteeService {
     public boolean save(Committee obj) {
         boolean flag = false;
         Committee tmp = committeeRepository.save(obj);
-        if (!tmp.equals(null)) {
+        if (tmp!=null) {
             flag = true;
         }
         return flag;
@@ -40,7 +40,7 @@ public class CommitteeService {
     public boolean delete(long id) {
         boolean flag = false;
         Committee tmp = committeeRepository.findById(id);
-        if (!tmp.equals(null)) {
+        if (tmp!=null) {
             committeeRepository.delete(tmp);
             flag = true;
         }

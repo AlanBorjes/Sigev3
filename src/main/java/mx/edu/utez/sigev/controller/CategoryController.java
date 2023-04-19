@@ -69,7 +69,7 @@ public class CategoryController {
             Category category, Authentication authentication) {
         Users user = userService.findByUsername(authentication.getName());
         Category tmp = categoryService.findById(id);
-        if (!tmp.equals(null)) {
+        if (tmp!=null) {
             Images image = imagesService.findImages(1);
             Color color = colorService.findColors(1);
             model.addAttribute("userLog", user);
@@ -87,7 +87,7 @@ public class CategoryController {
     public String categoryUpdate(Model model, RedirectAttributes redirectAttributes, @PathVariable("id") long id,
             Category category) {
         Category tmp = categoryService.findById(id);
-        if (!tmp.equals(null)) {
+        if (tmp!=null) {
             if (!BlacklistController.checkBlacklistedWords(tmp.getName())) {
                 tmp.setName(category.getName());
                 boolean res = categoryService.save(tmp);
@@ -112,7 +112,7 @@ public class CategoryController {
                                  Category category) {
         String msg;
         Category tmp = categoryService.findById(id);
-        if (!tmp.equals(null)) {
+        if (tmp!=null) {
             if (!BlacklistController.checkBlacklistedWords(tmp.getName())) {
                 if (tmp.getStatus() == 1){
                     tmp.setStatus(0);

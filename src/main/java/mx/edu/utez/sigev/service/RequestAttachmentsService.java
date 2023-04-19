@@ -28,7 +28,7 @@ public class RequestAttachmentsService {
     public boolean save(RequestAttachment obj) {
         boolean flag = false;
         RequestAttachment tmp = attachmentsRepository.save(obj);
-        if (!tmp.equals(null)) {
+        if (tmp!=null) {
             flag = true;
         }
         return flag;
@@ -37,7 +37,7 @@ public class RequestAttachmentsService {
     public boolean delete(long id) {
         boolean flag = false;
         RequestAttachment tmp = attachmentsRepository.findById(id);
-        if (!tmp.equals(null)) {
+        if (tmp!=null) {
             attachmentsRepository.delete(tmp);
             flag = true;
         }

@@ -40,7 +40,7 @@ public class UserService {
     public boolean save(Users obj) {
         boolean flag = false;
         Users tmp = userRepository.save(obj);
-        if (!tmp.equals(null)) {
+        if (tmp!=null) {
             flag = true;
         }
         return flag;
@@ -49,7 +49,7 @@ public class UserService {
     public boolean delete(long id) {
         boolean flag = false;
         Users tmp = userRepository.findById(id);
-        if (!tmp.equals(null)) {
+        if (tmp!=null) {
             userRepository.delete(tmp);
             flag = true;
         }

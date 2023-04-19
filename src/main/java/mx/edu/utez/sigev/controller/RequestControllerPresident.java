@@ -67,7 +67,7 @@ public class RequestControllerPresident {
         Map<String, Object> data = new HashMap<>();
         if (status.equals("COMPLETED")) {
             Request tmp = requestService.findById(id);
-            if (!tmp.equals(null)) {
+            if (tmp!=null) {
                 tmp.setPaymentStatus(2);
                 tmp.setStatus(3);
                 requestService.save(tmp);

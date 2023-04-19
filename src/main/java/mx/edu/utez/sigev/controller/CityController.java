@@ -118,7 +118,7 @@ public class CityController {
     public String edit(Model model, RedirectAttributes redirectAttributes, Authentication authentication, City category, @PathVariable("id") long id) {
         Users user = userService.findByUsername(authentication.getName());
         City tmp = cityService.findOne(id);
-        if (!tmp.equals(null)) {
+        if (tmp!=null) {
             Images image = imagesService.findImages(1);
             Color color = colorService.findColors(1);
             model.addAttribute("image", image);
@@ -137,7 +137,7 @@ public class CityController {
     public String update(Model model, RedirectAttributes redirectAttributes, City city, @PathVariable("id") long id) {
         if (!BlacklistController.checkBlacklistedWords(city.getName())) {
             City tmp = cityService.findOne(id);
-            if (!tmp.equals(null)) {
+            if (tmp!=null) {
                 tmp.setName(city.getName());
                 boolean res = cityService.save(tmp);
                 if (res) {
@@ -160,7 +160,7 @@ public class CityController {
                                       City city) {
         String msg = "";
         City tmp = cityService.findOne(id);
-        if (!tmp.equals(null)) {
+        if (tmp!=null) {
             if (!BlacklistController.checkBlacklistedWords(tmp.getName())) {
                 if (tmp.getStatus() == 1){
                     tmp.setStatus(0);
