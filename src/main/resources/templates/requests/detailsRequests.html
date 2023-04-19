@@ -46,7 +46,7 @@
                                     <div class="carousel-inner" th:each="tmpRequestaaa : ${request.getRequestAttachment()}">
 
                                         <div class="carousel-item active">
-                                            <img th:src="@{/docs/{i} (i = ${tmpRequestaaa})}"
+                                            <img th:src="@{/docs/{i} (i = ${tmpRequestaaa.getName()})}"
                                                  class="d-block imgCarousel" alt="...">
                                         </div>
                                     </div>
