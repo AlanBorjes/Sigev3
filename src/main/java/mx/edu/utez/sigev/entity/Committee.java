@@ -20,14 +20,14 @@ public class Committee implements Serializable {
     @NotBlank(message = "El nombre no puede estar vacío")
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "suburb", nullable = false)
-    @NotNull(message = "La colonia no puede estar vacía")
-    private Suburb suburb;
-
     @Column(name = "status", nullable = false)
     @NotNull(message = "El estatus no puede estar vacío")
     private int status;
+
+    @ManyToOne
+    @JoinColumn(name = "suburb", nullable = false)
+    private Suburb suburb;
+
 
     public Committee() {
         this.status = 1;

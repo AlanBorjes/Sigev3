@@ -14,26 +14,30 @@ public class Suburb implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
+
     @Column(name = "name", nullable = false, length = 150)
     @Size(min = 2, message = "El nombre debe tener mínimo 2 caracteres")
     @Size(max = 150, message = "El nombre debe tener máximo 150 caracteres")
     @NotBlank(message = "El nombre no puede estar vacío")
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "city", nullable = false)
-    @NotNull(message = "La ciudad no puede estar vacía")
-    private City city;
-
-    @Column(name = "status", nullable = false)
-    @NotNull(message = "El estatus no puede estar vacío")
-    private int status;
-
     @Column(name = "postal_code", nullable = false, length = 5, unique = true)
     @Size(min = 5, message = "El Código postal debe tener mínimo 5 caracteres")
     @Size(max = 5, message = "El código postal debe tener máximo 5 caracteres")
     @NotBlank(message = "El código postal no puede estar vacío")
     private String postalCode;
+
+    @Column(name = "status", nullable = false)
+    @NotNull(message = "El estatus no puede estar vacío")
+    private int status;
+    @ManyToOne
+    @JoinColumn(name = "city", nullable = false)
+    @NotNull(message = "La ciudad no puede estar vacía")
+    private City city;
+
+
+
 
     public String getPostalCode() {
         return postalCode;
@@ -63,6 +67,14 @@ public class Suburb implements Serializable {
         this.name = name;
     }
 
+    public Suburb(Long id, String name, String postalCode, int status, City city) {
+        this.id = id;
+        this.name = name;
+        this.postalCode = postalCode;
+        this.status = status;
+        this.city = city;
+    }
+
     public City getCity() {
         return city;
     }
@@ -78,5 +90,5 @@ public class Suburb implements Serializable {
     public void setStatus(int status) {
         this.status = status;
     }
-    
+
 }

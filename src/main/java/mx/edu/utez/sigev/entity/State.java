@@ -24,6 +24,13 @@ public class State implements Serializable {
     @NotNull(message = "El estatus no puede estar vacío")
     private int status;
 
+    public State(Long id, String name, int status) {
+        this.id = id;
+        this.name = name;
+        this.status = status;
+    }
+
+
     public State(){
         this.status = 1;
     }
@@ -51,5 +58,5 @@ public class State implements Serializable {
     public void setStatus(int status) {
         this.status = status;
     }
-    
+
 }

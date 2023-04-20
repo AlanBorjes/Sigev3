@@ -110,7 +110,7 @@ public class SuburbController {
             model.addAttribute("image", image);
             model.addAttribute("color", color);
             model.addAttribute("listCities",
-                    cityService.findAllCitiesByStateId(linkService.findOne(user.getId()).getCity().getState().getId()));
+                    cityService.findAllCitiesByStateId(linkService.findOne(user.getId()).getCity().getId()));
             model.addAttribute("suburb", tmp);
             return "suburb/edit";
         } else {

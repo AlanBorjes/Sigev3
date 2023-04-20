@@ -63,7 +63,7 @@
           <th scope="col">Nombre</th>
           <th scope="col">Municipio</th>
           <th scope="col">Código Postal</th>
-          <th scope="col">Acciones</th>
+
           </thead>
           <tbody>
           <tr th:each="tmpSuburb, iter : ${listSuburbs}">
@@ -71,13 +71,6 @@
             <td th:text="${tmpSuburb.name}"></td>
             <td th:text="${tmpSuburb.city.name}"></td>
             <td th:text="${tmpSuburb.postalCode}"></td>
-            <td>
-              <div class="text-end">
-                <a th:href="@{/suburb/edit/{id} (id=${tmpSuburb.id})}" class="btn bg-main btn-circle m-1 align-content-center">
-                  <ion-icon name="create-outline"></ion-icon>
-                </a>
-              </div>
-            </td>
           </tr>
           </tbody>
         </table>

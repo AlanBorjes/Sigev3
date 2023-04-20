@@ -44,6 +44,7 @@ public class CityController {
     private UserService userService;
 
 
+
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String list(Model model, Pageable pageable, Authentication authentication) {
         Users user = userService.findByUsername(authentication.getName());
@@ -75,7 +76,7 @@ public class CityController {
         Users user = userService.findByUsername(authentication.getName());
         State state = stateService.findById(1);
         city.setStatus(1);
-        city.setState(state);
+        city.setState(7);
         System.out.println(city.getId());
         System.out.println(city.getName());
         System.out.println(city.getStatus());

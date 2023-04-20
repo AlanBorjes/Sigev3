@@ -134,23 +134,23 @@
                                     <select sec:authorize="hasAnyAuthority('ROL_ENLACE')" class="form-select" id="inputGroupSelect04"
                                             aria-label="Example select with button addon" block th:switch="${request.status}" th:field="*{paymentStatus}" >
                                         <div th:case="1">
-                                            <option value="1" selected>Inactivo</option>
-                                            <option value="2">Activo</option>
+                                            <option value="1" >Inactivo</option>
+                                            <option value="2" selected>Activo</option>
                                             <option value="3">Terminado</option>
                                         </div>
                                         <div th:case="2">
                                             <option value="1">Inactivo</option>
                                             <option value="2" selected>Activo</option>
-                                            <option value="3">desente</option>
+                                            <option value="3">Terminado</option>
                                         </div>
                                         <div th:case="3">
                                             <option value="1">Inactivo</option>
-                                            <option value="2">Inactivo</option>
-                                            <option value="3" selected>desente</option>
+                                            <option value="2" selected>Activo</option>
+                                            <option value="3" >Terminado</option>
                                         </div>
 
                                     </select>
-                                    <button sec:authorize="hasAnyAuthority('ROL_ENLACE')" class="btn btn-main" type="submit">Button</button>
+                                    <button sec:authorize="hasAnyAuthority('ROL_ENLACE')" class="btn btn-main" type="submit">Guardar</button>
                                 </form>
 
                                 <p class="text-break mt-3 mb-5" th:utext="${request.description}">

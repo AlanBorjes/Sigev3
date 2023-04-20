@@ -1,6 +1,8 @@
 package mx.edu.utez.sigev.controller;
 
+import mx.edu.utez.sigev.entity.Color;
 import mx.edu.utez.sigev.entity.Committee;
+import mx.edu.utez.sigev.entity.Images;
 import mx.edu.utez.sigev.entity.Users;
 import mx.edu.utez.sigev.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +39,32 @@ public class CommitteeController {
     @Autowired
     private CityLinkService linkService;
 
+    @Autowired
+    private ColorService colorService;
+
+    @Autowired
+    private ImagesService imagesService;
+
+
+
     @GetMapping(value = "/list")
-    public String findAll(Model model, Pageable pageable) {
+    public String findAll(Authentication authentication, HttpSession session, Model model, Pageable pageable) {
+        Users user = userService.findByUsername(authentication.getName());
+        if (session.getAttribute("user") == null) {
+            user.setPassword(null);
+            session.setAttribute("user", user);
+        }
+
         Page<Committee> listCommittees = committeeService.listarPaginacion(PageRequest.of(pageable.getPageNumber(), 4, Sort.by("id").ascending()));
         model.addAttribute("listCommittees", listCommittees);
+        System.out.println(listCommittees);
+        System.out.println("-*-*-*-*-*-*-*-*-*-*-*-");
+
+        Color color = colorService.findColors(1);
+        Images image = imagesService.findImages(1);
+        model.addAttribute("userLog", user);
+        model.addAttribute("color", color);
+        model.addAttribute("image", image);
         return "committee/listAllCommittees";
     }
 
@@ -54,23 +78,43 @@ public class CommitteeController {
         //model.addAttribute("listCities", cityService.findAllCitiesByStateId(linkService.findByUserId(user.getId()).getCity().getState().getId()));
         model.addAttribute("listSuburbs", suburbService.findAll());
         model.addAttribute("listStates", stateService.findAll());
+        Color color = colorService.findColors(1);
+        Images image = imagesService.findImages(1);
+        model.addAttribute("userLog", user);
+        model.addAttribute("color", color);
+        model.addAttribute("image", image);
         return "committee/create";
     }
 
 
     @GetMapping(value = "/find/{id}")
-    public String findOne(Model model, @PathVariable("id") long id, RedirectAttributes redirectAttributes) {
+    public String findOne(Authentication authentication, HttpSession session, Model model, @PathVariable("id") long id, RedirectAttributes redirectAttributes) {
+
+        Users user = userService.findByUsername(authentication.getName());
+        if (session.getAttribute("user") == null) {
+            user.setPassword(null);
+            session.setAttribute("user", user);
+        }
         Committee committee = committeeService.findById(id);
         if (!committee.equals(null)) {
             model.addAttribute("committee", committee);
+            Color color = colorService.findColors(1);
+            Images image = imagesService.findImages(1);
+            model.addAttribute("color", color);
+            model.addAttribute("image", image);
             return "commitee/listCommittee";
         } else {
             redirectAttributes.addFlashAttribute("msg_error", "No se encontró el comité solicitado");
+            Color color = colorService.findColors(1);
+            Images image = imagesService.findImages(1);
+            model.addAttribute("userLog", user);
+            model.addAttribute("color", color);
+            model.addAttribute("image", image);
             return "committee/listAllCommittees";
         }
     }
     @PostMapping(value = "/save")
-    public String save(Model model, Committee committee, RedirectAttributes redirectAttributes) {
+    public String save(Authentication authentication, HttpSession session, Model model, Committee committee, RedirectAttributes redirectAttributes) {
         String msgOk = "";
         String msgError = "";
 
@@ -94,26 +138,55 @@ public class CommitteeController {
 
 
     @GetMapping(value = "/update/{id}")
-    public String update(@PathVariable long id, Model modelo, RedirectAttributes redirectAttributes) {
+    public String update(Authentication authentication, HttpSession session, @PathVariable long id, Model modelo, RedirectAttributes redirectAttributes) {
+        Users user = userService.findByUsername(authentication.getName());
+        if (session.getAttribute("user") == null) {
+            user.setPassword(null);
+            session.setAttribute("user", user);
+        }
         Committee committee = committeeService.findById(id);
         if (committee != null) {
             modelo.addAttribute("committee", committee);
             modelo.addAttribute("listSuburbs", suburbService.findAll());
+            Color color = colorService.findColors(1);
+            Images image = imagesService.findImages(1);
+            modelo.addAttribute("userLog", user);
+            modelo.addAttribute("color", color);
+            modelo.addAttribute("image", image);
             return "committee/create";
         }else{
+            Color color = colorService.findColors(1);
+            Images image = imagesService.findImages(1);
+            modelo.addAttribute("userLog", user);
+            modelo.addAttribute("color", color);
+            modelo.addAttribute("image", image);
             return "committee/listAllCommittees";
         }
     }
 
     @RequestMapping (value = "/details/{id}", method = RequestMethod.GET)
-    public String detalles(Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes){
+    public String detalles(Authentication authentication, HttpSession session, Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes){
+        Users user = userService.findByUsername(authentication.getName());
+        if (session.getAttribute("user") == null) {
+            user.setPassword(null);
+            session.setAttribute("user", user);
+        }
         Committee committee = committeeService.findById(id);
         if (!committee.equals(null)){
             model.addAttribute("committee", committeeService.findById(id));
             model.addAttribute("listCommittees", committeeService.findAll());
+            Color color = colorService.findColors(1);
+            Images image = imagesService.findImages(1);
+            model.addAttribute("userLog", user);
+            model.addAttribute("color", color);
+            model.addAttribute("image", image);
             return "committee/listCommittee";
         }else {
             redirectAttributes.addFlashAttribute("msg_error", "Registro No Encontrado");
+            Color color = colorService.findColors(1);
+            Images image = imagesService.findImages(1);
+            model.addAttribute("color", color);
+            model.addAttribute("image", image);
             return "redirect:/committee/listAllCommittees";
         }
 
@@ -122,19 +195,40 @@ public class CommitteeController {
 
 
     @DeleteMapping(value = "/delete/{id}")
-    public String delete(Model model, @PathVariable("id") long id, RedirectAttributes redirectAttributes) {
+    public String delete(Authentication authentication, HttpSession session,Model model, @PathVariable("id") long id, RedirectAttributes redirectAttributes) {
+        Users user = userService.findByUsername(authentication.getName());
+        if (session.getAttribute("user") == null) {
+            user.setPassword(null);
+            session.setAttribute("user", user);
+        }
+
         Committee committee = committeeService.findById(id);
         if (!committee.equals(null)) {
             boolean res = committeeService.delete(id);
             if (res) {
                 redirectAttributes.addFlashAttribute("msg_success", "Comité eliminado correctamente");
+                Color color = colorService.findColors(1);
+                Images image = imagesService.findImages(1);
+                model.addAttribute("userLog", user);
+                model.addAttribute("color", color);
+                model.addAttribute("image", image);
                 return "committe/listAllCommittees";
             } else {
                 redirectAttributes.addFlashAttribute("msg_error", "No se pudo eliminar el comité");
+                Color color = colorService.findColors(1);
+                Images image = imagesService.findImages(1);
+                model.addAttribute("userLog", user);
+                model.addAttribute("color", color);
+                model.addAttribute("image", image);
                 return "committe/listAllCommittees";
             }
         } else {
             redirectAttributes.addFlashAttribute("msg_error", "No se encontró el comité solicitado");
+            Color color = colorService.findColors(1);
+            Images image = imagesService.findImages(1);
+            model.addAttribute("userLog", user);
+            model.addAttribute("color", color);
+            model.addAttribute("image", image);
             return "committe/listAllCommittees";
         }
     }

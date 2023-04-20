@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "city")
 public class City implements Serializable {
-    
+
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
@@ -23,12 +23,26 @@ public class City implements Serializable {
     @Column(name = "status", nullable = false)
     private int status;
 
-    @Column(name = "shield", nullable = true)
+    @Column(name = "shield", nullable = true, length = 150)
     private String shield;
 
-    @ManyToOne
-    @JoinColumn(name = "state", nullable = false)
-    private State state;
+    @Column(name = "state", nullable = true, length = 150)
+    private int state;
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
+
+    public City(Long id, String name, int status, String shield) {
+        this.id = id;
+        this.name = name;
+        this.status = status;
+        this.shield = shield;
+    }
 
     public City() {
         this.status = 1;
@@ -56,13 +70,6 @@ public class City implements Serializable {
 
     public void setStatus(int status) {
         this.status = status;
-    }
-    public State getState() {
-        return state;
-    }
-
-    public void setState(State state) {
-        this.state = state;
     }
 
     public String getShield() {
