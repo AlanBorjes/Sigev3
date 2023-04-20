@@ -32,8 +32,8 @@ public class Suburb implements Serializable {
     @NotNull(message = "El estatus no puede estar vacío")
     private int status;
     @ManyToOne
-    @JoinColumn(name = "city", nullable = false)
-    @NotNull(message = "La ciudad no puede estar vacía")
+    @JoinColumn(name = "city")
+
     private City city;
 
 

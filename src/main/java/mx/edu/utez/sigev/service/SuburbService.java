@@ -29,6 +29,7 @@ public class SuburbService {
     }
 
 
+
     public boolean save(Suburb obj) {
         boolean flag = false;
         Suburb tmp = suburbRepository.save(obj);

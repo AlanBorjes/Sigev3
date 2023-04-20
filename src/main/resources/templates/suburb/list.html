@@ -63,14 +63,24 @@
           <th scope="col">Nombre</th>
           <th scope="col">Municipio</th>
           <th scope="col">Código Postal</th>
+          <th style="text-align: center">Acciones</th>
+          <th th:text="${cityLink}"></th>
 
           </thead>
           <tbody>
-          <tr th:each="tmpSuburb, iter : ${listSuburbs}">
+          <tr th:each="tmpSuburb, iter : ${listSuburbs}" th:if="${tmpSuburb.city.id == cityLink.city}">
             <td th:text="${iter.index + 1}"></td>
             <td th:text="${tmpSuburb.name}"></td>
             <td th:text="${tmpSuburb.city.name}"></td>
             <td th:text="${tmpSuburb.postalCode}"></td>
+            <td class="text-end">
+              <div class="col-lg-12 mb-3 float-right">
+                <a class="btn btn-primary" th:href="@{/suburb/update/{id} (id=${tmpSuburb.id})}">
+                  <ion-icon name="create-outline"></ion-icon><span
+                        class="d-sm-none d-md-none d-lg-inline d-xl-inline">Actualizar</span>
+                </a>
+              </div>
+            </td>
           </tr>
           </tbody>
         </table>

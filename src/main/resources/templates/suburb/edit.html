@@ -40,7 +40,9 @@
                         <div class="col d-flex justify-content-between bg-white border-bottom mb-2">
                             <h5 class="card-title">EDITAR COLONIA</h5>
                         </div>
-                        <form th:action="@{/suburb/update/{id} (id=${suburb.id})}" method="POST" th:object="${suburb}">
+                        <form th:action="@{/suburb/saves}" method="POST" th:object="${suburb}">
+                            <input type="hidden" th:field="*{id}" >
+                            <input type="hidden" th:field="*{city}" >
                             <div class="col">
                                 <div class="row">
                                     <div class="col-6">
@@ -53,13 +55,7 @@
                                         <input id="name2" class="form-control" type="text" minlength="5" maxlength="5"
                                                placeholder="Código Postal" th:field="*{postalCode}" required>
                                     </div>
-                                    <div class="col mt-3 mb-3">
-                                        <label class="form-label">Estado</label>
-                                        <select class="form-control" th:field="*{city}" required>
-                                            <option th:each="city : ${listCities}" th:value="${city.id}" th:text="${city.name}">
-                                            </option>
-                                        </select>
-                                    </div>
+
                                 </div>
                             </div>
 

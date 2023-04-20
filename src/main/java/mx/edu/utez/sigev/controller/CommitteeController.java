@@ -58,7 +58,7 @@ public class CommitteeController {
             session.setAttribute("user", user);
         }
 
-        Page<Committee> listCommittees = committeeService.listarPaginacion(PageRequest.of(pageable.getPageNumber(), 4, Sort.by("id").ascending()));
+        Page<Committee> listCommittees = committeeService.listarPaginacion(PageRequest.of(pageable.getPageNumber(), 6, Sort.by("id").ascending()));
         model.addAttribute("listCommittees", listCommittees);
         System.out.println(listCommittees);
         System.out.println("-*-*-*-*-*-*-*-*-*-*-*-");
