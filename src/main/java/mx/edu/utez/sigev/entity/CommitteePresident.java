@@ -45,5 +45,13 @@ public class CommitteePresident implements Serializable {
     public void setCommittee(Committee committee) {
         this.committee = committee;
     }
-    
+
+    @Override
+    public String toString() {
+        return "CommitteePresident{" +
+                "id=" + id +
+                ", user=" + user +
+                ", committee=" + committee +
+                '}';
+    }
 }

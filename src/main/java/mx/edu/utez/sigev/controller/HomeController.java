@@ -42,22 +42,31 @@ public class HomeController {
     @Autowired
     private ImagesService imagesService;
 
+    @Autowired CityLinkService cityLinkService;
 
 
 
     @RequestMapping( value = "/", method = RequestMethod.GET)
     public String index() {
-        return "index";
+        return "login";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String showLogin() {
+    public String showLogin(Model model) {
+        Color color = colorService.findColors(1);
+        Images image = imagesService.findImages(1);
+        model.addAttribute("color", color);
+        model.addAttribute("image", image);
         return "login";
     }
 
     @RequestMapping(value = "/administrador/dashboard", method = RequestMethod.GET)
-	public String dashboardAdministrador(Authentication authentication, HttpSession session, Model model) {
+	public String dashboardAdministrador(Authentication authentication, HttpSession session, Model model, RedirectAttributes redirectAttributes) {
         Users user = userService.findByUsername(authentication.getName());
+        if (user.getEnabled() != 1){
+            redirectAttributes.addFlashAttribute("msg_error", "El usuario esta deshabilitado");
+            return "redirect:/logout";
+        }
 		if (session.getAttribute("user") == null) {
 			user.setPassword(null);
 			session.setAttribute("user", user);
@@ -86,12 +95,21 @@ public class HomeController {
 	}
 
     @RequestMapping(value = "/enlace/dashboard", method = RequestMethod.GET)
-	public String dashboardEnlace(Authentication authentication, HttpSession session,Model model) {
+	public String dashboardEnlace(Authentication authentication, HttpSession session,Model model, RedirectAttributes redirectAttributes) {
         Users user = userService.findByUsername(authentication.getName());
+        if (user.getEnabled() != 1){
+            redirectAttributes.addFlashAttribute("msg_error", "El usuario esta deshabilitado");
+            return "redirect:/logout";
+        }
+        City city = cityLinkService.findByUserId(user.getId()).getCity();
         if (session.getAttribute("user") == null) {
 			user.setPassword(null);
 			session.setAttribute("user", user);
 		}
+        if (city.getStatus() != 1){
+            redirectAttributes.addFlashAttribute("msg_error1", "La ciudad del usuario esta deshabilitada");
+            return "redirect:/logout";
+        }
         Color color = colorService.findColors(1);
         Images image = imagesService.findImages(1);
         model.addAttribute("userLog", user);
@@ -118,8 +136,12 @@ public class HomeController {
 	}
 
     @RequestMapping(value = "/presidente/dashboard", method = RequestMethod.GET)
-	public String dashboardPresidente(Authentication authentication, HttpSession session,Model model) {
+	public String dashboardPresidente(Authentication authentication, HttpSession session,Model model, RedirectAttributes redirectAttributes) {
             Users user = userService.findByUsername(authentication.getName());
+        if (user.getEnabled() != 1){
+            redirectAttributes.addFlashAttribute("msg_error1", "El usuario esta deshabilitado");
+            return "redirect:/logout";
+        }
 			user.setPassword(null);
             Color color = colorService.findColors(1);
             Images image = imagesService.findImages(1);

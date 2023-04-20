@@ -33,7 +33,7 @@
 <div class="container">
     <div class="card">
         <h2 class="mb-3">Nuevo Comité</h2>
-        <form  th:action="@{/committee/save}" th:object="${committee}" method="POST">
+        <form  th:action="@{/committee/guardar}" th:object="${committee}" method="POST">
             <input type="hidden" th:field="*{id}" >
             <div class="modal-body">
                 <div class="form-row">

@@ -20,6 +20,10 @@ public class SuburbService {
         return suburbRepository.findAll();
     }
 
+    public List<Suburb> findByCity(long id){
+        return suburbRepository.findAllByCityId(id);
+    }
+
     public Page<Suburb> listPagination(PageRequest page) {
         return suburbRepository.findAll((org.springframework.data.domain.Pageable) page);
     }

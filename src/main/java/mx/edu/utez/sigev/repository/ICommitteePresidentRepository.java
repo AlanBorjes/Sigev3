@@ -16,5 +16,7 @@ public interface ICommitteePresidentRepository extends JpaRepository<CommitteePr
     public long totalCommitteePresidentCountByCommitteeId(@Param("id") long id);
 
     public CommitteePresident findByUserId(long id);
+
+
     
 }

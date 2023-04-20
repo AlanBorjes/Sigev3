@@ -9,5 +9,7 @@ import java.util.List;
 
 public interface ISuburbRepository extends JpaRepository<Suburb, Long>, PagingAndSortingRepository<Suburb, Long> {
 
+    public List<Suburb> findAllByCityId(long id);
+
     
 }

@@ -107,6 +107,19 @@ public class Users implements Serializable {
         this.roles = roles;
     }
 
+    public Users(String name, String lastname, String surname, String username, String phone, String password,  String email,  String profilePicture) {
+        this.name = name;
+        this.lastname = lastname;
+        this.surname = surname;
+        this.username = username;
+        this.phone = phone;
+        this.password = password;
+        this.enabled = 1;
+        this.registeredDate = new Date();
+        this.email = email;
+        this.profilePicture = profilePicture;
+    }
+
     public Long getId() {
         return id;
     }
@@ -212,11 +225,19 @@ public class Users implements Serializable {
 
     @Override
     public String toString() {
-        return "Users [email=" + email + ", enabled=" + enabled + ", id=" + id + ", lastname=" + lastname + ", name="
-                + name + ", password=" + password + ", phone=" + phone + ", registeredDate=" + registeredDate
-                + ", roles=" + "aaa" + ", surname=" + surname + ", username=" + username + "]";
+        return "Users{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", surname='" + surname + '\'' +
+                ", username='" + username + '\'' +
+                ", phone='" + phone + '\'' +
+                ", password='" + password + '\'' +
+                ", enabled=" + enabled +
+                ", email='" + email + '\'' +
+                ", registeredDate=" + registeredDate +
+                ", profilePicture='" + profilePicture + '\'' +
+                ", roles=" + roles +
+                '}';
     }
-
-    
-    
 }

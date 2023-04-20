@@ -48,6 +48,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/requests/**").hasAnyAuthority("ROL_ENLACE")
             .antMatchers("/suburb/**").hasAnyAuthority("ROL_ENLACE")
             .antMatchers("/president/**").hasAnyAuthority("ROL_PRESIDENTE")
+            .antMatchers("/committee/**").hasAnyAuthority("ROL_ENLACE")
             .anyRequest().authenticated()
             .and().formLogin().successHandler(successHandler).loginPage("/login").permitAll();
             logger.info("Todo salio bien");

@@ -5,6 +5,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "committee")
@@ -28,9 +31,16 @@ public class Committee implements Serializable {
     @JoinColumn(name = "suburb", nullable = false)
     private Suburb suburb;
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "committee_team", joinColumns = {
+            @JoinColumn(name = "committee") }, inverseJoinColumns = {
+            @JoinColumn(name = "user") })
+    private Set<Users> users;
+
 
     public Committee() {
         this.status = 1;
+        this.users = new HashSet<>();
     }
 
     public Long getId() {
@@ -65,4 +75,22 @@ public class Committee implements Serializable {
         this.status = status;
     }
 
+    public Set<Users> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<Users> users) {
+        this.users = users;
+    }
+
+    @Override
+    public String toString() {
+        return "Committee{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", status=" + status +
+                ", suburb=" + suburb +
+                ", users=" + users +
+                '}';
+    }
 }

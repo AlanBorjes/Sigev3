@@ -91,4 +91,15 @@ public class Suburb implements Serializable {
         this.status = status;
     }
 
+
+    @Override
+    public String toString() {
+        return "Suburb{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                ", status=" + status +
+                ", city=" + city +
+                '}';
+    }
 }

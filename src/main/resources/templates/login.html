@@ -8,15 +8,23 @@
 	<!--Toast-->
 	<link rel="stylesheet" th:href="@{/css/toast.min.css}" />
 	<link th:href="@{/css/login/login.css}" rel="stylesheet" crossorigin="anonymous">
+	<style>
+		:root {
+			--main: [[${color.colorMain}]];
+			--secondary: [[${color.colorSecundary}]];
+			--textMain: [[${color.colorText}]];
+			--textSecondary: [[${color.colorTitle}]];
+		}
+	</style>
 </head>
 
 <body style="background-color: #e9ecef;">
 <div class="container-fluid" >
 	<div class="row" >
 		<div class="col-12 encabezado">
-			<img th:src="@{/img/img.png}" alt="" >
+			<img th:src="@{/docs/{i} (i = ${image.logo1})}" alt="" >
 			<h2>Login</h2>
-			<img class="two " th:src="@{/img/img_1.png}" alt="" >
+			<img class="two " th:src="@{/docs/{i} (i = ${image.logo2})}" alt="" >
 		</div>
 		<div class="col-12 row imgBa"  style="background-image: url('../img/fongo.jpg');background-size: cover;
   background-repeat: no-repeat;
@@ -73,6 +81,13 @@
 			type: 'danger'
 		});
 	</script>
+
+<script th:if="${msg_error1 != null}">
+	new Toast({
+		message: '[[${msg_error}]]',
+		type: 'danger'
+	});
+</script>
 
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
 		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"

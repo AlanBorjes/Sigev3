@@ -24,6 +24,10 @@ public class CommitteeService {
         return committeeRepository.findById(id);
     }
 
+    public void inserTeam(long idCom, long idUse){
+        committeeRepository.insertTeam(idCom, idUse);
+    }
+
     public Page<Committee> listarPaginacion(PageRequest page) {
         return committeeRepository.findAll((org.springframework.data.domain.Pageable) page);
     }
