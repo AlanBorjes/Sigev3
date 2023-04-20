@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -46,6 +47,7 @@ public class CityController {
 
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String list(Model model, Pageable pageable, Authentication authentication) {
         Users user = userService.findByUsername(authentication.getName());
         Images image = imagesService.findImages(1);
@@ -59,6 +61,7 @@ public class CityController {
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String create(Model model, RedirectAttributes redirectAttributes, City city, Authentication authentication) {
         Users user = userService.findByUsername(authentication.getName());
         Images image = imagesService.findImages(1);
@@ -71,6 +74,7 @@ public class CityController {
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String save(Model model, RedirectAttributes redirectAttributes,
                        Authentication authentication, @Valid City city, BindingResult result, @RequestParam("picture") MultipartFile file) throws IOException {
         Users user = userService.findByUsername(authentication.getName());
@@ -119,6 +123,7 @@ public class CityController {
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String edit(Model model, RedirectAttributes redirectAttributes, Authentication authentication, City category, @PathVariable("id") long id) {
         Users user = userService.findByUsername(authentication.getName());
         City tmp = cityService.findOne(id);
@@ -138,6 +143,7 @@ public class CityController {
     }
 
     @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String update(Model model, RedirectAttributes redirectAttributes, City city, @PathVariable("id") long id) {
         if (!BlacklistController.checkBlacklistedWords(city.getName())) {
             City tmp = cityService.findOne(id);
@@ -160,6 +166,7 @@ public class CityController {
     }
 
     @RequestMapping(value = "/desactivate/{id}", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String categoryDesactivate(Model model, RedirectAttributes redirectAttributes, @PathVariable("id") long id,
                                       City city) {
         String msg = "";

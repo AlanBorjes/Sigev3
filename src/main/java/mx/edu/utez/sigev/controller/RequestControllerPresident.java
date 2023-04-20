@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,13 +22,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+import mx.edu.utez.sigev.util.Runner;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
 @Controller
 @RequestMapping("/president")
 public class RequestControllerPresident {
+    private static final Logger logger = LogManager.getLogger(Runner.class);
 
     @Autowired
     private RequestService requestService;
@@ -53,21 +57,28 @@ public class RequestControllerPresident {
 
     @Autowired
     private ColorService colorService;
+
     @RequestMapping(value = "/list/unpaid", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_PRESIDENTE'))")
     public String listAllPresidentUnpaidRequests(Authentication authentication, HttpSession session, Model model,
             RedirectAttributes redirectAttributes) {
         Users user = usersService.findByUsername(authentication.getName());
         user.setPassword(null);
         session.setAttribute("user", user);
         user.setPassword(usersService.findPasswordById(user.getId()));
-        model.addAttribute("unpaidList", requestService.findAllUnpaidByCommitteeId(presidentService.findByUser(user.getId()).getCommittee().getId()));
+        model.addAttribute("unpaidList", requestService
+                .findAllUnpaidByCommitteeId(presidentService.findByUser(user.getId()).getCommittee().getId()));
         return "president-request/unpaidList";
     }
 
     @RequestMapping(value = "/pay/{id}/{status}", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_PRESIDENTE'))")
     public ResponseEntity<Object> payRequest(@PathVariable("id") long id, @PathVariable("status") String status,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes,Authentication authentication, HttpSession sessio) {
         Map<String, Object> data = new HashMap<>();
+        Users user = usersService.findByUsername(authentication.getName());
+        UUID uuid = UUID.randomUUID();
+        logger.info("[USER : {}] || [UUID : {}] ---> EXECUTING  ---> pay()", user.getName(), uuid);
         if (status.equals("COMPLETED")) {
             Request tmp = requestService.findById(id);
             if (!tmp.equals(null)) {
@@ -89,37 +100,41 @@ public class RequestControllerPresident {
     }
 
     @RequestMapping(value = "/details/{id}", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_PRESIDENTE'))")
     public String showRequestDetails(@PathVariable("id") long id, Authentication authentication, HttpSession session,
             Model model,
-            RedirectAttributes redirectAttributes,Commentary commentary,Request request) {
-                Users user = usersService.findByUsername(authentication.getName());
-                Request sa = requestService.findById(id);
-                System.out.println(user.getId());
-                System.out.println(sa.getPresident().getUser().getId());
-                if(user.getId() == sa.getPresident().getUser().getId()){
-                    Color color = colorService.findColors(1);
-                    Images image = imagesService.findImages(1);
-                    System.out.println("Entre");
-                    model.addAttribute("userLog", user);
-                    model.addAttribute("image", image);
-                    model.addAttribute("color", color);
-                    model.addAttribute("listComents", commentaryService.findAllByRequestId(id));               
-                    if (!requestService.findById(id).equals(null)) {
-                        model.addAttribute("request", requestService.findById(id));;
-                        System.out.println(sa.getRequestAttachment());
-                        return "president-request/details";
-                    } else {
-                        redirectAttributes.addFlashAttribute("msg_error", "La solicitud que buscas no existe");
-                        return "redirect:/president/list";
-                    }
-                }else{
-                    System.out.println("Entre2");
-                    redirectAttributes.addFlashAttribute("msg_error", "Error no tienes permiso para entrar a esas incidencias ");
-                    return "redirect:/president/list";
-                }
+            RedirectAttributes redirectAttributes, Commentary commentary, Request request) {
+        Users user = usersService.findByUsername(authentication.getName());
+        Request sa = requestService.findById(id);
+        System.out.println(user.getId());
+        System.out.println(sa.getPresident().getUser().getId());
+        if (user.getId() == sa.getPresident().getUser().getId()) {
+            Color color = colorService.findColors(1);
+            Images image = imagesService.findImages(1);
+            System.out.println("Entre");
+            model.addAttribute("userLog", user);
+            model.addAttribute("image", image);
+            model.addAttribute("color", color);
+            model.addAttribute("listComents", commentaryService.findAllByRequestId(id));
+            if (!requestService.findById(id).equals(null)) {
+                model.addAttribute("request", requestService.findById(id));
+                ;
+                System.out.println(sa.getRequestAttachment());
+                return "president-request/details";
+            } else {
+                redirectAttributes.addFlashAttribute("msg_error", "La solicitud que buscas no existe");
+                return "redirect:/president/list";
+            }
+        } else {
+            System.out.println("Entre2");
+            redirectAttributes.addFlashAttribute("msg_error",
+                    "Error no tienes permiso para entrar a esas incidencias ");
+            return "redirect:/president/list";
+        }
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_PRESIDENTE'))")
     public String listAllPresidentRequests(Authentication authentication, HttpSession session, Model model,
             RedirectAttributes redirectAttributes, Pageable pageable) {
         Users user = usersService.findByUsername(authentication.getName());
@@ -141,9 +156,12 @@ public class RequestControllerPresident {
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_PRESIDENTE'))")
     public String createPresidentRequest(Authentication authentication, HttpSession session, Model model,
             RedirectAttributes redirectAttributes, RequestDto requestDto) {
         Users user = usersService.findByUsername(authentication.getName());
+        UUID uuid = UUID.randomUUID();
+        logger.info("[USER : {}] || [UUID : {}] ---> EXECUTING  ---> pay()", user.getName(), uuid);
         user.setPassword(null);
         session.setAttribute("user", user);
         model.addAttribute("categoryList", categoryService.findAllByStatus(1));
@@ -156,17 +174,20 @@ public class RequestControllerPresident {
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_PRESIDENTE'))")
     public String savePresidentRequest(Authentication authentication, HttpSession session, Model model,
             RedirectAttributes redirectAttributes, RequestDto requestDto,
-            @RequestParam("attachment") MultipartFile multipartFile) {
+            @RequestParam("attachment") MultipartFile[] multipartFile) {
         System.out.println(authentication.getName());
         Users user = usersService.findByUsername(authentication.getName());
         Users tmpuser = user;
         System.out.println(usersService.findPasswordById(tmpuser.getId()));
+        RequestAttachment attachments = new RequestAttachment();
+        boolean res2 = false;
 
         user.setPassword(null);
         session.setAttribute("user", user);
-        if (!BlacklistController.checkBlacklistedWords(requestDto.getDescription())) {
+
             Request obj = new Request();
             System.out.println(obj);
             obj.setCategory(requestDto.getCategory());
@@ -178,17 +199,22 @@ public class RequestControllerPresident {
             obj.getPresident().getUser().setPassword(usersService.findPasswordById(tmpuser.getId()));
             Set<RequestAttachment> attachments2 = new HashSet<>();
             String path = "C:/sigev/docs";
-            String filename = FileUtil.saveFile(multipartFile, path);
-            attachments2.add(new RequestAttachment(filename.replaceAll(" ", "").replaceAll("-", "").replace("°", "")));
+            if(multipartFile.length >4){
+                redirectAttributes.addFlashAttribute("msg_error",
+                "No puede registrar mas de 4 archivos");
+                return "redirect:/president/create";
+            }
+            for (MultipartFile multipartFile2 : multipartFile) {
+                String filename = FileUtil.saveFile(multipartFile2, path);
+                attachments2.add(new RequestAttachment(filename.replaceAll(" ", "").replaceAll("-", "").replace("°", "")));
+                attachments.setName(filename.replaceAll(" ", "").replaceAll("-", "").replace("°", ""));
+                attachmentsService.save(attachments);
+                res2 = true;
+            }
             obj.setRequestAttachment(attachments2);
             boolean res1 = requestService.save(obj);
             if (res1) {
-                if (!multipartFile.isEmpty()) {
-                    RequestAttachment attachments = new RequestAttachment();
-
-                    if (filename != null) {
-                        attachments.setName(filename.replaceAll(" ", "").replaceAll("-", "").replace("°", ""));
-                        boolean res2 = attachmentsService.save(attachments);
+                    if (multipartFile != null) {
                         if (res2) {
                             redirectAttributes.addFlashAttribute("msg_success",
                                     "¡Se registró la solicitud con la evidencia!");
@@ -202,22 +228,16 @@ public class RequestControllerPresident {
                         redirectAttributes.addFlashAttribute("msg_success", "¡Se registró la solicitud correctamente!");
                         return "redirect:/president/list";
                     }
-                }
             } else {
                 redirectAttributes.addFlashAttribute("msg_error", "Ocurrió un error al registrar la solicitud");
                 return "redirect:/president/create";
             }
-            redirectAttributes.addFlashAttribute("msg_error", "Ocurrió un fallo");
-            return "redirect:/president/create";
-        } else {
-            redirectAttributes.addFlashAttribute("msg_error", "Ingresó una o más palabras prohibidas.");
-            return "redirect:/president/create";
-        }
     }
 
     @RequestMapping(value = "/commentary/{id}", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_PRESIDENTE'))")
     public String chat(@PathVariable("id") long id, Authentication authentication, HttpSession session, Model model,
-                       RedirectAttributes redirectAttributes, Commentary commentary) {
+            RedirectAttributes redirectAttributes, Commentary commentary) {
         Users user = usersService.findByUsername(authentication.getName());
         user.setPassword(null);
         session.setAttribute("user", user);
@@ -227,18 +247,21 @@ public class RequestControllerPresident {
     }
 
     @RequestMapping(value = "/commentary/save/{id}", method = RequestMethod.POST)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_PRESIDENTE'))")
     public String saveCommentary(Model model, Commentary commentary, Authentication authentication,
-                                 HttpSession session, @PathVariable("id") long id, RedirectAttributes redirectAttributes) {
+            HttpSession session, @PathVariable("id") long id, RedirectAttributes redirectAttributes) {
         Users user = usersService.findByUsername(authentication.getName());
         Color color = colorService.findColors(1);
         Images image = imagesService.findImages(1);
+        UUID uuid = UUID.randomUUID();
+        logger.info("[USER : {}] || [UUID : {}] ---> EXECUTING  ---> commentary()", user.getName(), uuid);
         model.addAttribute("userLog", user);
         model.addAttribute("image", image);
         model.addAttribute("color", color);
         model.addAttribute("listComents", commentaryService.findAllByRequestId(id));
         session.setAttribute("user", user);
         commentary.setRequest(requestService.findById(id));
-         Long Idrequesr = commentary.getRequest().getId();
+        Long Idrequesr = commentary.getRequest().getId();
         if (!BlacklistController.checkBlacklistedWords(commentary.getContent())) {
             Users tmp = usersService.findById(user.getId());
             tmp.setPassword(usersService.findPasswordById(tmp.getId()));
@@ -258,7 +281,7 @@ public class RequestControllerPresident {
         } else {
             redirectAttributes.addFlashAttribute("msg_error", "Ingresó una o más palabras prohibidas.");
         }
-        return ("redirect:/request/details/"+Idrequesr);
+        return ("redirect:/request/details/" + Idrequesr);
     }
 
 }

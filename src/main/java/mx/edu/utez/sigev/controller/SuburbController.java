@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,6 +44,7 @@ public class SuburbController {
     private ColorService colorService;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ENLACE')) and (hasRole('ROL_ADMINISTRADOR'))")
     public String list(Model model, RedirectAttributes redirectAttributes, Pageable pageable,Authentication authentication) {
         Users user = userService.findByUsername(authentication.getName());
         Color color = colorService.findColors(1);
@@ -57,6 +59,7 @@ public class SuburbController {
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ENLACE')) and (hasRole('ROL_ADMINISTRADOR'))")
     public String create(Model model, RedirectAttributes redirectAttributes, Suburb suburb,
             Authentication authentication, HttpSession session) {
         Users user = userService.findByUsername(authentication.getName());
@@ -73,6 +76,7 @@ public class SuburbController {
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ENLACE')) and (hasRole('ROL_ADMINISTRADOR'))")
     public String save(Model model, RedirectAttributes redirectAttributes, Suburb suburb, Authentication authentication,
             HttpSession session) {
         Users user = userService.findByUsername(authentication.getName());
@@ -96,6 +100,7 @@ public class SuburbController {
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ENLACE')) and (hasRole('ROL_ADMINISTRADOR'))")
     public String edit(Model model, RedirectAttributes redirectAttributes, Suburb suburb, @PathVariable("id") long id,
             Authentication authentication, HttpSession session) {
 
@@ -120,6 +125,7 @@ public class SuburbController {
     }
 
     @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ENLACE')) and (hasRole('ROL_ADMINISTRADOR'))")
     public String update(Model model, RedirectAttributes redirectAttributes, Suburb suburb,
             @PathVariable("id") long id) {
         if (!(BlacklistController.checkBlacklistedWords(suburb.getName())

@@ -21,8 +21,8 @@ public class Request implements Serializable {
     @NotNull(message = "La categoría no puede estar vacía")
     private Category category;
 
-    @Column(name = "description")
-    @Size(min = 2, message = "La descripción debe tener mínimo 2 caracteres")
+    @Column(name = "description", columnDefinition = "longtext null")
+    @Size(min = 2, message = "La descripción debe tener mínimo 2 caracteres" )
     @NotBlank(message = "La descripción no puede estar vacía")
     private String description;
 

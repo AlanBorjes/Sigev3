@@ -54,9 +54,12 @@
                             <div class="col-8">
                                 <div id="carouselExampleControls" style="background-color: black;"
                                      class="carousel slide" data-bs-ride="carousel">
-                                    <div class="carousel-inner" th:each="tmpRequestaaa : ${request.getRequestAttachment()}">
-
-                                        <div class="carousel-item active">
+                                    <div class="carousel-inner" >
+                                        <div  class="carousel-item active"  th:each="tmpRequestaaa : ${request.getRequestAttachment()}">
+                                            <img th:src="@{/docs/{i} (i = ${tmpRequestaaa.getName()})}"
+                                                 class="d-block imgCarousel" alt="...">
+                                        </div>
+                                        <div  class="carousel-item "  th:each="tmpRequestaaa : ${request.getRequestAttachment()}">
                                             <img th:src="@{/docs/{i} (i = ${tmpRequestaaa.getName()})}"
                                                  class="d-block imgCarousel" alt="...">
                                         </div>
@@ -223,6 +226,7 @@ aria-hidden="true">
 <!--FIN PAYPAL-->
 
 <script>
+
 let amount = 0;
 let id = 0;
 
@@ -288,6 +292,10 @@ paypal.Buttons({
         message: "[[${msg_error}]]",
         type: "danger",
     });
+</script>
+
+<script>
+    var elemento = document.getElementById("carousel-item");
 </script>
 </body>
 

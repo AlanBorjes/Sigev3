@@ -58,12 +58,12 @@
                                 </div>
                                 <div class="col-6 mb-3">
                                     <label class="form-label">Evidencia</label>
-                                    <input type="file" class="form-control" accept="image/*, application/pdf"
-                                           name="attachment" required>
+                                    <input id="subirPDFinput" type="file" class="form-control" accept="image/*"
+                                           name="attachment" multiple required>
                                 </div>
                                 <div class="col-12 mb-3">
                                     <label class="form-label">DescripciÃ³n</label>
-                                    <textarea class="form-control form-control-lg" name="description" id="description" rows="10"
+                                    <textarea class="form-control form-control-lg"   rows="10"
                                               th:field="*{description}"></textarea>
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-block mt-3">
@@ -85,7 +85,29 @@
     <!--Ionicons-->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    
+    <script>
+        const maxSize = 3000000; 
+        const $miInput = document.querySelector("#subirPDFinput");
 
+    $miInput.addEventListener("change", function () {
+        // si no hay archivos, regresamos
+        if (this.files.length <= 0) return;
+
+        // Validamos el primer archivo únicamente
+        const archivo = this.files[0];
+        if (archivo.size > maxSize) {
+            const tamanioEnMb = maxSize / 1000000;
+            alert(`El tamaño máximo es ${tamanioEnMb} MB`);
+            // Limpiar
+            $miInput.value = "";
+        } else {
+            // Validación pasada. Envía el formulario o haz lo que tengas que hacer
+        }
+    });
+
+
+    </script>
     <script th:src="@{/js/toast.min.js}"></script>
 
     <script th:if="${msg_success != null}">

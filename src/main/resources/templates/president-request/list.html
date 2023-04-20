@@ -47,8 +47,8 @@
                             <a th:href="@{/president/details/{id} (id=${tmpRequest.id})}"
                                class="btn mb-3" ><i style="" class="fa-solid fa-arrow-right fa-fade fa-2x"></i></a>
                         </div>
-                        <div class="row"  th:each="tmpRequestaaa : ${tmpRequest.getRequestAttachment()}">
-                            <div class="col-md-3 col-6" >
+                        <div class="row"  >
+                            <div class="col-md-3 col-6" th:each="tmpRequestaaa : ${tmpRequest.getRequestAttachment()}" >
                                 <img th:src="@{/docs/{i} (i = ${tmpRequestaaa.getName()})}"
                                      class="imgIncidence" alt="...">
                             </div>

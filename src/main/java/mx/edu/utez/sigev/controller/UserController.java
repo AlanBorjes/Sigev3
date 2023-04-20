@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -61,6 +62,7 @@ public class UserController {
     private  ColorService colorService;
 
     @RequestMapping(value = "/list/enlaces", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String findAllEnlaces(Model model, Authentication authentication, HttpSession session) {
         Users user = userService.findByUsername(authentication.getName());
         Images image = imagesService.findImages(1);
@@ -76,6 +78,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/list/administradores", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String findAllAdmins(Model model, Authentication authentication, HttpSession session) {
         Users user = userService.findByUsername(authentication.getName());
         Images image = imagesService.findImages(1);
@@ -91,6 +94,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String findOne(Model model, @PathVariable("id") long id, RedirectAttributes redirectAttributes,
             RecoverPasswordDto recoverPasswordDto, Authentication authentication) {
         Users userTmp = userService.findByUsername(authentication.getName());
@@ -117,6 +121,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/edit/password/{id}", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String editPassword(Model model, @PathVariable("id") long id, RedirectAttributes redirectAttributes,
                           RecoverPasswordDto recoverPasswordDto, Authentication authentication) {
         Users userTmp = userService.findByUsername(authentication.getName());
@@ -136,6 +141,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String create(UserDto userDto,Users users, Model modelo, Authentication authentication) {
         Users userTmp = userService.findByUsername(authentication.getName());
         Images image = imagesService.findImages(1);
@@ -148,6 +154,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/create/admin", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String createAdmin(UserDto userDto, Users users, Model modelo, Authentication authentication) {
         Users userTmp = userService.findByUsername(authentication.getName());
         Images image = imagesService.findImages(1);
@@ -159,6 +166,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/recover/{id}", method = RequestMethod.POST)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String recoverPassword(@Valid RecoverPasswordDto recoverPasswordDto, BindingResult result, Model model,
             RedirectAttributes redirectAttributes, @PathVariable("id") long id, @RequestParam("confirmarContraseña") String confirmarContraseña,
             Authentication authentication, HttpSession session) {
@@ -206,6 +214,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String updateUser(Users users, @Valid UserUpdateDTO userDto, BindingResult results, RecoverPasswordDto recoverPasswordDto, Model model,
                              RedirectAttributes redirectAttributes, @PathVariable("id") long id,
                              Authentication authentication, HttpSession session, @RequestParam("picture")  MultipartFile file) throws IOException{
@@ -261,6 +270,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String signup(UserDto userDto, Model model, RedirectAttributes redirectAttributes) {
         if (!(BlacklistController.checkBlacklistedWords(userDto.getName())
                 || BlacklistController.checkBlacklistedWords(userDto.getLastname())
@@ -302,6 +312,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/admin/signup", method = RequestMethod.POST)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String adminSignup( @Valid Users users, BindingResult result, @RequestParam("confirmarContraseña") String confirmarContraseña,
                                Model model, Authentication authentication, RedirectAttributes redirectAttributes, @RequestParam("picture")  MultipartFile file) throws IOException {
         String contentType = file.getContentType();
@@ -366,6 +377,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/enlace/signup", method = RequestMethod.POST)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String enlaceSignup( @Valid UserDto userDto, BindingResult result, @RequestParam("confirmarContraseña") String confirmarContraseña,
                                Model model, Authentication authentication, RedirectAttributes redirectAttributes, @RequestParam("picture")  MultipartFile file) throws IOException {
         model.addAttribute("listCities", cityService.findAllByStatus(1));
@@ -447,6 +459,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/disable/{id}", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String disableUser(@PathVariable("id") long id, RedirectAttributes redirectAttributes,
             Authentication authentication, HttpSession session) {
         Users user = userService.findByUsername(authentication.getName());
@@ -472,6 +485,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/disable/admin/{id}", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String disableAdmin(@PathVariable("id") long id, RedirectAttributes redirectAttributes,
                               Authentication authentication, HttpSession session) {
         Users user = userService.findByUsername(authentication.getName());

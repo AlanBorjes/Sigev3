@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpSession;
 
 @Controller
+@PreAuthorize("isAuthenticated() and (hasRole('ROL_ENLACE'))")
 @RequestMapping(value = "/committee")
 public class CommitteeController {
     @Autowired
@@ -48,6 +50,7 @@ public class CommitteeController {
 
 
     @GetMapping(value = "/list")
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ENLACE'))")
     public String findAll(Authentication authentication, HttpSession session, Model model, Pageable pageable) {
         Users user = userService.findByUsername(authentication.getName());
         if (session.getAttribute("user") == null) {
@@ -71,6 +74,7 @@ public class CommitteeController {
 
 
     @GetMapping("/create")
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ENLACE'))")
     public String createCommittee(Committee committee, Model model, Authentication authentication, HttpSession session) {
         Users user = userService.findByUsername(authentication.getName());
         user.setPassword(null);
@@ -88,6 +92,7 @@ public class CommitteeController {
 
 
     @GetMapping(value = "/find/{id}")
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ENLACE'))")
     public String findOne(Authentication authentication, HttpSession session, Model model, @PathVariable("id") long id, RedirectAttributes redirectAttributes) {
 
         Users user = userService.findByUsername(authentication.getName());
@@ -114,6 +119,7 @@ public class CommitteeController {
         }
     }
     @PostMapping(value = "/save")
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ENLACE'))")
     public String save(Authentication authentication, HttpSession session, Model model, Committee committee, RedirectAttributes redirectAttributes) {
         String msgOk = "";
         String msgError = "";
@@ -138,6 +144,7 @@ public class CommitteeController {
 
 
     @GetMapping(value = "/update/{id}")
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ENLACE'))")
     public String update(Authentication authentication, HttpSession session, @PathVariable long id, Model modelo, RedirectAttributes redirectAttributes) {
         Users user = userService.findByUsername(authentication.getName());
         if (session.getAttribute("user") == null) {
@@ -165,6 +172,7 @@ public class CommitteeController {
     }
 
     @RequestMapping (value = "/details/{id}", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ENLACE'))")
     public String detalles(Authentication authentication, HttpSession session, Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes){
         Users user = userService.findByUsername(authentication.getName());
         if (session.getAttribute("user") == null) {
@@ -195,6 +203,7 @@ public class CommitteeController {
 
 
     @DeleteMapping(value = "/delete/{id}")
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ENLACE'))")
     public String delete(Authentication authentication, HttpSession session,Model model, @PathVariable("id") long id, RedirectAttributes redirectAttributes) {
         Users user = userService.findByUsername(authentication.getName());
         if (session.getAttribute("user") == null) {

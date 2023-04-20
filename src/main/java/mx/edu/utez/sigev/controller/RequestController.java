@@ -6,8 +6,10 @@ import mx.edu.utez.sigev.service.*;
 import mx.edu.utez.sigev.util.Runner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.aspectj.apache.bcel.generic.ClassGen;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.csrf.CsrfLogoutHandler;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.nio.file.LinkOption;
+import java.util.UUID;
 
 @Controller
 @RequestMapping(value = "/request")
@@ -42,7 +45,9 @@ public class RequestController {
     private ColorService colorService;
     @Autowired
     private RequestAttachmentsService requestAttachmentsService;
+
     @RequestMapping(value = "/amount/{id}", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ENLACE'))")
     public String amount(Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         Request request = requestService.findById(id);
         if (!request.equals(null)) {
@@ -56,24 +61,38 @@ public class RequestController {
     }
 
     @RequestMapping(value = "/details/{id}", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ENLACE'))")
     public String details(Authentication authentication,Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes,Commentary commentary,Request request) {
         Users user = userService.findByUsername(authentication.getName());
         Color color = colorService.findColors(1);
         Images image = imagesService.findImages(1);
-
-        model.addAttribute("userLog", user);
-        model.addAttribute("image", image);
-        model.addAttribute("color", color);
-        model.addAttribute("listComents", commentaryService.findAllByRequestId(id));
+        CityLink link = linkService.findByUserId(user.getId());
         Request sa = requestService.findById(id);
-        if (!requestService.findById(id).equals(null)) {
-            model.addAttribute("request", requestService.findById(id));;
-            System.out.println(sa.getRequestAttachment());
-            return "/requests/detailsRequests";
-        } else {
-            redirectAttributes.addFlashAttribute("msg_error", "La solicitud que buscas no existe");
-            return "redirect:/request/list";
-        }
+        System.out.println(link.getCity().getId());
+        System.out.println(sa.getPresident().getCommittee().getSuburb().getCity().getId());
+        System.out.println(link.getCity().getId() == sa.getPresident().getCommittee().getSuburb().getCity().getId());
+
+        if(link.getCity().getId() == sa.getPresident().getCommittee().getSuburb().getCity().getId()){
+            System.out.println("Entre1");
+            model.addAttribute("userLog", user);
+            model.addAttribute("image", image);
+            model.addAttribute("color", color);
+            model.addAttribute("listComents", commentaryService.findAllByRequestId(id));
+            if (!requestService.findById(id).equals(null)) {
+                model.addAttribute("request", requestService.findById(id));;
+                System.out.println(sa.getRequestAttachment());
+                return "/requests/detailsRequests";
+            } else {
+                redirectAttributes.addFlashAttribute("msg_error", "La solicitud que buscas no existe");
+                return "redirect:/request/list";
+            }
+        }else {
+            System.out.println("Entre2");
+            redirectAttributes.addFlashAttribute("msg_error",
+                    "Error no tienes permiso para entrar a esas incidencias ");
+                    return "redirect:/request/list";
+                }
+        
     }
 /*
     @PostMapping(value = "/update")
@@ -95,12 +114,16 @@ public class RequestController {
     }*/
 
     @PostMapping(value = "/update")
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ENLACE'))")
     public String actualizar(@ModelAttribute("request") Request request, Model modelo,
-                             RedirectAttributes redirectAttributes) {
+                             RedirectAttributes redirectAttributes, Authentication authentication, HttpSession session) {
         Request obj = requestService.findById(request.getId());
+        Users user = userService.findByUsername(authentication.getName());
         if (!BlacklistController.checkBlacklistedWords(obj.getDescription())) {
             obj.setPaymentAmount(request.getPaymentAmount());
             if (obj != null) {
+                UUID uuid = UUID.randomUUID();
+                logger.info("[USER : {}] || [UUID : {}] ---> EXECUTING PRODUCT MODULE ---> findAllProducts()", user.getName(), uuid);
                 requestService.save(obj);
                 modelo.addAttribute("listRequests", requestService.findAll());
             }
@@ -113,6 +136,7 @@ public class RequestController {
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ENLACE'))")
     public String findAll(Model model, Pageable pageable, Authentication authentication, HttpSession session) {
         Users user = userService.findByUsername(authentication.getName());
         Images image = imagesService.findImages(1);
@@ -131,12 +155,13 @@ public class RequestController {
     }
 
     @GetMapping("/create")
-
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ENLACE'))")
     public String create(Request request, Model modelo) {
         modelo.addAttribute("listRequests", requestService.findAll());
         return "requests/amountRequests";
     }
     @GetMapping(value = "/find/{id}")
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ENLACE'))")
     public String findOne(Model model, @PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         Request request = requestService.findById(id);
         if (!request.equals(null)) {
@@ -148,9 +173,11 @@ public class RequestController {
     }
 
     @PostMapping(value = "/save")
-    public String save(Model model, Request request, RedirectAttributes redirectAttributes) {
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ENLACE'))")
+    public String save(Model model, Request request, RedirectAttributes redirectAttributes,Authentication authentication, HttpSession session) {
         String msgOk = "";
         String msgError = "";
+        Users user = userService.findByUsername(authentication.getName());
 
         if (!BlacklistController.checkBlacklistedWords(request.getDescription())) {
             if (request.getId() != null) {
@@ -163,6 +190,8 @@ public class RequestController {
 
             boolean res = requestService.save(request);
             if (res) {
+                UUID uuid = UUID.randomUUID();
+                logger.info("[USER : {}] || [UUID : {}] ---> EXECUTING ---> save()", user.getName(), uuid);
                 redirectAttributes.addFlashAttribute("msg_success", msgOk);
             } else {
                 redirectAttributes.addFlashAttribute("msg_error", msgError);
@@ -175,9 +204,12 @@ public class RequestController {
     }
 
     @PostMapping(value = "/save/paymentAmount")
-    public String savepaymentAmount(Model model, Request request, RedirectAttributes redirectAttributes) {
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ENLACE'))")
+    public String savepaymentAmount(Model model, Request request, RedirectAttributes redirectAttributes,Authentication authentication, HttpSession session) {
         Request obj = requestService.findById(request.getId());
         obj.setPaymentAmount(request.getPaymentAmount());
+        Users user = userService.findByUsername(authentication.getName());
+
         String msgOk = "";
         String msgError = "";
             if (obj.getId() != null) {
@@ -190,6 +222,8 @@ public class RequestController {
 
             boolean res = requestService.save(obj);
             if (res) {
+                UUID uuid = UUID.randomUUID();
+                logger.info("[USER : {}] || [UUID : {}] ---> EXECUTING ---> paymentAmount()", user.getName(), uuid);
                 redirectAttributes.addFlashAttribute("msg_success", msgOk);
             } else {
                 redirectAttributes.addFlashAttribute("msg_error", msgError);
@@ -199,12 +233,16 @@ public class RequestController {
     }
 
     @PostMapping(value = "/save/savepaymentStatus")
-    public String savepaymentStatus(Model model, Request request, RedirectAttributes redirectAttributes) {
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ENLACE'))")
+    public String savepaymentStatus(Model model, Request request, RedirectAttributes redirectAttributes,Authentication authentication, HttpSession session) {
         Request obj = requestService.findById(request.getId());
         System.out.println(obj.getPaymentStatus());
         obj.setPaymentStatus(request.getPaymentStatus());
         System.out.println(obj.getPaymentStatus());
         System.out.println(request.getPaymentStatus());
+        Users user = userService.findByUsername(authentication.getName());
+        UUID uuid = UUID.randomUUID();
+        logger.info("[USER : {}] || [UUID : {}] ---> EXECUTING ---> save()", user.getName(), uuid);
 
         String msgOk = "";
         String msgError = "";
@@ -226,10 +264,12 @@ public class RequestController {
 
     }
     @RequestMapping(value = "/commentary/{id}", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ENLACE'))")
     public String chat(@PathVariable("id") long id, Authentication authentication, HttpSession session, Model model,
                        RedirectAttributes redirectAttributes, Commentary commentary) {
         Users user = userService.findByUsername(authentication.getName());
         user.setPassword(null);
+        
         session.setAttribute("user", user);
         model.addAttribute("listComents", commentaryService.findAllByRequestId(id));
         model.addAttribute("request", requestService.findById(id));
@@ -237,9 +277,12 @@ public class RequestController {
     }
 
     @RequestMapping(value = "/commentary/save/{id}", method = RequestMethod.POST)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ENLACE'))")
     public String saveCommentary(Model model, Commentary commentary, Authentication authentication,
                                  HttpSession session, @PathVariable("id") long id, RedirectAttributes redirectAttributes) {
         Users user = userService.findByUsername(authentication.getName());
+        UUID uuid = UUID.randomUUID();
+        logger.info("[USER : {}] || [UUID : {}] ---> EXECUTING ---> commentary()", user.getName(), uuid);
         Color color = colorService.findColors(1);
         Images image = imagesService.findImages(1);
         model.addAttribute("userLog", user);

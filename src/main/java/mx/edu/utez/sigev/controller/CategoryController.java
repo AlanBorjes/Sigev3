@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,13 +22,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+import mx.edu.utez.sigev.util.Runner;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
 @RequestMapping(value = "/category")
 public class CategoryController {
+    private static final Logger logger = LogManager.getLogger(Runner.class);
 
     @Autowired
     private CategoryService categoryService;
@@ -42,6 +46,7 @@ public class CategoryController {
     private UserService userService;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String listCategories(Model model, RedirectAttributes redirectAttributes, Pageable pageable,
             Authentication authentication, HttpSession session) {
         Users user = userService.findByUsername(authentication.getName());
@@ -56,6 +61,7 @@ public class CategoryController {
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String createCategory(Model model, RedirectAttributes redirectAttributes, Category category, Authentication authentication) {
         Users user = userService.findByUsername(authentication.getName());
         model.addAttribute("userLog", user);
@@ -67,6 +73,7 @@ public class CategoryController {
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String categoryEdit(Model model, RedirectAttributes redirectAttributes, @PathVariable("id") long id,
             Category category, Authentication authentication) {
         Users user = userService.findByUsername(authentication.getName());
@@ -86,6 +93,7 @@ public class CategoryController {
     }
 
     @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String categoryUpdate(Model model, RedirectAttributes redirectAttributes, @PathVariable("id") long id,
             Category category) {
         Category tmp = categoryService.findById(id);
@@ -110,6 +118,7 @@ public class CategoryController {
     }
 
     @RequestMapping(value = "/desactivate/{id}", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String categoryDesactivate(Model model, RedirectAttributes redirectAttributes, @PathVariable("id") long id,
                                  Category category) {
         String msg;
@@ -141,6 +150,7 @@ public class CategoryController {
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String save(Model model, RedirectAttributes redirectAttributes, Category category) {
         if (!categoryService.exists(category.getName())) {
             if (!BlacklistController.checkBlacklistedWords(category.getName())) {

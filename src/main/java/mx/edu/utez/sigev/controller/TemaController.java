@@ -12,6 +12,7 @@ import mx.edu.utez.sigev.service.ImagesService;
 import mx.edu.utez.sigev.service.UserService;
 import mx.edu.utez.sigev.util.DocumentoUtileria;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,6 +44,7 @@ public class TemaController {
 
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String findAllEnlaces(Model model, Authentication authentication, HttpSession session) {
         Color color = colorService.findColors(1);
         Images image = imagesService.findImages(1);
@@ -56,6 +58,7 @@ public class TemaController {
     }
 
     @RequestMapping(value = "/update/color", method = RequestMethod.POST)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String updateColor(Model model,RedirectAttributes redirectAttributes, Authentication authentication,
                               HttpSession session, Color color) {
         Color tmp = colorService.findColors(1);
@@ -81,6 +84,7 @@ public class TemaController {
     }
 
     @RequestMapping(value = "/update/logo1", method = RequestMethod.POST)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String updateLogo1(Model model,RedirectAttributes redirectAttributes, Authentication authentication,
                               HttpSession session, @RequestParam("logo1")  MultipartFile file) throws IOException{
         Images tmp = imagesService.findImages(1);
@@ -110,6 +114,7 @@ public class TemaController {
     }
 
     @RequestMapping(value = "/update/logo2", method = RequestMethod.POST)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String updateLogo2(Model model,RedirectAttributes redirectAttributes, Authentication authentication,
                               HttpSession session, @RequestParam("logo2")  MultipartFile file) throws IOException{
         Images tmp = imagesService.findImages(1);
@@ -139,6 +144,7 @@ public class TemaController {
     }
 
     @RequestMapping(value = "/update/imgLogin", method = RequestMethod.POST)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
     public String updateimgLogin(Model model,RedirectAttributes redirectAttributes, Authentication authentication,
                               HttpSession session, @RequestParam("imgLogin")  MultipartFile file) throws IOException{
         Images tmp = imagesService.findImages(1);

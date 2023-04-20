@@ -3,6 +3,7 @@ package mx.edu.utez.sigev.controller;
 import mx.edu.utez.sigev.entity.*;
 import mx.edu.utez.sigev.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -56,6 +57,7 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/administrador/dashboard", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ADMINISTRADOR'))")
 	public String dashboardAdministrador(Authentication authentication, HttpSession session, Model model) {
         Users user = userService.findByUsername(authentication.getName());
 		if (session.getAttribute("user") == null) {
@@ -86,6 +88,7 @@ public class HomeController {
 	}
 
     @RequestMapping(value = "/enlace/dashboard", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_ENLACE'))")
 	public String dashboardEnlace(Authentication authentication, HttpSession session,Model model) {
         Users user = userService.findByUsername(authentication.getName());
         if (session.getAttribute("user") == null) {
@@ -101,6 +104,7 @@ public class HomeController {
 	}
 
     @RequestMapping(value = "/miembro/dashboard", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_MIEMBRO'))")
 	public String dashboardAMiembro(Authentication authentication, HttpSession session,Model model) {
         Users user = userService.findByUsername(authentication.getName());
 
@@ -118,6 +122,7 @@ public class HomeController {
 	}
 
     @RequestMapping(value = "/presidente/dashboard", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated() and (hasRole('ROL_PRESIDENTE'))")
 	public String dashboardPresidente(Authentication authentication, HttpSession session,Model model) {
             Users user = userService.findByUsername(authentication.getName());
 			user.setPassword(null);
